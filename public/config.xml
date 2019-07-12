@@ -1,0 +1,65 @@
+<widget id="A6017018324640" version="0.0.1">
+ <name>testApp</name>
+
+    <description>
+
+        Example For APICloud.
+
+    </description>
+
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+
+        Developer
+
+    </author>
+
+    <content src="index.html" />
+
+    <access origin="*" />
+
+    <preference name="pageBounce" value="false"/>
+		
+	<!-- window.navigation.userAgent追加标识,识别环境。 -->
+	<preference name="userAgent" value="APICloud" />
+
+	<preference name="appBackground" value="rgba(255,255,255,1)"/>
+
+	<preference name="windowBackground" value="rgba(255,255,255,1)"/>
+
+	<preference name="frameBackgroundColor" value="rgba(255,255,255,1)"/>
+
+	<preference name="hScrollBarEnabled" value="false"/>
+
+	<preference name="vScrollBarEnabled" value="false"/>
+
+	<preference name="autoLaunch" value="true"/>
+
+	<preference name="fullScreen" value="true"/>
+
+	<preference name="autoUpdate" value="true" />
+
+	<preference name="smartUpdate" value="false" />
+
+	<preference name="debug" value="true"/>
+
+	<preference name="statusBarAppearance" value="true"/>
+	
+    <preference name="iOS7StatusBarAppearance" value="false"/>
+
+	<permission name="readPhoneState" />
+
+	<permission name="camera" />
+
+	<permission name="record" />
+
+	<permission name="location" />
+
+	<permission name="fileSystem" />
+
+	<permission name="internet" />
+
+	<permission name="bootCompleted" />
+
+	<permission name="hardware" />
+
+</widget>

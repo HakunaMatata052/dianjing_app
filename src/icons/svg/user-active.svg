@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FFD948;}
+	.st1{fill:none;stroke:#333333;stroke-width:60;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:100;}
+	.st2{fill:#333333;}
+</style>
+<g id="参考线">
+</g>
+<g id="图层_2">
+	<g id="椭圆_4_拷贝">
+		<g>
+			<path class="st0" d="M163.47,913.1H863c0-125.02-65.6-201.42-164.25-239.77c62.83-20.17,100.65-63.77,100.65-157.69
+				c0-166.82-119.34-302.07-286.17-302.07S227.06,348.81,227.06,515.64c0,93.92,37.83,137.52,100.65,157.69
+				C229.07,711.68,163.47,788.08,163.47,913.1z"/>
+		</g>
+	</g>
+	<g id="椭圆_4_拷贝_2">
+		<g>
+			<path class="st1" d="M163.47,913.1H863c0-122.3-62.77-210.82-157.85-259.31c67.38-55.44,110.35-139.46,110.35-233.53
+				c0-166.93-135.33-302.27-302.27-302.27S210.97,253.32,210.97,420.25c0,94.07,42.97,178.09,110.35,233.53
+				C226.24,702.28,163.47,790.8,163.47,913.1z"/>
+		</g>
+	</g>
+	<g id="椭圆_4">
+		<g>
+			<ellipse class="st2" cx="409.8" cy="420.25" rx="39.65" ry="47.7"/>
+		</g>
+	</g>
+	<g id="椭圆_4_拷贝_3">
+		<g>
+			<path class="st2" d="M616.67,372.56c-21.9,0-39.65,21.35-39.65,47.7s17.75,47.7,39.65,47.7c21.9,0,39.65-21.35,39.65-47.7
+				S638.57,372.56,616.67,372.56z"/>
+		</g>
+	</g>
+	<path class="st1" d="M421.22,563.29c11.6,7.99,44.26,28.23,90.62,28.26c48.49,0.02,82.28-22.09,93.54-30.21"/>
+</g>
+</svg>
