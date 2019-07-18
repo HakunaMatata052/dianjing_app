@@ -27,6 +27,8 @@ const router = new Router({
             keepAlive: true,
             isTransition: true,
             title:"电竞",
+            isMember: false,
+            isLogin:false
           }
         },
         {
@@ -37,6 +39,8 @@ const router = new Router({
             keepAlive: true,
             isTransition: true,
             title:"电竞",
+            isMember: false,
+            isLogin:false
           }
         },
         {
@@ -47,6 +51,8 @@ const router = new Router({
             keepAlive: true,
             isTransition: true,
             title:"电竞",
+            isMember: false,
+            isLogin:false
           }
         },
         {
@@ -57,6 +63,8 @@ const router = new Router({
             keepAlive: true,
             isTransition: true,
             title:"电竞",
+            isMember: false,
+            isLogin:false
           }
         }
       ]
@@ -68,6 +76,8 @@ const router = new Router({
         keepAlive: false,
         isTransition: true,
         title:"电竞",
+        isMember: false,
+        isLogin:false
       }
     },
     {
@@ -78,9 +88,54 @@ const router = new Router({
         keepAlive: false,
         isTransition: true,
         title:"陪玩",
+        isMember: false,
+        isLogin:false
+      }
+    },
+    {
+      path: "/accompanyDetail/:id",
+      name:"accompanyDetail",
+      component: () => import("@/views/accompany/accompanyDetail.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"个人主页",
+        isMember: false,
+        isLogin:false
+      }
+    },
+    {
+      path: "/downorder/:id",
+      name:"downOrder",
+      component: () => import("@/views/order/downOrder.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"下订单",
+        isMember: false,
+        isLogin:false
+      }
+    },
+    {
+      path: "/login",
+      name:"login",
+      component: () => import("@/views/login/login.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"登录",
+        isMember: false,
+        isLogin:false
       }
     }
   ]
 });
+router.beforeEach((to, from, next) => {
+  if (to.meta.isMember) {
+    // document.title = to.meta.title + '-新派魔方'
+    console.log(1)    
+  }
+  next()
+})
 
 export default router;

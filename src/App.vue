@@ -32,6 +32,7 @@ export default {
         this.transitionName = "";
       }
     });
+    this.getBanners()
   },
   mounted() {
     console.log(this.keepAlive); // 设置缓存匹配
@@ -56,11 +57,18 @@ export default {
         }
       });
     },
+    getBanners(){
+      this.$SERVER.getBanners().then(res=>{
+
+      })
+    }
   }
 };
 </script>
 <style lang="less">
-
+.color{
+  color: #ffd948
+}
 @color: #ffd948;
 @black: #000;
 @white: #fff;
@@ -85,8 +93,8 @@ export default {
 
 <style lang="less" scope>
 #app {
-  font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB",
-    "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-family: "PingFang-SC-Medium", "PingFang SC", "Microsoft YaHei" ,Helvetica, Tahoma, Arial, "Hiragino Sans GB",
+    "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
     height: 100%;
 }
 .slide-right-enter-active,

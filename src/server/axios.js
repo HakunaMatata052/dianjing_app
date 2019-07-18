@@ -38,7 +38,7 @@ axios.interceptors.request.use(
     }
     // qs转换
     if (config.method.toUpperCase() !== "GET") {
-      config.data = qs.stringify(config.data);
+      // config.data = qs.stringify(config.data);
     }
     return config;
   },
@@ -76,7 +76,7 @@ axios.interceptors.response.use(
       } else if (status === 403) {
         router.push("/login");
       } else if (status >= 404 && status < 422) {
-        router.push("/404");
+        // router.push("/404");
       }
     }
     return Promise.reject(error);
@@ -93,16 +93,19 @@ export default class Axios {
           url,
           baseURL: envconfig.baseURL,
           timeout: 30000,
-          headers: null
+          headers: {
+            'Content-Type': 'application/json',
+          },
           // withCredentials: true, //是否携带cookies发起请求
         },
         config
       );
       // 添加token
-      // _option.headers = {
-      //   ..._option.headers,
-      //   authorization: "Bearer " + "token"
-      // };
+      _option.headers = {
+        ..._option.headers,
+        authorization: "Bearer " + window.localStorage.getItem('token'),
+        // Cookie: "JSESSIONID=" + window.localStorage.getItem('Cookie')
+      };
       // 处理get、post传参问题
       method.toUpperCase() !== "GET"
         ? (_option.data = params)
@@ -111,11 +114,11 @@ export default class Axios {
       // 请求成功后服务器返回二次处理
       axios.request(_option).then(
         res => {
-          // if(res.data.code==200){
+          if(res.data.code==200){
             resolve(res.data);
-          // }else{
-            // Toast.fail(res.data.msg);
-          // }
+          }else{
+            Toast.fail(res.data.msg);
+          }
         },
         error => {
           if (error.response) {

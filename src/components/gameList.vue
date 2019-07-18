@@ -6,9 +6,9 @@
     </van-tabs>
     <div class="wrapper" ref="wrapper">
       <div class="gamelist">
-        <div class="gamelist-item" v-for="(image, index) in images" :key="index">
-          <img :src="image.download_url" />
-          <span>{{image.author}}</span>
+        <div class="gamelist-item" v-for="(image, index) in list" :key="index">
+          <img :src="image.icon" />
+          <span>{{image.name}}</span>
         </div>
       </div>
     </div>
@@ -20,7 +20,7 @@ export default {
   components: {},
   data() {
     return {
-      images: []
+      list: []
     };
   },
   created() {
@@ -29,8 +29,11 @@ export default {
   mounted() {},
   methods: {
     getList() {
-      this.$SERVER.getGameList().then(res => {
-        this.images = res;
+      this.$SERVER.getGames({
+        pageNum:1,
+        pageSize:20
+      }).then(res => {
+        this.list = res.data.list;
         this.$nextTick(() => {
           this.scroll = new BScroll(this.$refs.wrapper, {
             scrollX: true,
@@ -67,6 +70,7 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 14px;
     }
   }
 }

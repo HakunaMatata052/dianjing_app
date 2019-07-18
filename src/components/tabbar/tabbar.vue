@@ -16,7 +16,7 @@
           <h3 :class="item.icon ? 'tabbar-name' : 'iconShow'" v-if="index!=2">{{ item.title }}</h3>
         </li>
       </ul>
-      <div class="box" :style="'height:'+bottom+'px'"></div>
+      <div class="iphonX-box" :style="'height:'+bottom+'px'"></div>
       <van-dialog v-model="show" :show-confirm-button="false" get-container="body">
         <div class="release-dialog">
           <div class="release-group">
@@ -119,7 +119,7 @@ export default {
 .footer-empty {
   height: 65px;
 }
-.box {
+.iphonX-box {
   height: 0;
 }
 .tabbar-list {

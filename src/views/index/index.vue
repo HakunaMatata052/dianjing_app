@@ -18,12 +18,10 @@
 
 import router from "@/router/router.js";
 import Tabbar from "@/components/tabbar/tabbar.vue";
-import navBar from "@/components/navbar/navbar.vue";
 export default {
-  name:"index",
+  name:"home",
   components: {
-    Tabbar,
-    navBar
+    Tabbar
   },
   data() {
     return {

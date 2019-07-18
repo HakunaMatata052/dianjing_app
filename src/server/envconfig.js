@@ -9,6 +9,6 @@ if (process.env.NODE_ENV === "production") {
 }
 if (process.env.NODE_ENV === "development") {
   // 干一些测试时不可告人的事情
-  baseURL = "https://picsum.photos/";
+  baseURL = "http://192.168.0.119:9000/game/";
 }
 export default { baseURL };

@@ -1,18 +1,17 @@
 <template>
   <div>
-    <div class="navbar" id="navbar">
+    <div class="navbar" id="navbar" :class=" stl ? stl : ''">
       <div class="top" :style="'padding-top:'+ top +'px'"></div>
-      <van-nav-bar @click-left="onClickLeft()" @click-right="openSearchFn()" :z-index="999">
-        <span slot="title" v-if="title">{{title}}</span>
-        <span slot="title" v-else>{{$route.meta.title}}</span>
-        <van-icon name="arrow-left" slot="left"  v-if="goback" />
-        <svg-icon icon-class="filter" slot="left"  v-if="filter && !goback" />
-        <svg-icon icon-class="search" slot="right" v-if="search" />
+      <van-nav-bar @click-left="onClickLeft()" @click-right="openSearchFn()" :z-index="999" style="background:none">
+        <span slot="title" class="title">{{title}}</span>>
+        <van-icon name="arrow-left" class="left" slot="left"  v-if="goback" />
+        <svg-icon icon-class="filter" class="left" slot="left"  v-if="filter && !goback" />
+        <svg-icon icon-class="search" class="right" slot="right" v-if="search" />
       </van-nav-bar>
     </div>
-    <div class="navbar-empty" :style="'padding-top:'+ top +'px'"></div>
+    <div class="navbar-empty" :style="'padding-top:'+ top +'px'" v-if="!stl"></div>
     <van-popup v-model="searchShow" position="top" get-container="body">
-      <div class="navbar-empty" v-if="searchEmptyShow"></div>
+      <div class="navbar-empty" v-if="searchEmptyShow && !stl"></div>
       <van-search placeholder="请输入搜索关键词" v-model="value" @blur="searchFn"/>
     </van-popup>
   </div>
@@ -28,7 +27,43 @@ export default {
       searchEmptyShow: false,
     };
   },
-  props: ["title","goback" ,"search", "filter"],
+  props: {
+    title: {
+      type: String,
+      default() {
+        return this.$route.meta.title;
+      },
+      required: false
+    },
+    goback: {
+      type: Boolean,
+      default() {
+        return true;
+      },
+      required: false
+    },
+    search: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+      required: false
+    },
+    filter: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+      required: false
+    },
+    stl: {
+      type: String,
+      default() {
+        return ;
+      },
+      required: false
+    }
+  },
   components: {},
   mounted() {
     var systemType = api.systemType;
@@ -53,7 +88,13 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="less">
+.nobg .van-hairline--bottom::after {
+  border-bottom-width:0;
+}
+</style>
+
+<style lang="less" scoped>
 .navbar {
   position: fixed;
   top: 0;
@@ -66,6 +107,17 @@ span {
 }
 .navbar-empty {
   height: 46px;
+}
+
+/* 风格 */
+.nobg {
+  background: none;
+  .title {
+    color:#fff;
+  }
+  .left {
+    color:#fff!important;
+  }
 }
 </style>
 

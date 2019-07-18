@@ -4,7 +4,7 @@
       class="accompany-item"
       v-for="item in accompanyList"
       :key="item.id"
-      @click="openAccompanyFn"
+      @click="openAccompanyFn(item.id)"
     >
       <div class="accompany-img">
         <van-image fit="cover" width="100%" height="100%" :src="item.download_url" />
@@ -57,8 +57,9 @@ export default {
     };
   },
   methods: {
-    openAccompanyFn() {
+    openAccompanyFn(id) {
       console.log("打开陪练详情");
+      this.$router.push(`/accompanyDetail/${id}`)
     }
   }
 };

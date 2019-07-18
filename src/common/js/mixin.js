@@ -61,6 +61,33 @@ export const uuid = function (len, radix, typeid) {
 };
 
 /**
+ * 时间格式转yyyy-MM-dd hh:mm:ss 
+ * @param {Number} dateTimeStamp 毫秒数
+ * @param {String} fmt 指定格式 yyyy-MM-dd hh:mm:ss 
+ */
+export const format = function (dateTimeStamp,fmt) {
+  dateTimeStamp = new Date(Number(dateTimeStamp)) 
+  var o = {
+    "M+": dateTimeStamp.getMonth() + 1, //月份 
+    "d+": dateTimeStamp.getDate(), //日 
+    "h+": dateTimeStamp.getHours(), //小时 
+    "m+": dateTimeStamp.getMinutes(), //分 
+    "s+": dateTimeStamp.getSeconds(), //秒 
+    "q+": Math.floor((dateTimeStamp.getMonth() + 3) / 3), //季度 
+    "S": dateTimeStamp.getMilliseconds() //毫秒 
+  };
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (dateTimeStamp.getFullYear() + "").substr(4 - RegExp.$1.length));
+  }
+  for (var k in o) {
+    if (new RegExp("(" + k + ")").test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    }
+  }
+  return fmt;
+}
+
+/**
  * url参数转JSON参数
  * @param {url}} url
  */

@@ -10,20 +10,20 @@
       <div class="box" style="padding:0;">
         <van-row class="notice" type="flex" justify="center" style="align-items:center">
           <van-col span="5" style="border-right:1px dashed #ebedf0">
-            <van-image fit="contain" width="60" height="60" src="img/notice.png" />
+            <van-image class="notice-img" fit="contain" width="100%" height="100%" src="img/notice.png" />
           </van-col>
-          <van-col span="13">
-            <h3 class="notice-title">刺激战场·乡野导师计划</h3>
-            <p class="notice-des">今天17:00开始 已有4812人预定</p>
+          <van-col span="19" @click="goExpress(expressList.id)">
+            <h3 class="notice-title">{{expressList.title}}</h3>
+            <p class="notice-des">{{expressList.content}}</p>
           </van-col>
-          <van-col span="6">
+          <!-- <van-col span="6">
             <van-button
               size="large"
               round
               :hairline="false"
               :style="'background: '+$store.state.color +';height:40px;line-height:40px;'"
             >预定</van-button>
-          </van-col>
+          </van-col>-->
         </van-row>
 
         <van-grid :border="true" :column-num="3" :square="true">
@@ -38,8 +38,8 @@
           </van-grid-item>
         </van-grid>
       </div>
-      
-        <gameList />
+
+      <gameList />
 
       <div class="box accompany">
         <div class="accompany-title">
@@ -75,7 +75,7 @@
             <van-image fit="cover" width="300" src="https://picsum.photos/300/300" />
           </van-swipe-item>
         </van-swipe>
-      </div> -->
+      </div>-->
       <div class="box match">
         <div class="match-title">
           <h2>
@@ -118,9 +118,10 @@ import navBar from "@/components/navbar/navbar.vue";
 import gameList from "@/components/gameList.vue";
 import accompanyList from "@/components/accompany/accompanyList.vue";
 export default {
-  name:'home',
+  name: "home",
   data() {
     return {
+      expressList: {},
       AccompanyList1: [],
       AccompanyList2: [],
       AccompanyList3: [],
@@ -133,13 +134,13 @@ export default {
     "accompany-list": accompanyList
   },
   created() {
-    this.getAccompanyList();
+    // this.getAccompanyList()
+    this.getExpress()
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     getAccompanyList() {
-      this.$SERVER.getGameList().then(res => {
+      this.$SERVER.getGame().then(res => {
         this.isLoading = false;
         this.AccompanyList1 = res.slice(0, 5);
         this.AccompanyList2 = res.slice(5, 10);
@@ -166,8 +167,19 @@ export default {
         });
       });
     },
-    goAccompany(){
-      this.$router.push('/accompany')
+    getExpress() {
+      this.$SERVER.getExpress({
+        pageNum:1,
+        pageSize:10
+      }).then(res => {
+        this.expressList = res.data.list[0]
+      });
+    },
+    goExpress(id){
+      console.log(id)
+    },
+    goAccompany() {
+      this.$router.push("/accompany");
     }
   }
 };
@@ -190,9 +202,15 @@ export default {
 
 .more {
   color: #999;
+  font-size: 14px;
 }
 .notice {
   padding: 10px 15px;
+  .notice-img {
+    padding: 0 5px;
+    width: 60px;
+    height: 60px;
+  }
   .notice-title {
     font-size: 14px;
     padding: 0 10px;

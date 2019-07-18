@@ -34,7 +34,7 @@
 
 	<preference name="autoLaunch" value="true"/>
 
-	<preference name="fullScreen" value="true"/>
+	<preference name="fullScreen" value="false"/>
 
 	<preference name="autoUpdate" value="true" />
 
