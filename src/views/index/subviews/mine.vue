@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "page04",
+  name: "mine",
   components: {}
 };
 </script>

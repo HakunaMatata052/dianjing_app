@@ -61,5 +61,9 @@
 	<permission name="bootCompleted" />
 
 	<permission name="hardware" />
-
+	<!-- 定位 -->
+    <meta-data name="com.baidu.lbsapi.API_KEY" value="aRP8AAYAFhVbaVCwDSDRFHOX2wIgtEGN"/>
+    <feature name="bmLocation">
+        <param name="ios_api_key" value="aRP8AAYAFhVbaVCwDSDRFHOX2wIgtEGN"/>
+    </feature>
 </widget>

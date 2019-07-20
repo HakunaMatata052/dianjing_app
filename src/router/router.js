@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "../store/store";
 
 // tarBar ----- 子页面
 import Index from "@/views/index/index.vue";
@@ -22,7 +23,7 @@ const router = new Router({
       children: [{
           path: "",
           name: "home",
-          component: () => import("@/views/index/home.vue"),
+          component: () => import("@/views/index/subviews/home.vue"),
           meta: {
             keepAlive: true,
             isTransition: true,
@@ -32,39 +33,39 @@ const router = new Router({
           }
         },
         {
-          path: "/page02",
-          name: "page02",
-          component: () => import("@/views/index/subviews/page02.vue"),
+          path: "/video",
+          name: "video",
+          component: () => import("@/views/index/subviews/video.vue"),
           meta: {
             keepAlive: true,
             isTransition: true,
-            title:"电竞",
+            title:"视频",
             isMember: false,
             isLogin:false
           }
         },
         {
-          path: "/page03",
-          name: "page03",
-          component: () => import("@/views/index/subviews/page03.vue"),
+          path: "/game",
+          name: "game",
+          component: () => import("@/views/index/subviews/game.vue"),
           meta: {
             keepAlive: true,
             isTransition: true,
-            title:"电竞",
+            title:"游戏",
             isMember: false,
             isLogin:false
           }
         },
         {
-          path: "/page04",
-          name: "page04",
-          component: () => import("@/views/index/subviews/page04.vue"),
+          path: "/mine",
+          name: "mine",
+          component: () => import("@/views/index/subviews/mine.vue"),
           meta: {
             keepAlive: true,
             isTransition: true,
-            title:"电竞",
+            title:"我的",
             isMember: false,
-            isLogin:false
+            isLogin:true
           }
         }
       ]
@@ -127,15 +128,46 @@ const router = new Router({
         isMember: false,
         isLogin:false
       }
+    },
+    {
+      path: "/register",
+      name:"register",
+      component: () => import("@/views/login/register.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"注册",
+        isMember: false,
+        isLogin:false
+      }
     }
   ]
 });
 router.beforeEach((to, from, next) => {
-  if (to.meta.isMember) {
-    // document.title = to.meta.title + '-新派魔方'
-    console.log(1)    
+  if (to.meta.isLogin) {
+    if (!window.localStorage.getItem('token')) {
+      router.push('/login')
+    }else{
+      next()
+    }
+    if (to.meta.isMember) {
+      if (!window.localStorage.getItem('token')) {
+        router.push('/login')
+      }else{
+        if (store.state.isMember) {
+          next()
+        }else{
+          router.push('/buymember')
+        }
+      }
+    }
+  }else {
+    next()
   }
-  next()
+  router.afterEach(route => {
+    // console.log(route)
+    // console.log("跳转")
+  })
 })
 
 export default router;

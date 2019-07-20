@@ -89,7 +89,6 @@
   </div>
 </template>
 <script>
-import { format } from "@/common/js/mixin.js";
 import navBar from "@/components/navbar/navbar.vue";
 const coupon = {
   available: 1,
@@ -152,7 +151,7 @@ export default {
       this.showPopup = false;
     },
     time(val) {
-      return format(val, "MM月dd日 hh:mm");
+      return this.$METHOD.format(val, "MM月dd日 hh:mm");
     },
     onChangeCoupons(index) {
       this.showCoupons = false;

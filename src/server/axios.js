@@ -1,8 +1,9 @@
 import Vue from "vue";
 import axios from "axios";
-import qs from "qs";
+// import qs from "qs";
 import envconfig from "./envconfig.js";
 import router from "@/router/router.js";
+import store from "../store/store";
 import { Toast } from "vant";
 Vue.use(Toast);
 
@@ -103,7 +104,8 @@ export default class Axios {
       // 添加token
       _option.headers = {
         ..._option.headers,
-        authorization: "Bearer " + window.localStorage.getItem('token'),
+        authorization: "Bearer " + store.state.token || "",
+        // userid: store.state.userInfo.userid || ""
         // Cookie: "JSESSIONID=" + window.localStorage.getItem('Cookie')
       };
       // 处理get、post传参问题
@@ -118,6 +120,7 @@ export default class Axios {
             resolve(res.data);
           }else{
             Toast.fail(res.data.msg);
+            reject(res.data)
           }
         },
         error => {

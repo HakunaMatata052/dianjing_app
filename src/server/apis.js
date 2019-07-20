@@ -37,14 +37,41 @@ class Api extends Axios {
       throw err;
     }
   }
-
+  /**
+   * 发送验证码
+   * @param {Object} params {telephone}
+   */
+  async sendchecknum(params = {}) {
+    try {
+      let result = await this.axios("post", "user/sendchecknum", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
   /**
    * 登录
    * @param {Object} params {telephone,password}
    */
   async login(params = {}) {
     try {
-      let result = await this.axios("post", "login", params);
+      let result = await this.axios("post", "user/login", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+  /**
+   * 注册
+   * @param {Object} params {telephone,password,checknum}
+   */
+  async register(params = {}) {
+    try {
+      let result = await this.axios("post", "user/register", params);
       if (result) {
         return result;
       }
@@ -69,7 +96,7 @@ class Api extends Axios {
   /**
    * 轮播图banner
    */
-  async getExpress(params = {}) {
+  async getBanners(params = {}) {
     try {
       let result = await this.axios("post", "banner/getBanners", params);
       if (result) {

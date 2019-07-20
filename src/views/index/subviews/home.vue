@@ -1,16 +1,20 @@
 <template>
   <div id="home">
     <navBar :search="true" />
-    <van-pull-refresh v-model="isLoading" @refresh="getAccompanyList">
+    <van-pull-refresh v-model="isLoading" @refresh="onrefresh">
       <van-swipe :autoplay="3000" class="banner">
-        <van-swipe-item v-for="(image, index) in AccompanyList1" :key="index">
-          <img :src="image.download_url" />
+        <van-swipe-item v-for="(image, index) in bannerList" :key="index">
+          <img :src="image.url" />
         </van-swipe-item>
       </van-swipe>
       <div class="box" style="padding:0;">
         <van-row class="notice" type="flex" justify="center" style="align-items:center">
           <van-col span="5" style="border-right:1px dashed #ebedf0">
-            <van-image class="notice-img" fit="contain" width="100%" height="100%" src="img/notice.png" />
+            <van-image
+              class="notice-img"
+              fit="contain"
+              src="img/notice.png"
+            />
           </van-col>
           <van-col span="19" @click="goExpress(expressList.id)">
             <h3 class="notice-title">{{expressList.title}}</h3>
@@ -121,11 +125,13 @@ export default {
   name: "home",
   data() {
     return {
+      bannerList: [],
       expressList: {},
       AccompanyList1: [],
       AccompanyList2: [],
       AccompanyList3: [],
-      isLoading: false
+      isLoading: false,
+      refreshNum: 0
     };
   },
   components: {
@@ -133,50 +139,88 @@ export default {
     gameList,
     "accompany-list": accompanyList
   },
+  watch: {
+    refreshNum(newVal, oldVal) {
+      if (newVal == 2) {
+        this.isLoading = false;
+        this.refreshNum = 0;
+      }
+    }
+  },
   created() {
-    // this.getAccompanyList()
-    this.getExpress()
+    this.getAccompanyList();
+    this.getExpress();
+    this.getBanners();
   },
   mounted() {},
   methods: {
-    getAccompanyList() {
-      this.$SERVER.getGame().then(res => {
-        this.isLoading = false;
-        this.AccompanyList1 = res.slice(0, 5);
-        this.AccompanyList2 = res.slice(5, 10);
-        this.AccompanyList3 = res.slice(10, 15);
-        this.$nextTick(() => {
-          this.scroll = new BScroll(this.$refs.wrapper1, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
-          this.scroll = new BScroll(this.$refs.wrapper2, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
-          this.scroll = new BScroll(this.$refs.wrapper3, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
+    onrefresh() {
+      this.getAccompanyList(() => {
+        this.refreshNum++;
+      });
+      this.getExpress(() => {
+        this.refreshNum++;
+      });
+      this.getBanners();
+    },
+    getAccompanyList(fn) {
+      // this.$SERVER.getGame().then(res => {
+      //   this.isLoading = false;
+      //   this.AccompanyList1 = res.slice(0, 5);
+      //   this.AccompanyList2 = res.slice(5, 10);
+      //   this.AccompanyList3 = res.slice(10, 15);
+      //   this.$nextTick(() => {
+      //     this.scroll = new BScroll(this.$refs.wrapper1, {
+      //       scrollX: true,
+      //       scrollY: false,
+      //       eventPassthrough: "vertical",
+      //       freeScroll: true
+      //     });
+      //     this.scroll = new BScroll(this.$refs.wrapper2, {
+      //       scrollX: true,
+      //       scrollY: false,
+      //       eventPassthrough: "vertical",
+      //       freeScroll: true
+      //     });
+      //     this.scroll = new BScroll(this.$refs.wrapper3, {
+      //       scrollX: true,
+      //       scrollY: false,
+      //       eventPassthrough: "vertical",
+      //       freeScroll: true
+      //     });
+      //   });
+      // });
+      if (fn) {
+        fn();
+      }
+    },
+    getExpress(fn) {
+      this.$SERVER
+        .getExpress({
+          pageNum: 1,
+          pageSize: 10
+        })
+        .then(res => {
+          this.expressList = res.data.list[0];
+          if (fn) {
+            fn();
+          }
         });
-      });
     },
-    getExpress() {
-      this.$SERVER.getExpress({
-        pageNum:1,
-        pageSize:10
-      }).then(res => {
-        this.expressList = res.data.list[0]
-      });
+    getBanners() {
+      let head_img = this.$METHOD.getStore("head_img");
+      if (head_img && head_img.length != 0) {
+        this.bannerList = JSON.parse(head_img);
+      } else {
+        this.$SERVER.getBanners().then(res => {
+          this.$METHOD.setStore("head_img", res.data.head_img);
+          this.$METHOD.setStore("merchant_img", res.data.merchant_img);
+          this.bannerList = res.data.head_img;
+        });
+      }
     },
-    goExpress(id){
-      console.log(id)
+    goExpress(id) {
+      console.log(id);
     },
     goAccompany() {
       this.$router.push("/accompany");

@@ -29,18 +29,13 @@ export default {
   mounted() {},
   methods: {
     getList() {
-      this.$SERVER.getGames({
-        pageNum:1,
-        pageSize:20
-      }).then(res => {
-        this.list = res.data.list;
-        this.$nextTick(() => {
-          this.scroll = new BScroll(this.$refs.wrapper, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
+      this.list = JSON.parse(this.$METHOD.getStore("games"))
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.wrapper, {
+          scrollX: true,
+          scrollY: false,
+          eventPassthrough: "vertical",
+          freeScroll: true
         });
       });
     }

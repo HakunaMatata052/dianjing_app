@@ -7,11 +7,8 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { PullRefresh } from 'vant'
-Vue.use(PullRefresh)
 export default {
-  name: "page02",
+  name: "video",
   data() {
     return {
       count: 0,

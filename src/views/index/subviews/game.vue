@@ -82,7 +82,7 @@
 <script>
  
     export default {
-        name: 'page03',
+        name: 'game',
         data() {
             let u = navigator.userAgent;
             return {
@@ -321,6 +321,9 @@
                 tabIndex:0,
                 showShareBox:false
             }
+        },
+        mounted(){
+            this.playvideo()
         },
         methods: {
                 //改变菜单

@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { timeSwitchString } from "@/common/js/mixin.js";
 export default {
   data() {
     return {

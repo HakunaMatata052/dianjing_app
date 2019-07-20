@@ -23,7 +23,7 @@ export default {
     this.setRouteKeepAlive(router.options.routes);
     // 记录路由,动态给定动画
     this.$navigation.on("forward", to => {
-      this.transitionName = to.route.meta.isTransition ? "slide-left" : "";      
+      this.transitionName = to.route.meta.isTransition ? "slide-left" : "";
     });
     this.$navigation.on("back", (to, from) => {
       if (to.route.meta.isTransition || from.route.meta.isTransition) {
@@ -32,18 +32,26 @@ export default {
         this.transitionName = "";
       }
     });
-    this.getBanners()
+    this.getBanners();
+    this.getGames();
+    this.getLocation();
+    this.setVux();
   },
   mounted() {
-    console.log(this.keepAlive); // 设置缓存匹配
-    var that = this
-    api.addEventListener({
-        name: "swiperight"
-      },
-      function(ret, err) {
-        that.$router.go(-1);
-      }
-    );
+    // console.log(this.keepAlive); // 设置缓存匹配
+    if (process.env.APICloud) {
+      api.addEventListener(
+        {
+          name: "swiperight"
+        },
+        function(ret, err) {
+          // if(this.$route.name=="home"){
+          // }else if(this.$route.name=="home"){
+          // }
+          // that.$router.go(-1);
+        }
+      );
+    }
   },
   methods: {
     setRouteKeepAlive(routes) {
@@ -57,22 +65,82 @@ export default {
         }
       });
     },
-    getBanners(){
-      this.$SERVER.getBanners().then(res=>{
-
-      })
+    getBanners() {
+      this.$SERVER.getBanners().then(res => {
+        this.$METHOD.setStore("head_img", res.data.head_img);
+        this.$METHOD.setStore("merchant_img", res.data.merchant_img);
+      });
+    },
+    getGames() {
+      this.$SERVER
+        .getGames({
+          pageNum: 1,
+          pageSize: 20
+        })
+        .then(res => {
+          this.$METHOD.setStore("games", res.data.list);
+        });
+    },
+    getUserInfo() {
+      // this.$store.state.userInfo =
+    },
+    getLocation() {
+      var that = this;
+      //获取定位
+      if (process.env.APICloud) {
+        let bmLocation = api.require("bmLocation");
+        bmLocation.configManager({
+          accuracy: "device_sensors",
+          filter: 1,
+          activityType: "automotiveNavigation",
+          coordinateType: "GCJ02",
+          locationTimeout: 10,
+          reGeocodeTimeout: 10
+        });
+        bmLocation.singleLocation(
+          {
+            reGeocode: false,
+            netWorkState: false
+          },
+          function(ret, err) {
+            if (ret.status) {
+              that.$METHOD.setStore("position", {
+                lng: ret.location.longitude,
+                lat: ret.location.latitude
+              });
+              if (JSON.stringify(that.$store.state.userInfo) == "{}") {
+                if (process.env.APICloud) {
+                  if (api.systemType == "android") {
+                  } else if (api.systemType == "ios") {
+                  }
+                }
+              }
+            }
+          }
+        );
+      }
+    },
+    settLocation() {},
+    setVux() {
+      this.$store.state.token = this.$METHOD.getStore("token");
+      this.$store.state.userInfo = JSON.parse(
+        this.$METHOD.getStore("userInfo")
+      );
+      this.$store.state.position = JSON.parse(
+        this.$METHOD.getStore("position")
+      );
     }
   }
 };
 </script>
 <style lang="less">
-.color{
-  color: #ffd948
+.color {
+  color: #ffd948;
 }
 @color: #ffd948;
 @black: #000;
 @white: #fff;
-@red: #000!important;
+@red: #000 !important;
 @blue: #999;
 @orange: #ff976a;
 @orange-dark: #ed6a0c;
@@ -93,9 +161,10 @@ export default {
 
 <style lang="less" scope>
 #app {
-  font-family: "PingFang-SC-Medium", "PingFang SC", "Microsoft YaHei" ,Helvetica, Tahoma, Arial, "Hiragino Sans GB",
-    "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
-    height: 100%;
+  font-family: "PingFang-SC-Medium", "PingFang SC", "Microsoft YaHei", Helvetica,
+    Tahoma, Arial, "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei",
+    sans-serif;
+  height: 100%;
 }
 .slide-right-enter-active,
 .slide-right-leave-active,

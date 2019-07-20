@@ -8,7 +8,7 @@
           <van-field
             v-model="form.telephone"
             clearable
-            placeholder="请输入用户名"
+            placeholder="请输入手机号"
             class="field"
             :border="false"
           >
@@ -39,14 +39,13 @@
         >立即登录</van-button>
         <p>
           <span>忘记密码</span>
-          <span>用户注册</span>
+          <span @click="$router.push('/register')">用户注册</span>
         </p>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { setStore , getStore } from "@/common/js/mixin.js";
 import navBar from "@/components/navbar/navbar.vue";
 export default {
   name: "login",
@@ -67,9 +66,14 @@ export default {
       this.loginLoading = true;
       this.$SERVER.login(this.form).then((res) => {
         this.$toast.success("登录成功");
-        setStore('token',res.token)
-        this.loginLoading = true;
+        this.$METHOD.setStore('token',res.token)
+        this.$METHOD.setStore('userInfo',res.userinfo)
+        this.$store.state.token = res.token
+        this.$store.state.userInfo = res.userinfo
+        this.loginLoading = false;
         this.$router.push('/')
+      }).catch(res=>{
+        this.loginLoading = false;
       });
     }
   }
