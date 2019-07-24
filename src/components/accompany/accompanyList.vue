@@ -4,25 +4,29 @@
       class="accompany-item"
       v-for="item in accompanyList"
       :key="item.id"
-      @click="openAccompanyFn(item.id)"
+      @click="$router.push(`/accompanyDetail/${item.userid}`)"
     >
       <div class="accompany-img">
-        <van-image fit="cover" width="100%" height="100%" :src="item.download_url" />
+        <van-image fit="cover" width="100%" height="100%" :src="item.backimage" />
         <div class="tag">
-          <img src="img/hj_icon_party_type_amount.png" />
+          <img src="../../assets/images/hj_icon_party_type_amount.png" v-if="item.type==0" />
+          <img src="../../assets/images/hj_icon_party_type_fire.png" v-else-if="item.type==1"/>
+          <img src="../../assets/images/hj_icon_party_type_hot.png" v-else-if="item.type==2" />
         </div>
         <div class="online">
-          <van-icon class-prefix="icon" name="dot" size="4em" color="green" />在线
+          <van-icon class-prefix="icon" name="dot" size="4em" :color="item.loginstate == 1 ? 'green' : '#999' " />
+          <span v-if="item.loginstate == 1">在线</span>
+          <span v-else>离线</span>
         </div>
         <div class="info">
           <div class="info-left">
-            <span>评分 4.5分</span>
-            <p>距离我1.2KM</p>
+            <span>评分 {{item.score}}分</span>
+            <p>距离我{{item.distance}}KM</p>
           </div>
-          <div class="info-right">50币/小时</div>
+          <div class="info-right">{{item.price}}币/小时</div>
         </div>
       </div>
-      <h3>{{item.author}}</h3>
+      <h3>{{item.nickname}}</h3>
     </div>
   </div>
 </template>
@@ -56,12 +60,6 @@ export default {
     return {
     };
   },
-  methods: {
-    openAccompanyFn(id) {
-      console.log("打开陪练详情");
-      this.$router.push(`/accompanyDetail/${id}`)
-    }
-  }
 };
 </script>
 <style lang="less" scoped>

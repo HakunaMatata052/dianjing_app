@@ -1,21 +1,33 @@
 <template>
   <div id="accompany">
-    <navBar :search="true"/>
+    <navBar :search="true" />
     <div class="main">
-    <van-pull-refresh v-model="isLoading" @refresh="getList" :disabled="disabledPullRefresh">
-      <gameList />
-      <div class="box accompany">
-        <van-dropdown-menu>
-          <van-dropdown-item v-model="filterActive" :options="sortOption"  @open="dropdownOpenFn" @close="dropdownCloseFn" />
-          <van-dropdown-item title="筛选" ref="item"  @open="dropdownOpenFn" @close="dropdownCloseFn">
-            <van-switch-cell v-model="switch1" title="包邮" />
-            <van-switch-cell v-model="switch2" title="团购" />
-            <van-button block type="info" @click="onConfirm">确认</van-button>
-          </van-dropdown-item>
-        </van-dropdown-menu>
-        <accompanyList :accompanyList="AccompanyList" />
-      </div>
-    </van-pull-refresh>
+      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" :disabled="disabledPullRefresh">
+        <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
+        <div class="box accompany">
+          <van-dropdown-menu>
+            <van-dropdown-item
+              v-model="filterActive"
+              :options="sortOption"
+              @open="dropdownOpenFn"
+              @close="dropdownCloseFn"
+            />
+            <van-dropdown-item
+              title="筛选"
+              ref="item"
+              @open="dropdownOpenFn"
+              @close="dropdownCloseFn"
+            >
+              <van-switch-cell v-model="filter.switch1" title="包邮" />
+              <van-switch-cell v-model="filter.switch2" title="团购" />
+              <van-button block type="info" @click="onFilter">确认</van-button>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+          <van-list v-model="listLoading" :finished="finished" finished-text="没有更多了" @load="getList">
+            <accompanyList :accompanyList="AccompanyList" />
+          </van-list>
+        </div>
+      </van-pull-refresh>
     </div>
   </div>
 </template>
@@ -32,32 +44,76 @@ export default {
   },
   data() {
     return {
+      activeTabs: 0,
+      pageNum: 1,
+      pageSize: 3,
+      hasNextPage: true,
       AccompanyList: [],
       disabledPullRefresh: false,
       filterActive: 0,
-      sortOption:  [
-        { text: '智能排序', value: 0 },
-        { text: '人气最高', value: 1 },
-        { text: '距离最近', value: 2 }
+      sortOption: [
+        { text: "智能排序", value: 0 },
+        { text: "人气最高", value: 1 },
+        { text: "距离最近", value: 2 }
       ],
-      isLoading: false
+      refreshLoading: false,
+      listLoading: false,
+      finished: false,
+      filter: {
+        switch1: true,
+        switch2: true
+      }
     };
   },
+  watch: {
+    activeTabs() {
+      this.getList(true);
+    }
+  },
   created() {
-    this.getList();
+    // this.getList();
   },
   methods: {
-    getList() {
-      this.$SERVER.getGameList().then(res => {
-        this.AccompanyList = res;
-        this.isLoading = false;
-      });
+    onRefresh() {
+      this.pageNum = 1;
+      this.getList(true);
     },
-    dropdownOpenFn(){
-      this.disabledPullRefresh = true
+    getList(isClear) {
+      if(!this.hasNextPage){
+        this.refreshLoading = false;
+        this.listLoading = false;        
+        this.finished = true;
+        return
+      }
+      this.$SERVER
+        .getUserList({
+          userId: this.$store.state.userInfo.userid,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          userType: this.activeTabs
+        })
+        .then(res => {
+          if (isClear) {
+            // this.AccompanyList = res.data.list;
+            this.refreshLoading = false;
+          } else {
+            this.pageNum = res.data.nextpage
+            this.hasNextPage = res.data.hasNextPage
+            this.AccompanyList = [...this.AccompanyList, ...res.data.list];
+            this.listLoading = false;
+          }
+        });
     },
-    dropdownCloseFn(){
-      this.disabledPullRefresh = false
+    dropdownOpenFn() {
+      this.disabledPullRefresh = true;
+    },
+    dropdownCloseFn() {
+      this.disabledPullRefresh = false;
+    },
+    onFilter() {},
+    // 监听 速配/大神 切换
+    tabsFn(val) {
+      this.activeTabs = val;
     }
   }
 };
@@ -67,7 +123,7 @@ export default {
 
 <style lang="less" scoped>
 .accompany {
-  background-image: url(/img/mzdj_room_user_ds.png);
+  background-image: url(../../assets/images/mzdj_room_user_ds.png);
   background-repeat: no-repeat;
   background-position: left 10px;
   background-size: 20px;

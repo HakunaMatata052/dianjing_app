@@ -8,9 +8,10 @@
             v-model="form.telephone"
             clearable
             placeholder="请输入手机号"
-            class="field"            
+            class="field"
             type="tel"
             :border="false"
+            :readonly="readonly"
           ></van-field>
           <van-cell-group>
             <van-field
@@ -39,7 +40,12 @@
             type="password"
             placeholder="请输入密码"
             class="field"
-            :border="false"
+          ></van-field>
+          <van-field
+            v-model="form.password2"
+            type="password"
+            placeholder="请再次输入密码"
+            class="field"
           ></van-field>
         </van-cell-group>
         <van-button
@@ -50,17 +56,8 @@
           @click="regFn"
           class="regbtn"
           :hairline="false"
-        >立即注册</van-button>
+        >确认修改</van-button>
         <p>
-          <van-checkbox
-            v-model="checked"
-            shape="square"
-            :checked-color="$store.state.color"
-            class="agreement"
-          >
-            我同意
-            <span>《用户注册协议》</span>
-          </van-checkbox>
         </p>
         <div class="gologin">
           已有账号？
@@ -74,7 +71,7 @@
 import regexUtil from "regex-util";
 import navBar from "@/components/navbar/navbar.vue";
 export default {
-  name: "register",
+  name: "resetPassword",
   components: {
     navBar
   },
@@ -82,6 +79,7 @@ export default {
     return {
       regLoading: false,
       checkNumDisabled: false,
+      readonly: false,
       form: {
         telephone: "",
         password: "",
@@ -93,9 +91,10 @@ export default {
     };
   },
   created(){
-    if(this.$METHOD.getStore('token')){
-      this.$router.push('/')
-    }
+      if(this.$METHOD.getStore('token')){
+          this.form.telephone = this.$store.state.userInfo.telephone
+          this.readonly = true
+      }
   },
   methods: {
     sendchecknum() {
@@ -148,14 +147,21 @@ export default {
         this.$toast.fail("请阅读并同意《用户注册协议》");
         return;
       }
+      if(this.form.password!==this.form.password2){
+        this.$toast.fail("两次密码不一致");
+        return;
+      }
       this.regLoading = true;
-      this.$SERVER.register(this.form).then(res => {
-        this.$toast.success("注册成功");
-        this.regLoading = false;
-        this.$router.push("/login");
-      }).catch(res=>{
-        this.regLoading = false;
-      });
+      this.$SERVER
+        .resetPassword(this.form)
+        .then(res => {
+          this.$toast.success(res.data);
+          this.regLoading = false;
+          this.$router.push("/login");
+        })
+        .catch(res => {
+          this.regLoading = false;
+        });
     }
   },
   destroyed() {

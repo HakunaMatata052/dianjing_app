@@ -1,8 +1,14 @@
 <template>
   <div class="box">
-    <van-tabs :color="$store.state.color" :title-active-color="$store.state.color" animated>
-      <van-tab title="速配"></van-tab>
-      <van-tab title="大神"></van-tab>
+    <van-tabs
+      v-model="activeTabs"
+      :color="$store.state.color"
+      :title-active-color="$store.state.color"
+      animated
+      @click="tabs"
+    >
+      <van-tab title="速配" :name="0"></van-tab>
+      <van-tab title="大神" :name="1"></van-tab>
     </van-tabs>
     <div class="wrapper" ref="wrapper">
       <div class="gamelist">
@@ -17,6 +23,15 @@
 <script>
 import BScroll from "better-scroll";
 export default {
+  props: {
+    activeTabs: {
+      type: Number,
+      default() {
+        return 0;
+      },
+      required: true
+    }
+  },
   components: {},
   data() {
     return {
@@ -29,7 +44,7 @@ export default {
   mounted() {},
   methods: {
     getList() {
-      this.list = JSON.parse(this.$METHOD.getStore("games"))
+      this.list = JSON.parse(this.$METHOD.getStore("games"));
       this.$nextTick(() => {
         this.scroll = new BScroll(this.$refs.wrapper, {
           scrollX: true,
@@ -38,6 +53,9 @@ export default {
           freeScroll: true
         });
       });
+    },
+    tabs() {
+      this.$emit("tabs", this.activeTabs);
     }
   }
 };

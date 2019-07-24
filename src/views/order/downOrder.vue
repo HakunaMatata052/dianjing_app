@@ -9,7 +9,7 @@
         <div class="userinfo-right">
           <h3>
             仲喵_MG
-            <img src="/img/authentication.png" />
+            <img src="../../assets/images/authentication.png" />
             <span>ID:19901220</span>
           </h3>
           <p>首单返12元上车找主播加群</p>
@@ -17,11 +17,11 @@
       </div>
       <van-cell-group class="cell-group">
         <van-cell title="类型" size="large" is-link :value="form.type" @click="showPopupFn(0)" />
-        <van-cell title="时间" size="large" is-link :value="time(form.time)" @click="showPopupFn(1)" />
+        <van-cell title="时间" size="large" is-link :value="dateTime" @click="showPopupFn(1)" />
         <van-cell title="局数" size="large" :value="form.games+'局'" @click="showKeyboard=true" />
         <van-cell title="价格" size="large" :value="price+'元'" />
         <van-coupon-cell
-        currency=""
+          currency
           :coupons="coupons"
           :chosen-coupon="chosenCoupon"
           @click="showCoupons = true"
@@ -70,7 +70,7 @@
     <!-- 优惠券弹窗 -->
     <van-popup v-model="showCoupons" position="bottom">
       <van-coupon-list
-        currency=""
+        currency
         :coupons="coupons"
         :chosen-coupon="chosenCoupon"
         :disabled-coupons="disabledCoupons"
@@ -92,19 +92,29 @@
 import navBar from "@/components/navbar/navbar.vue";
 const coupon = {
   available: 1,
-  condition: '无使用门槛\n最多优惠12元',
-  reason: '',
+  condition: "无使用门槛\n最多优惠12元",
+  reason: "",
   value: 150,
-  name: '优惠券名称',
+  name: "优惠券名称",
   startAt: 1489104000,
   endAt: 1514592000,
-  valueDesc: '1.5',
-  unitDesc: '金币'
+  valueDesc: "1.5",
+  unitDesc: "金币"
 };
 export default {
   name: "downOrder",
   components: {
     navBar
+  },
+  computed: {
+    dateTime: {
+      get() {
+        return new Date(Number(this.form.time));
+      },
+      set(val) {
+        this.form.time = val;
+      }
+    }
   },
   data() {
     return {
@@ -160,9 +170,7 @@ export default {
     onExchangeCoupons(code) {
       this.coupons.push(coupon);
     },
-    onSubmit(){
-
-    }
+    onSubmit() {}
   }
 };
 </script>

@@ -81,6 +81,7 @@ const router = new Router({
         isLogin:false
       }
     },
+    // 陪玩
     {
       path: "/accompany",
       name:"accompany",
@@ -94,7 +95,7 @@ const router = new Router({
       }
     },
     {
-      path: "/accompanyDetail/:id",
+      path: "/accompanyDetail/:userid",
       name:"accompanyDetail",
       component: () => import("@/views/accompany/accompanyDetail.vue"),
       meta: {
@@ -105,6 +106,7 @@ const router = new Router({
         isLogin:false
       }
     },
+    // 订单
     {
       path: "/downorder/:id",
       name:"downOrder",
@@ -114,11 +116,36 @@ const router = new Router({
         isTransition: true,
         title:"下订单",
         isMember: false,
-        isLogin:false
+        isLogin:true
       }
     },
     {
-      path: "/login",
+      path: "/orderlist",
+      name:"orderList",
+      component: () => import("@/views/order/orderList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"订单列表",
+        isMember: false,
+        isLogin:true
+      }
+    },
+    {
+      path: "/orderdetail/:id",
+      name:"orderDetail",
+      component: () => import("@/views/order/orderDetail.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"订单详情",
+        isMember: false,
+        isLogin:true
+      }
+    },
+    // 注册登录
+    {
+      path: "/login/:name?",
       name:"login",
       component: () => import("@/views/login/login.vue"),
       meta: {
@@ -140,19 +167,44 @@ const router = new Router({
         isMember: false,
         isLogin:false
       }
-    }
+    },
+    {
+      path: "/resetPassword",
+      name:"resetPassword",
+      component: () => import("@/views/login/resetPassword.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"修改密码",
+        isMember: false,
+        isLogin:false
+      }
+    },
+    // 个人中心
+    {
+      path: "/setting",
+      name:"setting",
+      component: () => import("@/views/mine/setting.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"资料设置",
+        isMember: false,
+        isLogin:true
+      }
+    },
   ]
 });
 router.beforeEach((to, from, next) => {
   if (to.meta.isLogin) {
     if (!window.localStorage.getItem('token')) {
-      router.push('/login')
+      router.push('/login/'+from.name)
     }else{
       next()
     }
     if (to.meta.isMember) {
       if (!window.localStorage.getItem('token')) {
-        router.push('/login')
+        router.push('/login/'+from.name)
       }else{
         if (store.state.isMember) {
           next()
@@ -164,10 +216,12 @@ router.beforeEach((to, from, next) => {
   }else {
     next()
   }
-  router.afterEach(route => {
-    // console.log(route)
-    // console.log("跳转")
-  })
+})
+
+router.afterEach(route => {
+    
+  // console.log(route)
+  // console.log("跳转")
 })
 
 export default router;

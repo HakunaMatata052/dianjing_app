@@ -36,28 +36,27 @@ export default {
         },
         {
           title: "视频",
-          path: "/page02",
+          path: "/video",
           icon: "video",
           icon_press: "video-active",
           index: 1
         },
         {
           title: "发布",
-          path: "/about",
           icon: "release",
           icon_press: "release",
           index: 2
         },
         {
           title: "游戏",
-          path: "/page03",
+          path: "/game",
           icon: "game",
           icon_press: "game-active",
           index: 3
         },
         {
           title: "我的",
-          path: "/page04",
+          path: "/mine",
           icon: "user",
           icon_press: "user-active",
           index: 4

@@ -1,8 +1,20 @@
 <template>
   <div id="accompanyDetail">
-    <navBar :stl="'nobg'" />
+    <navBar :stl="'nobg'">
+      <van-icon
+        class-prefix="icon"
+        name="camera"
+        color="rgba(255,255,255,.6)"
+        class="camera"
+        slot="right"
+        @click="uploadBackimage"
+        v-if="$route.params.userid==$store.state.userInfo.userid"
+      />
+    </navBar>
     <div class="main">
-      <div class="userbg"></div>
+      <div class="userbg">
+        <img :src="backimage || 'https://picsum.photos/500/500'" />
+      </div>
       <van-pull-refresh
         v-model="isLoading"
         @refresh="isLoading = false"
@@ -15,39 +27,35 @@
       >
         <div class="userinfo">
           <div class="avatar">
-            <img src="https://picsum.photos/75/75" />
-            <div class="authentication"></div>
+            <img :src="userInfo.image" />
+            <div class="authentication" v-if="userInfo.level"></div>
           </div>
           <div class="username">
-            仲喵_MG
+            {{userInfo.nickname}}
             <span>
-              <gander :gander="1" :age="21" />
+              <gander :gander="userInfo.sex" :age="userInfo.age" />
             </span>
           </div>
-          <div class="sign">首单返12元上车找主播加群</div>
+          <div class="sign">{{userInfo.signname}}</div>
           <div class="btn-group">
             <div class="btn nofollow">关注</div>
             <div class="btn">私聊</div>
-            <div class="voice">
+            <div class="voice" v-if="!userInfo.voice &&  userInfo.voice != ''">
               <van-icon class-prefix="icon" name="play" />
             </div>
           </div>
           <div class="receiptinfo">
             <dl>
-              <dt>125W</dt>
+              <dt>{{myInfo.fansCount}}</dt>
               <dd>粉丝数</dd>
             </dl>
             <dl>
-              <dt>125W</dt>
-              <dd>粉丝数</dd>
+              <dt>{{myInfo.attentionCount}}</dt>
+              <dd>关注数</dd>
             </dl>
             <dl>
-              <dt>125W</dt>
-              <dd>粉丝数</dd>
-            </dl>
-            <dl>
-              <dt>125W</dt>
-              <dd>粉丝数</dd>
+              <dt>{{myInfo.orderCount}}</dt>
+              <dd>接单数</dd>
             </dl>
           </div>
         </div>
@@ -95,7 +103,6 @@
                 </van-skeleton>
               </div>
             </div>
-            
           </van-tab>
           <van-tab title="动态" name="1">
             <div class="tabs-con">
@@ -252,8 +259,14 @@
           </van-tab>
         </van-tabs>
       </van-pull-refresh>
-      <div class="order-btn" v-if="activeTabs==0" @click="downOrder">立即下单</div>
+      <div
+        class="order-btn"
+        v-if="activeTabs==0"
+        @click="$router.push(`/downorder/${this.$route.params.id}`)"
+        :style="'padding-bottom:'+ bottom +'px'"
+      >立即下单</div>
     </div>
+    <uploadImage ref="upload" @uploadSuccess="uploadSuccess" mode="all" height="300" />
   </div>
 </template>
 <script>
@@ -263,22 +276,36 @@ Vue.use(ImagePreview);
 import navBar from "@/components/navbar/navbar.vue";
 import gander from "@/components/user/gander.vue";
 import operation from "@/components/operation/operation.vue";
+import uploadImage from "@/components/upload/uploadImage.vue";
 export default {
   name: "accompanyDetail",
   components: {
     navBar,
     gander,
-    operation
+    operation,
+    uploadImage
   },
   data() {
     return {
       isLoading: false,
       loading: true,
       activeTabs: "0",
-      score: 2
+      score: 2,
+      bottom: 0,
+      userInfo: {},
+      myInfo: {
+        fansCount: 0,
+        attentionCount: 0,
+        orderCount: 0
+      }
     };
   },
-  created() {},
+  created() {
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      this.bottom = api.safeArea.bottom;
+    }
+    this.getUserInfo();
+  },
   mounted() {
     setTimeout(() => {
       this.loading = false;
@@ -294,8 +321,36 @@ export default {
         }
       });
     },
-    downOrder(){
-      this.$router.push(`/downorder/${this.$route.params.id}`)
+    uploadBackimage() {
+      this.$refs.upload.openLoadPopup();
+    },
+    // 组件上传成功的回调函数
+    uploadSuccess(val) {
+      var that = this;
+      that.$SERVER.updateUseInfo({
+        userid: that.$store.state.userInfo.userid,
+        backimage: val
+      }).then(res => {
+        that.$toast.success(res.data);
+        that.userInfo.backimage = val;
+      });
+    },
+    getUserInfo() {
+      var that = this;
+      that.$SERVER
+        .getUserInforById({
+          userid: that.$route.params.userid
+        })
+        .then(res => {
+          that.userInfo = res.data;
+        });
+      that.$SERVER
+        .getMyInfo({
+          userId: that.$route.params.userid
+        })
+        .then(res => {
+          that.myInfo = res.data;
+        });
     }
   }
 };
@@ -307,14 +362,17 @@ export default {
   }
 }
 </style>
-
 <style lang="less" scoped>
 .userbg {
-  position: fixed;
+  position: relative;
+  z-index: -1;
   width: 100%;
   height: 300px;
   background-size: cover;
-  background: url("https://picsum.photos/500/500") no-repeat center center;
+  img {
+    width: 100%;
+    height: auto;
+  }
 }
 .userinfo {
   background: rgba(255, 255, 255, 1);
@@ -323,9 +381,9 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 0 15px;
-  margin-top: 200px;
   .avatar {
     position: relative;
+    z-index: 99;
     top: -30px;
     margin-bottom: -30px;
     img {
@@ -337,7 +395,8 @@ export default {
       position: absolute;
       bottom: 0;
       right: 0;
-      background: url(/img/authentication.png) no-repeat center center;
+      background: url(../../assets/images/authentication.png) no-repeat center
+        center;
       background-size: 100%;
       width: 20px;
       height: 26px;
@@ -403,7 +462,6 @@ export default {
     dl {
       dt {
         font-size: 15px;
-        font-family: PingFang-SC-Bold;
         font-weight: bold;
       }
       dd {

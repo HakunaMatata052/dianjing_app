@@ -1,3 +1,4 @@
+import $store from "../../store/store.js";
 /* eslint-disable */
 /**
  * 开启接触touchmove默认事件
@@ -391,4 +392,13 @@ export const IdCodeValid = function (code) {
     }
   }
   return row;
+};
+
+
+export const updateLocalUserInfo = (name,val) => {
+  var obj = JSON.parse(getStore('userInfo'))
+  obj[name] = val
+  setStore('userInfo',obj)
+  console.log($store)
+  $store.state.userInfo[name] = val
 };

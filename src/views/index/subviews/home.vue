@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <navBar :search="true" />
+    <navBar :goback="false" :search="true" />
     <van-pull-refresh v-model="isLoading" @refresh="onrefresh">
       <van-swipe :autoplay="3000" class="banner">
         <van-swipe-item v-for="(image, index) in bannerList" :key="index">
@@ -10,11 +10,7 @@
       <div class="box" style="padding:0;">
         <van-row class="notice" type="flex" justify="center" style="align-items:center">
           <van-col span="5" style="border-right:1px dashed #ebedf0">
-            <van-image
-              class="notice-img"
-              fit="contain"
-              src="img/notice.png"
-            />
+            <img class="notice-img" src="../../../assets/images/notice.png" />
           </van-col>
           <van-col span="19" @click="goExpress(expressList.id)">
             <h3 class="notice-title">{{expressList.title}}</h3>
@@ -30,24 +26,25 @@
           </van-col>-->
         </van-row>
 
-        <van-grid :border="true" :column-num="3" :square="true">
+        <van-grid :border="true" :column-num="3" :square="true" class="grid">
           <van-grid-item>
-            <van-image fit="contain" width="80" height="80" src="img/img1.png" />
+            <img src="../../../assets/images/img1.png" />
           </van-grid-item>
           <van-grid-item>
-            <van-image fit="contain" width="80" height="80" src="img/img2.png" />
+            <img src="../../../assets/images/img2.png" />
           </van-grid-item>
           <van-grid-item>
-            <van-image fit="contain" width="80" height="80" src="img/img3.png" />
+            <img src="../../../assets/images/img3.png" />
           </van-grid-item>
         </van-grid>
       </div>
 
-      <gameList />
+      <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
 
       <div class="box accompany">
         <div class="accompany-title">
-          <h2>美女陪练</h2>
+          <h2 v-if="activeTabs==0">美女陪练</h2>
+          <h2 v-if="activeTabs==1">大神陪练</h2>
           <div class="more" @click="goAccompany">
             查看更多
             <van-icon class-prefix="icon" name="more" />
@@ -99,10 +96,10 @@
             </div>
             <div class="tag-list">
               <div class="match-tag">
-                <img src="img/hj_icon_live_hot_1.png" />
+                <img src="../../../assets/images/hj_icon_live_hot_1.png" />
               </div>
               <div class="match-tag">
-                <img src="img/hj_icon_live_hot_1.png" />
+                <img src="../../../assets/images/hj_icon_live_hot_1.png" />
               </div>
             </div>
             <div class="watch">
@@ -125,6 +122,7 @@ export default {
   name: "home",
   data() {
     return {
+      activeTabs: 0,
       bannerList: [],
       expressList: {},
       AccompanyList1: [],
@@ -140,11 +138,15 @@ export default {
     "accompany-list": accompanyList
   },
   watch: {
+    // 监听所有请求是否都完成
     refreshNum(newVal, oldVal) {
-      if (newVal == 2) {
+      if (newVal == 3) {
         this.isLoading = false;
         this.refreshNum = 0;
       }
+    },
+    activeTabs(){
+      this.getAccompanyList();
     }
   },
   created() {
@@ -164,35 +166,39 @@ export default {
       this.getBanners();
     },
     getAccompanyList(fn) {
-      // this.$SERVER.getGame().then(res => {
-      //   this.isLoading = false;
-      //   this.AccompanyList1 = res.slice(0, 5);
-      //   this.AccompanyList2 = res.slice(5, 10);
-      //   this.AccompanyList3 = res.slice(10, 15);
-      //   this.$nextTick(() => {
-      //     this.scroll = new BScroll(this.$refs.wrapper1, {
-      //       scrollX: true,
-      //       scrollY: false,
-      //       eventPassthrough: "vertical",
-      //       freeScroll: true
-      //     });
-      //     this.scroll = new BScroll(this.$refs.wrapper2, {
-      //       scrollX: true,
-      //       scrollY: false,
-      //       eventPassthrough: "vertical",
-      //       freeScroll: true
-      //     });
-      //     this.scroll = new BScroll(this.$refs.wrapper3, {
-      //       scrollX: true,
-      //       scrollY: false,
-      //       eventPassthrough: "vertical",
-      //       freeScroll: true
-      //     });
-      //   });
-      // });
-      if (fn) {
-        fn();
-      }
+      this.$SERVER.getUserList({
+        pageNum: 1,
+        pageSize: 15,
+        ...this.$store.state.position
+      }).then(res => {
+        this.isLoading = false;
+        this.AccompanyList1 = res.data.list.slice(0, 5);
+        this.AccompanyList2 = res.data.list.slice(5, 10);
+        this.AccompanyList3 = res.data.list.slice(10, 15);
+        this.$nextTick(() => {
+          this.scroll = new BScroll(this.$refs.wrapper1, {
+            scrollX: true,
+            scrollY: false,
+            eventPassthrough: "vertical",
+            freeScroll: true
+          });
+          this.scroll = new BScroll(this.$refs.wrapper2, {
+            scrollX: true,
+            scrollY: false,
+            eventPassthrough: "vertical",
+            freeScroll: true
+          });
+          this.scroll = new BScroll(this.$refs.wrapper3, {
+            scrollX: true,
+            scrollY: false,
+            eventPassthrough: "vertical",
+            freeScroll: true
+          });
+        });
+        if (fn) {
+          fn();
+        }
+      });
     },
     getExpress(fn) {
       this.$SERVER
@@ -224,6 +230,10 @@ export default {
     },
     goAccompany() {
       this.$router.push("/accompany");
+    },
+    // 监听 速配/大神 切换
+    tabsFn(val){
+      this.activeTabs = val
     }
   }
 };
@@ -253,7 +263,7 @@ export default {
   .notice-img {
     padding: 0 5px;
     width: 60px;
-    height: 60px;
+    height: auto;
   }
   .notice-title {
     font-size: 14px;
@@ -267,7 +277,7 @@ export default {
 }
 .accompany {
   padding: 15px;
-  background-image: url(/img/mzdj_room_user_ds.png);
+  background-image: url(../../../assets/images/mzdj_room_user_ds.png);
   background-repeat: no-repeat;
   background-position: left 10px;
   background-size: 20px;
@@ -295,7 +305,7 @@ export default {
 }
 .match {
   padding: 15px;
-  background-image: url(/img/pk.png);
+  background-image: url(../../../assets/images/pk.png);
   background-repeat: no-repeat;
   background-position: 10px 15px;
   background-size: 40px;
@@ -375,6 +385,12 @@ export default {
         background: linear-gradient(to right, #ff376d, #ff8c5a);
       }
     }
+  }
+}
+.grid{
+  img{
+    width: auto;
+    height: 80px;
   }
 }
 </style>

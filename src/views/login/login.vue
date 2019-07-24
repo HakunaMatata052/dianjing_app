@@ -10,6 +10,7 @@
             clearable
             placeholder="请输入手机号"
             class="field"
+            type="tel"
             :border="false"
           >
             <template slot="left-icon">
@@ -38,7 +39,7 @@
           :hairline="false"
         >立即登录</van-button>
         <p>
-          <span>忘记密码</span>
+          <span @click="$router.push('/resetPassword')">忘记密码？</span>
           <span @click="$router.push('/register')">用户注册</span>
         </p>
       </div>
@@ -61,19 +62,27 @@ export default {
       loginLoading: false
     };
   },
+  created(){
+    if(this.$METHOD.getStore('token')){
+      this.$router.push('/')
+    }
+  },
   methods: {
     loginFn() {
-      this.loginLoading = true;
-      this.$SERVER.login(this.form).then((res) => {
-        this.$toast.success("登录成功");
-        this.$METHOD.setStore('token',res.token)
-        this.$METHOD.setStore('userInfo',res.userinfo)
-        this.$store.state.token = res.token
-        this.$store.state.userInfo = res.userinfo
-        this.loginLoading = false;
-        this.$router.push('/')
+      var that = this
+      that.loginLoading = true;
+      that.$SERVER.login(that.form).then((res) => {
+        that.$toast.success("登录成功");
+        that.$METHOD.setStore('token',res.data.token)
+        that.$METHOD.setStore('userInfo',res.data)
+        that.$store.state.token = res.data.token
+        that.$store.state.userInfo = res.data
+        that.loginLoading = false;
+        that.$router.push({
+          name: that.$route.params.name == "register" ? "home" : that.$route.params.name || "index"
+        })
       }).catch(res=>{
-        this.loginLoading = false;
+        that.loginLoading = false;
       });
     }
   }
@@ -89,7 +98,7 @@ export default {
 #login {
   width: 100%;
   height: 100%;
-  background: url(/img/loginbg.png) no-repeat center center;
+  background: url('../../assets/images/login-bg.jpg') no-repeat center center;
   background-size: cover;
   .login {
     width: 100%;

@@ -80,6 +80,20 @@ class Api extends Axios {
     }
   }
   /**
+   * 修改密码
+   * @param {Object} params {userid,password,newpassword}
+   */
+  async resetPassword(params = {}) {
+    try {
+      let result = await this.axios("post", "user/resetPassword", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+  /**
    * 资讯列表
    * @param {Object} params {pageNum ,pageSize}
    */
@@ -99,6 +113,111 @@ class Api extends Axios {
   async getBanners(params = {}) {
     try {
       let result = await this.axios("post", "banner/getBanners", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+  /**
+   * 速配列表
+   * @param {Object} params {pageNum ,pageSize,type}
+   */
+  async getUserList(params = {}) {
+    try {
+      let result = await this.axios("post", "user/getUserList", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+  /**
+   * 查询用户信息（粉丝数，关注数，接单数）
+   * @param {Object} params {userId}
+   */
+  async getMyInfo(params = {}) {
+    try {
+      let result = await this.axios("post", "user/getMyInfo", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  
+  /**
+   * 查询用户信息（资料）
+   * @param {Object} params {userId}
+   */
+  async getUserInforById(params = {}) {
+    try {
+      let result = await this.axios("post", "user/getUserInforById", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * 更新 定位/在线状态
+   * @param {Object} params { userId ,position,loginstate/ lng ,lat}
+   */
+  async openUpdate(params = {}) {
+    try {
+      let result = await this.axios("post", "user/openUpdate", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+
+  /**
+   * 订单列表
+   * @param {Object} params {pageNum ,pageSize,userid,state}
+   */
+  async getOrders(params = {}) {
+    try {
+      let result = await this.axios("post", "order/getOrders", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * 订单详情
+   * @param {Object} params {pageNum ,pageSize,userid,state}
+   */
+  async orderDetails(params = {}) {
+    try {
+      let result = await this.axios("post", "order/orderDetails", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * 更新用户
+   * @param {Object} params {userid}
+   */
+  async updateUseInfo(params = {}) {
+    try {
+      let result = await this.axios("post", "user/updateUseInfo", params);
       if (result) {
         return result;
       }

@@ -6,10 +6,10 @@
           v-for="(item, index) in tabList"
           :key="index"
           @touchend="switchTab(item, index)"
-          :class="['tabbar-item', { active: tabActiveIndex === index }]"
+          :class="['tabbar-item', { active: $store.state.tabActiveIndex === index }]"
         >
           <svg-icon
-            :icon-class="tabActiveIndex === index ? item.icon_press : item.icon"
+            :icon-class="$store.state.tabActiveIndex === index ? item.icon_press : item.icon"
             v-if="item.icon"
             slot="right"
           ></svg-icon>
@@ -65,23 +65,23 @@ export default {
   components: {},
   data() {
     return {
-      tabActiveIndex: 0,
+      // tabActiveIndex: 0,
       bottom: 0,
       show: false
     };
   },
   created() {
-    this.tabActiveIndex = this.tabList.findIndex(
+    this.$store.state.tabActiveIndex = this.tabList.findIndex(
       item => item.path === this.$route.path
     );
     window.addEventListener("popstate", () => {
-      this.tabActiveIndex = this.tabList.findIndex(
+      this.$store.state.tabActiveIndex = this.tabList.findIndex(
         item => item.path === this.$route.path
       );
     });
-  },
-  mounted() {
-    this.bottom = api.safeArea.bottom;
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      this.bottom = api.safeArea.bottom;
+    }
   },
   methods: {
     switchTab(item, idx) {
@@ -90,13 +90,13 @@ export default {
         document.getElementById("app").style.filter = "blur(5px)";
         return false;
       } else {
-        if (this.tabActiveIndex > idx) {
+        if (this.$store.state.tabActiveIndex > idx) {
           this.$store.state.navAn = "slide-right";
         } else {
           this.$store.state.navAn = "slide-left";
         }
-        if (this.tabActiveIndex !== idx) {
-          this.tabActiveIndex = idx;
+        if (this.$store.state.tabActiveIndex !== idx) {
+          this.$store.state.tabActiveIndex = idx;
           this.$router.push(item.path);
         }
       }

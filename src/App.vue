@@ -19,6 +19,7 @@ export default {
     };
   },
   created() {
+    var that = this;
     // 递归路由设置KeepAlive  ***** 注意路由name必须和组件内的name一致 *****
     this.setRouteKeepAlive(router.options.routes);
     // 记录路由,动态给定动画
@@ -32,6 +33,29 @@ export default {
         this.transitionName = "";
       }
     });
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      api.setStatusBarStyle({
+        style: "dark",
+        color: "rgba(255,255,255,0)"
+      });
+      api.addEventListener(
+        {
+          name: "swiperight"
+        },
+        function(ret, err) {
+          if (
+            that.$route.name == "home" ||
+            that.$route.name == "video" ||
+            that.$route.name == "game" ||
+            that.$route.name == "mine"
+          ) {
+          } else {
+            that.$router.go(-1);
+          }
+        }
+      );
+      that.$store.state.systemType = api.systemType
+    }
     this.getBanners();
     this.getGames();
     this.getLocation();
@@ -39,19 +63,6 @@ export default {
   },
   mounted() {
     // console.log(this.keepAlive); // 设置缓存匹配
-    if (process.env.APICloud) {
-      api.addEventListener(
-        {
-          name: "swiperight"
-        },
-        function(ret, err) {
-          // if(this.$route.name=="home"){
-          // }else if(this.$route.name=="home"){
-          // }
-          // that.$router.go(-1);
-        }
-      );
-    }
   },
   methods: {
     setRouteKeepAlive(routes) {
@@ -81,13 +92,10 @@ export default {
           this.$METHOD.setStore("games", res.data.list);
         });
     },
-    getUserInfo() {
-      // this.$store.state.userInfo =
-    },
     getLocation() {
       var that = this;
       //获取定位
-      if (process.env.APICloud) {
+      if (window.navigator.userAgent.match(/APICloud/i)) {
         let bmLocation = api.require("bmLocation");
         bmLocation.configManager({
           accuracy: "device_sensors",
@@ -108,26 +116,75 @@ export default {
                 lng: ret.location.longitude,
                 lat: ret.location.latitude
               });
-              if (JSON.stringify(that.$store.state.userInfo) == "{}") {
-                if (process.env.APICloud) {
-                  if (api.systemType == "android") {
-                  } else if (api.systemType == "ios") {
+              that.$store.state.position = {
+                lng: ret.location.longitude,
+                lat: ret.location.latitude
+              };
+              if (that.$store.state.systemType == "android") {
+                that.openUpdate(
+                  ret.location.longitude,
+                  ret.location.latitude,
+                  ret.reGeo.locationDescribe
+                );
+              } else if (that.$store.state.systemType == "ios") {
+                api.ajax(
+                  {
+                    url: "http://api.map.baidu.com/reverse_geocoding/v3/",
+                    method: "post",
+                    data: {
+                      values: {
+                        ak: "r0GPTlafEf4gbOZAENRPNTb0b8OfzXGK",
+                        output: "json",
+                        coordtype: "wgs84ll",
+                        extensions_poi: "1",
+                        location:
+                          ret.location.latitude + "," + ret.location.longitude
+                      }
+                    }
+                  },
+                  function(data) {
+                    if (data) {
+                      if (data.status == 0) {
+                        that.openUpdate(
+                          ret.location.longitude,
+                          ret.location.latitude,
+                          "在" + data.result.pois[0].name + "附近"
+                        );
+                      } else {
+                        postLocation(
+                          ret.location.longitude,
+                          ret.location.latitude
+                        );
+                      }
+                    } else {
+                      postLocation(
+                        ret.location.longitude + "," + ret.location.latitude
+                      );
+                    }
                   }
-                }
+                );
               }
             }
           }
         );
       }
     },
-    settLocation() {},
+    openUpdate(lng, lat, position) {
+      var that = this;
+      if (window.localStorage.getItem("token")) {
+        that.$SERVER.openUpdate({
+          userId: that.$store.state.userInfo.userid,
+          lng: lng,
+          lat: lat,
+          position: position,
+          loginstate: 1
+        });
+      }
+    },
     setVux() {
       this.$store.state.token = this.$METHOD.getStore("token");
       this.$store.state.userInfo = JSON.parse(
         this.$METHOD.getStore("userInfo")
-      );
-      this.$store.state.position = JSON.parse(
-        this.$METHOD.getStore("position")
       );
     }
   }
