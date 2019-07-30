@@ -127,7 +127,8 @@ export default {
         isfree: 0,
         price: "",
         position: "",
-        owner: 0
+        owner: 0,
+        onceonly: 0
       }
     };
   },
