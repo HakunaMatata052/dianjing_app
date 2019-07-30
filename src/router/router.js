@@ -216,7 +216,7 @@ const router = new Router({
         isTransition: true,
         title:"粉丝/关注",
         isMember: false,
-        isLogin:true
+        isLogin:false
       }
     },
   ]
