@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      activeType: 2,
+      activeType: 1,
       refreshLoading: false,
       finished: false,
       listLoading: false,
@@ -133,7 +133,7 @@ export default {
     .info {
       padding: 0 10px 10px;
       h3 {
-        font-size: 8px;
+        font-size: 13px;
         font-weight: 500;
         color: rgba(51, 51, 51, 1);
         padding: 13px 0;

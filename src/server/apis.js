@@ -365,6 +365,23 @@ class Api extends Axios {
   }
 
   
+    /**
+   * 发布视频
+   * @param {Object} params {orderId,status}
+   */
+  async postVideo(params = {}) {
+    try {
+      let result = await this.axios("post", "video/postVideo", params);
+      if (result) {
+        return result;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+
+  
 
 }
 

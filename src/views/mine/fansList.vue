@@ -37,7 +37,6 @@
                   <h3>{{item.nickName}}</h3>
                   <p>{{item.signName}}</p>
                 </div>
-
                 <div
                   class="operation"
                   v-if="item.fanStatue == 1 && $route.params.userid == $store.state.userInfo.userid"

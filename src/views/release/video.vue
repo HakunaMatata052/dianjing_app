@@ -29,7 +29,7 @@
           </div>
         </van-cell>
         <van-field
-          v-model="tags"
+          v-model="tagsList"
           type="textarea"
           placeholder="#添加话题#"
           rows="1"
@@ -38,23 +38,23 @@
           @input="tagsInput"
         />
 
-        <van-cell title-class="duan-cell" v-if="form.tags.length!=0">
+        <van-cell title-class="duan-cell" v-if="form.tagsList.length!=0">
           <template slot="title">
             <van-tag
               type="primary"
               size="large"
-              v-for="(item,index) in form.tags"
+              v-for="(item,index) in form.tagsList"
               :key="index"
               style="margin-right:5px"
             >{{item}}</van-tag>
           </template>
         </van-cell>
         <van-cell title="@好友" class="cell" @click="userListPopupShow = true" />
-        <van-cell title-class="duan-cell" v-if="form.friends.length!=0">
+        <van-cell title-class="duan-cell" v-if="form.friendsList.length!=0">
           <template slot="title">
             <span
               class="friends-list"
-              v-for="(item,index) in form.friends"
+              v-for="(item,index) in form.friendsList"
               :key="index"
               @click="delFriends(index)"
             >@{{item.nickName}}</span>
@@ -86,11 +86,9 @@
         :columns="columns"
       />
     </van-popup>
-
     <van-popup v-model="userListPopupShow" style="height:100%;" position="bottom">
       <userList @selectUser="selectUser" />
     </van-popup>
-
     <!-- 上传视频层 -->
     <uploadVideo ref="upload" @selectVideo="selectVideo" appearance="circular" mode="image" />
   </div>
@@ -119,13 +117,13 @@ export default {
       ],
       owner: "公开",
       video: {},
-      tags: "",
+      tagsList: "",
       form: {
         frontcover: "",
         video: "",
         comment: "",
-        tags: [],
-        friends: [],
+        tagsList: [],
+        friendsList: [],
         isfree: 0,
         price: "",
         position: "",
@@ -155,23 +153,31 @@ export default {
       while ((result = patt.exec(str)) != null) {
         arry.push(result[1]);
       }
-      that.form.tags = arry;
+      that.form.tagsList = arry;
     },
     selectUser(val) {
       this.userListPopupShow = false;
       if (JSON.stringify(val) != "{}") {
-        this.form.friends.push(val);
+        this.form.friendsList.push({userId:val.userId,nickName:val.nickName});
       }
-    },
+    },    
     delFriends(index) {
       if (index == 0) {
-        this.form.friends = [];
+        this.form.friendsList = [];
       } else {
-        this.form.friends.splice(index, index);
+        this.form.friendsList.splice(index, index);
       }
     },
     releaseFn() {
       var that = this;
+      if(that.form.video.path==0){
+        that.$toast.fail('请上传视频')
+        return
+      }
+      if(that.form.comment.length==0){
+        that.$toast.fail('请填写描述')
+        return
+      }
       that.$toast.loading({
         duration: 0,
         mask: true,
@@ -188,8 +194,6 @@ export default {
             if (upret.oper == "complete") {
               that.form.frontcover =
                 that.$store.state.qiniuaddr + upret.info.key;
-              console.log(upret);
-              console.log(that.$store.state.qiniuaddr + upret.info.key);
               qiniuUpfile.upfile(
                 {
                   file: that.video.path,
@@ -199,14 +203,15 @@ export default {
                   if (upret2.status) {
                     if (upret2.oper == "complete") {
                       that.form.video =
-                        that.$store.state.qiniuaddr + upret2.info.key;
-
-                      console.log(upret2);
-                      console.log(
-                        that.$store.state.qiniuaddr + upret2.info.key
-                      );
-                      that.$toast.clear();
-                      that.$toast.success("上传成功！");
+                      that.$store.state.qiniuaddr + upret2.info.key;
+                      that.$SERVER.postVideo({
+                        userid: that.$store.state.userInfo.userid,
+                        ...that.form
+                      }).then(res=>{
+                        that.$toast.clear();
+                        that.$toast.success("上传成功！");
+                        // that.$router.push('/')
+                      })
                     }
                   }
                 }

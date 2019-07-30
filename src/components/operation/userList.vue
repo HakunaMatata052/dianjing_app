@@ -1,5 +1,5 @@
 <template>
-  <div class="user-list">
+  <div class="user-list" :style="'padding-top:'+top+'px'">
     <van-nav-bar title="好友列表" left-arrow @click-left="selectUser({})" />
     <van-field v-model="nickName" right-icon="search" @input="onSearch" />
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -22,6 +22,7 @@
 export default {
   data() {
     return {
+      top:"",
       type: 0,
       nickName: "",
       list: [],
@@ -31,6 +32,16 @@ export default {
       pageNum: 1,
       hasNextPage: true
     };
+  },  
+  mounted() {
+    var systemType = this.$store.state.systemType;
+    if (systemType == "android") {
+      this.top = 25;
+    }
+    if (systemType == "ios") {
+      this.top = 40;
+      this.searchEmptyShow = true;
+    }
   },
   methods: {
     onLoad() {
