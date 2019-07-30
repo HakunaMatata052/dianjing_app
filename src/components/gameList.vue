@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <van-tabs
-      v-model="activeTabs"
+      v-model="activeTab"
       :color="$store.state.color"
       :title-active-color="$store.state.color"
       animated
@@ -83,7 +83,7 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 14px;
+      font-size: 11px;
     }
   }
 }

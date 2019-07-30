@@ -9,26 +9,26 @@
             :src="$store.state.userInfo.image || ($store.state.userInfo.sex == 0 ? 'img/avatar-w.png' :'img/avatar-m.png')"
             class="avatar"
           />
-
           <div class="userinfo-top-right">
             <h4>
               {{$store.state.userInfo.nickname}}
               <img
                 src="../../../assets/images/authentication.png"
+                v-if="$store.state.userInfo.level"
               />
             </h4>
-            <span>ID:19901220</span>
+            <span>ID:{{$store.state.userInfo.userid}}</span>
           </div>
         </div>
 
         <div class="receiptinfo">
-          <dl>
-            <dt>{{myInfo.fansCount}}</dt>
-            <dd>粉丝数</dd>
-          </dl>
-          <dl>
+          <dl @click="$router.push('/fansList/1/'+$store.state.userInfo.userid)">
             <dt>{{myInfo.attentionCount}}</dt>
             <dd>关注数</dd>
+          </dl>
+          <dl @click="$router.push('/fansList/2/'+$store.state.userInfo.userid)">
+            <dt>{{myInfo.fansCount}}</dt>
+            <dd>粉丝数</dd>
           </dl>
           <dl>
             <dt>{{myInfo.orderCount}}</dt>
@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       top: 0,
-      myInfo:{
+      myInfo: {
         fansCount: 0,
         attentionCount: 0,
         orderCount: 0
@@ -165,12 +165,14 @@ export default {
       ]
     };
   },
-  created(){
-    this.$SERVER.getMyInfo({
-      userId: this.$store.state.userInfo.userid
-    }).then(res=>{
-      this.myInfo = res.data
-    })
+  created() {
+    this.$SERVER
+      .getMyInfo({
+        userId: this.$store.state.userInfo.userid
+      })
+      .then(res => {
+        this.myInfo = res.data;
+      });
   },
   mounted() {
     var systemType = this.$store.state.systemType;
@@ -180,7 +182,8 @@ export default {
     if (systemType == "ios") {
       this.top = 40;
     }
-  }
+  },
+  activated() {}
 };
 </script>
 

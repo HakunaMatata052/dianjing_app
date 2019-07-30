@@ -1,5 +1,5 @@
 <template>
-  <div id="setting">
+  <div class="container" id="setting">
     <navBar />
     <div class="main">
       <van-cell-group class="cell-group">
@@ -60,6 +60,14 @@
           @click="editPopup('修改个性签名','signname')"
         />
       </van-cell-group>
+      <van-cell-group class="cell-group">
+        <van-cell
+          title="退出登录"
+          size="large"
+          is-link
+           @click="logout"
+        />
+      </van-cell-group>
     </div>
     <!-- 输入框 -->
     <van-popup
@@ -92,7 +100,8 @@
       <van-datetime-picker
         v-model="dateTime"
         type="date"
-        :min-date="new Date()"
+        :min-date="new Date(1900, 10, 1)"
+        :max-date="new Date()"
         v-if="activePopup.field=='birthday'"
         @cancel="pickerPopupShow = false"
         @confirm="pickerOnConfirm"
@@ -105,7 +114,7 @@
         show-toolbar
       />
     </van-popup>
-    <!-- 上传层 -->
+    <!-- 上传头像层 -->
     <uploadImage ref="upload" @uploadSuccess="uploadSuccess" appearance="circular" mode="image"/>
   </div>
 </template>
@@ -258,6 +267,13 @@ export default {
         that.popupShow = false;
         that.pickerPopupShow = false;
       });
+    },
+    logout(){
+      this.$METHOD.removeStore('token')
+      this.$METHOD.removeStore('userInfo')
+      this.$store.state.userInfo = {userid:''}
+      this.$toast.success('退出成功！')
+      this.$router.push('/login')
     }
   }
 };

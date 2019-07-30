@@ -1,5 +1,5 @@
 <template>
-  <div id="orderDet">
+  <div class="container" id="orderDet">
     <navBar />
     <div class="main">
       <orderItem :list="list" />

@@ -61,7 +61,7 @@ const router = new Router({
           name: "mine",
           component: () => import("@/views/index/subviews/mine.vue"),
           meta: {
-            keepAlive: true,
+            keepAlive: false,
             isTransition: true,
             title:"我的",
             isMember: false,
@@ -71,14 +71,15 @@ const router = new Router({
       ]
     },
     {
-      path: "/about",
-      component: () => import("@/views/about/about.vue"),
+      path: "/release/video",
+      name:"release-video",
+      component: () => import("@/views/release/video.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
-        title:"电竞",
+        title:"发布视频",
         isMember: false,
-        isLogin:false
+        isLogin:true
       }
     },
     // 陪玩
@@ -108,7 +109,7 @@ const router = new Router({
     },
     // 订单
     {
-      path: "/downorder/:id",
+      path: "/downorder/:userid/:id?",
       name:"downOrder",
       component: () => import("@/views/order/downOrder.vue"),
       meta: {
@@ -139,6 +140,19 @@ const router = new Router({
         keepAlive: false,
         isTransition: true,
         title:"订单详情",
+        isMember: false,
+        isLogin:true
+      }
+    },
+    //视频
+    {
+      path: "/videolist/",
+      name:"videoList",
+      component: () => import("@/views/video/videoList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"视频",
         isMember: false,
         isLogin:true
       }
@@ -193,12 +207,29 @@ const router = new Router({
         isLogin:true
       }
     },
+    {
+      path: "/fansList/:type/:userid?",
+      name:"fansList",
+      component: () => import("@/views/mine/fansList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title:"粉丝/关注",
+        isMember: false,
+        isLogin:true
+      }
+    },
   ]
 });
 router.beforeEach((to, from, next) => {
   if (to.meta.isLogin) {
+    
     if (!window.localStorage.getItem('token')) {
-      router.push('/login/'+from.name)
+      if(from.name=="login"){
+        router.push('/')
+      }else{
+        router.push('/login/'+from.name)
+      }      
     }else{
       next()
     }

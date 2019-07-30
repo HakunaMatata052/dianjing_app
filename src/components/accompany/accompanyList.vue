@@ -10,11 +10,16 @@
         <van-image fit="cover" width="100%" height="100%" :src="item.backimage" />
         <div class="tag">
           <img src="../../assets/images/hj_icon_party_type_amount.png" v-if="item.type==0" />
-          <img src="../../assets/images/hj_icon_party_type_fire.png" v-else-if="item.type==1"/>
+          <img src="../../assets/images/hj_icon_party_type_fire.png" v-else-if="item.type==1" />
           <img src="../../assets/images/hj_icon_party_type_hot.png" v-else-if="item.type==2" />
         </div>
         <div class="online">
-          <van-icon class-prefix="icon" name="dot" size="4em" :color="item.loginstate == 1 ? 'green' : '#999' " />
+          <van-icon
+            class-prefix="icon"
+            name="dot"
+            size="4em"
+            :color="item.loginstate == 1 ? 'green' : '#999' "
+          />
           <span v-if="item.loginstate == 1">在线</span>
           <span v-else>离线</span>
         </div>
@@ -57,21 +62,30 @@ export default {
     }
   },
   data() {
-    return {
-    };
-  },
+    return {};
+  }
 };
 </script>
+<style lang="less">
+.accompany {
+  .more {
+    .icon {
+      font-size: 10px;
+    }
+  }
+}
+</style>
+
 <style lang="less" scoped>
 .accompany-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   .accompany-item {
-    width: 165px;
+    width: 150px;
     .accompany-img {
       width: 100%;
-      height: 130px;
+      height: 120px;
       border-radius: 5px;
       overflow: hidden;
       position: relative;
@@ -80,8 +94,10 @@ export default {
         left: 0;
         top: 10px;
         height: 20px;
+        width: auto;
         img {
           height: 100%;
+          width: auto;
         }
       }
       .online {
@@ -113,16 +129,14 @@ export default {
         padding: 5px;
         align-items: flex-end;
         box-sizing: border-box;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.35);
         .info-left {
-          span {
-            font-size: 10px;
-          }
-          p {
-            font-size: 12px;
-          }
+          font-size: 10px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
         }
         .info-right {
-          font-size: 12px;
+          font-size: 11px;
           font-weight: bold;
         }
       }
@@ -132,7 +146,9 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(51, 51, 51, 1);
     }
   }
   &.accompanylistX {

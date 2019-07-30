@@ -19,7 +19,7 @@
 import router from "@/router/router.js";
 import Tabbar from "@/components/tabbar/tabbar.vue";
 export default {
-  name:"home",
+  name: "home",
   components: {
     Tabbar
   },
@@ -64,9 +64,9 @@ export default {
       ]
     };
   },
-  created(){
-        // 递归路由设置KeepAlive  ***** 注意路由name必须和组件内的name一致 *****
-    this.setRouteKeepAlive(router.options.routes);   
+  created() {
+    // 递归路由设置KeepAlive  ***** 注意路由name必须和组件内的name一致 *****
+    this.setRouteKeepAlive(router.options.routes);
   },
   methods: {
     setRouteKeepAlive(routes) {
@@ -79,12 +79,22 @@ export default {
           }
         }
       });
-    },
+    }
   }
 };
 </script>
 <style lang="less" scoped>
-
+.view-container {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  .view-main {
+    height: 100%;
+    overflow: scroll;
+    flex-grow: 1;
+  }
+}
 .slide-right-enter-active,
 .slide-right-leave-active,
 .slide-left-enter-active,

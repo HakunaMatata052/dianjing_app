@@ -31,7 +31,6 @@ body{
   fill: currentColor;
   font-size: 22px;
 }
-
 .color {
   color: rgba(254, 196, 58, 1);
 }
@@ -40,7 +39,25 @@ body{
   background: rgba(254, 196, 58, 1);
 }
 
+.title-tabs {
+  .van-hairline--top-bottom::after {
+    border: 0;
+  }
+}
 .van-nav-bar .van-icon {
   color: #999 !important;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  .main {
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}

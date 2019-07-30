@@ -1,8 +1,12 @@
 <template>
-  <div id="accompany">
+  <div class="container" id="accompany">
     <navBar :search="true" />
     <div class="main">
-      <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh" :disabled="disabledPullRefresh">
+      <van-pull-refresh
+        v-model="refreshLoading"
+        @refresh="getList(true)"
+        :disabled="disabledPullRefresh"
+      >
         <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
         <div class="box accompany">
           <van-dropdown-menu>
@@ -23,7 +27,12 @@
               <van-button block type="info" @click="onFilter">确认</van-button>
             </van-dropdown-item>
           </van-dropdown-menu>
-          <van-list v-model="listLoading" :finished="finished" finished-text="没有更多了" @load="getList">
+          <van-list
+            v-model="listLoading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="getList"
+          >
             <accompanyList :accompanyList="AccompanyList" />
           </van-list>
         </div>
@@ -74,31 +83,32 @@ export default {
     // this.getList();
   },
   methods: {
-    onRefresh() {
-      this.pageNum = 1;
-      this.getList(true);
-    },
     getList(isClear) {
-      if(!this.hasNextPage){
+       if (isClear) {        
+        this.pageNum = 1;
+        this.hasNextPage = true
+      }
+      if (!this.hasNextPage) {
         this.refreshLoading = false;
-        this.listLoading = false;        
+        this.listLoading = false;
         this.finished = true;
-        return
+        return;
       }
       this.$SERVER
         .getUserList({
-          userId: this.$store.state.userInfo.userid,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          userType: this.activeTabs
+          userType: this.activeTabs,
+        ...this.$store.state.position
         })
         .then(res => {
+            this.pageNum = res.data.nextPage
+            this.hasNextPage = res.data.hasNextPage
+            this.finished = !res.data.hasNextPage
           if (isClear) {
-            // this.AccompanyList = res.data.list;
+            this.AccompanyList = res.data.list;
             this.refreshLoading = false;
           } else {
-            this.pageNum = res.data.nextpage
-            this.hasNextPage = res.data.hasNextPage
             this.AccompanyList = [...this.AccompanyList, ...res.data.list];
             this.listLoading = false;
           }

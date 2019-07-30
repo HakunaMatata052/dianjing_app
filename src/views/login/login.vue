@@ -66,6 +66,12 @@ export default {
     if(this.$METHOD.getStore('token')){
       this.$router.push('/')
     }
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      api.setStatusBarStyle({
+        style: "light",
+        color: "rgba(255,255,255,0)"
+      });
+    }
   },
   methods: {
     loginFn() {
@@ -78,9 +84,7 @@ export default {
         that.$store.state.token = res.data.token
         that.$store.state.userInfo = res.data
         that.loginLoading = false;
-        that.$router.push({
-          name: that.$route.params.name == "register" ? "home" : that.$route.params.name || "index"
-        })
+        that.$router.go(-1);
       }).catch(res=>{
         that.loginLoading = false;
       });

@@ -1,11 +1,11 @@
 <template>
   <div class="operation">
     <div class="operation-item" v-if="forward">
-      <van-icon class-prefix="icon" name="zhuanfa" color="rgba(153,153,153,1)" />
+      <van-icon class-prefix="icon" name="zhuanfa" color="rgba(153,153,153,1)" class="icon" />
       <span>{{forward}}</span>
     </div>
     <div class="operation-item" v-if="comment">
-      <van-icon class-prefix="icon" name="pinglun" color="rgba(153,153,153,1)" />
+      <van-icon class-prefix="icon" name="pinglun" color="rgba(153,153,153,1)"  class="icon"/>
       <span>{{comment}}</span>
     </div>
     <div class="operation-item" v-if="zan" @click="zanFn">
@@ -72,6 +72,9 @@ export default {
     color: rgba(153, 153, 153, 1);
     display: flex;
     align-content: center;
+    .icon {
+      font-size: 16px;
+    }
     span {
       margin-left: 5px;
     }

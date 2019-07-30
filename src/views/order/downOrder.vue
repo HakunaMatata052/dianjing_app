@@ -1,25 +1,33 @@
 <template>
-  <div class="order">
+  <div class="container" id="order">
     <navBar />
     <div class="main">
       <div class="userinfo">
         <div class="avatar">
-          <van-image fit="cover" width="100%" height="100%" src="https://picsum.photos/60/60" />
+          <van-image fit="cover" width="100%" height="100%" :src="userInfo.image" />
         </div>
         <div class="userinfo-right">
           <h3>
-            仲喵_MG
-            <img src="../../assets/images/authentication.png" />
-            <span>ID:19901220</span>
+            {{userInfo.nickname}}
+            <div class="authentication" v-if="userInfo.level"></div>
+            <span>ID:{{userInfo.userid}}</span>
           </h3>
-          <p>首单返12元上车找主播加群</p>
+          <p>{{userInfo.signname}}</p>
         </div>
       </div>
       <van-cell-group class="cell-group">
-        <van-cell title="类型" size="large" is-link :value="form.type" @click="showPopupFn(0)" />
-        <van-cell title="时间" size="large" is-link :value="dateTime" @click="showPopupFn(1)" />
-        <van-cell title="局数" size="large" :value="form.games+'局'" @click="showKeyboard=true" />
-        <van-cell title="价格" size="large" :value="price+'元'" />
+        <van-cell title="类型" size="large" is-link :value="form.type" @click="showPopupFn(0)" title-class="duan-cell"/>
+        <van-cell
+          title="时间"
+          size="large"
+          is-link
+          :value="$METHOD.format(form.publishDate,'MM月dd日 hh:mm')"
+          @click="showPopupFn(1)"
+        />
+        <van-cell title="局数" size="large">
+          <van-stepper v-model="form.playCount" integer min="1" max="30" />
+        </van-cell>
+        <van-cell title="价格" size="large" :value="price+'金币'" />
         <van-coupon-cell
           currency
           :coupons="coupons"
@@ -27,16 +35,24 @@
           @click="showCoupons = true"
           size="large"
         />
+        <van-field
+          v-model="form.remark"
+          label="备注"
+          type="textarea"
+          placeholder="请输入备注"
+          rows="1"
+          autosize
+        />
       </van-cell-group>
       <van-cell-group>
-        <van-cell size="large" :value="form.type" to="/">
+        <van-cell size="large" :value="form.type" to="/" class="balance" value-class="duan-cell">
           <template slot="default">
             <div class="btn">立即充值</div>
           </template>
           <template slot="title">
             <span>
               钱包支付
-              <small>（余额 0金币）</small>
+              <small>（余额 {{balance}}金币）</small>
             </span>
           </template>
         </van-cell>
@@ -45,18 +61,19 @@
         交易提示：
         <br />此交易仅为娱乐陪玩，不承诺包赢
       </p>
-      <van-submit-bar button-text="确认支付" @submit="onSubmit">
-        <template slot="default">
-          <span class="price">{{price}}金币</span>
-        </template>
-      </van-submit-bar>
     </div>
+
+    <van-submit-bar button-text="确认支付" @submit="onSubmit" :loading="loading">
+      <template slot="default">
+        <span class="price">{{price}}金币</span>
+      </template>
+    </van-submit-bar>
     <!-- 选择器弹窗 -->
     <van-popup v-model="showPopup" position="bottom">
       <van-picker
         show-toolbar
         :columns="columns"
-        @cancel="showPicker = false"
+        @cancel="showPopup = false"
         @confirm="typeOnConfirm"
         v-if="activePopupId==0"
       />
@@ -78,14 +95,6 @@
         @exchange="onExchangeCoupons"
       />
     </van-popup>
-    <!-- 数字键盘弹窗 -->
-    <van-number-keyboard
-      v-model="form.games"
-      maxlength="3"
-      :show="showKeyboard"
-      close-button-text="完成"
-      @blur="showKeyboard = false"
-    />
   </div>
 </template>
 <script>
@@ -109,41 +118,92 @@ export default {
   computed: {
     dateTime: {
       get() {
-        return new Date(Number(this.form.time));
+        return new Date(this.form.publishDate);
       },
       set(val) {
-        this.form.time = val;
+        this.form.publishDate = val;
       }
+    }
+  },
+  watch: {
+    form: {
+      handler(newValue, oldValue) {
+        this.loading = true;
+        this.$SERVER.getTotalMoney(newValue).then(res => {
+          this.loading = false;
+          this.price = res.data;
+        });
+      },
+      deep: true
     }
   },
   data() {
     return {
       activePopupId: 0,
       showPopup: false,
-      showKeyboard: false,
       showCoupons: false,
       datetime: new Date(),
-      price: 6,
+      price: 0,
+      balance: 0,
+      userInfo: {},
       form: {
-        type: "",
-        typeid: "",
-        time: "1563416695080",
-        games: ""
+        type: "请选择",
+        abilityId: "",
+        publishDate: new Date().getTime(),
+        playCount: 0,
+        remark: ""
       },
       columns: [
         {
-          text: "王者荣耀",
-          id: 1
-        },
-        {
-          text: "吃鸡",
-          id: 2
+          text: "请选择",
+          id: 0,
+          disabled: true
         }
       ],
       chosenCoupon: -1,
       coupons: [coupon],
-      disabledCoupons: [coupon]
+      disabledCoupons: [coupon],
+      loading: false
     };
+  },
+  created() {
+    // 获取用户信息
+    this.$SERVER
+      .getUserInforById({
+        userid: this.$route.params.userid
+      })
+      .then(res => {
+        this.userInfo = res.data;
+      });
+    // 获取服务列表
+    this.$SERVER
+      .userAbilityList({
+        userid: this.$route.params.userid,
+        pageNum: 1,
+        pageSize: 9999
+      })
+      .then(res => {
+        let columns = [];
+        res.data.list.forEach(val => {
+          if (this.$route.params.id == val.abilityId) {
+            this.form.abilityId = this.$route.params.id;
+            this.form.type = val.name + "-" + val.server + "-" + val.area;
+          }
+          columns.push({
+            text: val.name + "-" + val.server + "-" + val.area,
+            id: val.abilityId
+          });
+        });
+        this.columns = [...this.columns, ...columns];
+      });
+    // 查询余额
+    this.$SERVER
+      .getBalanceByUserId({
+        userid: this.$store.state.userInfo.userid
+      })
+      .then(res => {
+        this.balance = res.data.balance;
+      });
   },
   methods: {
     showPopupFn(id) {
@@ -151,13 +211,13 @@ export default {
       this.showPopup = true;
     },
     typeOnConfirm(val) {
+      this.form.abilityId = val.id;
       this.form.type = val.text;
-      this.form.typeid = val.id;
       this.showPopup = false;
     },
     timeOnConfirm(val) {
       var time = val.getTime();
-      this.form.time = time;
+      this.form.publishDate = time;
       this.showPopup = false;
     },
     time(val) {
@@ -170,7 +230,33 @@ export default {
     onExchangeCoupons(code) {
       this.coupons.push(coupon);
     },
-    onSubmit() {}
+    onSubmit() {
+      if (!this.form.abilityId || this.form.abilityId.length == 0) {
+        this.$toast.fail("请选择游戏品类");
+        return;
+      }
+      if (!this.form.publishDate || this.form.publishDate.length == 0) {
+        this.$toast.fail("请选择开始时间");
+        return;
+      }
+      if (!this.form.playCount || this.form.playCount.length == 0) {
+        this.$toast.fail("请选择游戏局数");
+        return;
+      }
+      if (this.price > this.balance) {
+        this.$toast.fail("余额不足，请先充值！");
+        return;
+      }
+      this.$SERVER
+        .bookOrder({
+          userid: this.$store.state.userInfo.userid,
+          ...this.form
+        })
+        .then(res => {
+          this.$toast.success(res.data);
+          this.$router.push("/orderlist");
+        });
+    }
   }
 };
 </script>
@@ -238,5 +324,11 @@ small {
   line-height: 35px;
   flex-grow: 1;
   padding: 0 15px;
+}
+.balance {
+  justify-content: space-between;
+}
+.duan-cell {
+  flex: inherit;
 }
 </style>

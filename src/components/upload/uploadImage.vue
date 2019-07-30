@@ -48,12 +48,19 @@ export default {
     },
     height: {
       type: String,
-      default() {        
+      default() {
         if (window.navigator.userAgent.match(/APICloud/i)) {
           return String(api.winHeight);
         } else {
           return "100%";
         }
+      },
+      required: false
+    },
+    top: {
+      type: String,
+      default() {
+        return "0";
       },
       required: false
     }
@@ -72,7 +79,7 @@ export default {
         return {
           w: this.width,
           h: this.height,
-          y: 0,
+          y: this.top,
           borderColor: "#ff9694",
           borderWidth: 0
         };
@@ -180,44 +187,9 @@ export default {
                         "uploadSuccess",
                         that.$store.state.qiniuaddr + upret.info.key
                       );
-                      // var photographs = CONFIG.QINIUADDR + upret.info.key;
-                      // api.ajax(
-                      //   {
-                      //     url: CONFIG.ADDRURL + CONFIG.UPLOADPHOTOAVATAR,
-                      //     method: "post",
-                      //     data: {
-                      //       values: {
-                      //         userid: userid,
-                      //         photograph: photographs,
-                      //         type: "head"
-                      //       }
-                      //     }
-                      //   },
-                      //   function(data) {
-                      //     if (data.code == "200") {
-                      //       $api.setStorage("avatar", photographs);
-                      //       api.hideProgress();
-                      //       FNImageClip.close();
-                      //       api.closeWin({
-                      //         name: "uploadavatar"
-                      //       });
-                      //       api.sendEvent({
-                      //         name: "infosetting"
-                      //       });
-                      //     } else {
-                      //       api.hideProgress();
-                      //       api.toast({
-                      //         msg: data.msg,
-                      //         duration: 1000,
-                      //         location: "bottom"
-                      //       });
-                      //     }
-                      //   }
-                      // );
                     }
                   }
-                }
-              );
+                });
             }
           }
         );

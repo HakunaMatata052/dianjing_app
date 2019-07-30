@@ -3,7 +3,7 @@
     <div class="order-item" v-for="(item , index) in list" :key="index">
       <van-cell-group class="cell-group">
         <van-cell size="large" :center="true">
-          <div slot="title" class="order-id">订单编号：201808221154007</div>
+          <div slot="title" class="order-id">订单编号：{{item.orderId}}</div>
           <div slot="default" class="order-state" v-if="!type">订单状态：我已接单</div>
         </van-cell>
         <van-cell
@@ -65,12 +65,13 @@
           <div slot="default" class="content">{{item.totalMoney}}币</div>
         </van-cell>
       </van-cell-group>
-      <div class="btn-group" v-if="type">
-        <div class="btn emphasize" v-if="type===1 && state === 4">重新下单</div>
-        <div class="btn emphasize" v-if="type===1 && state === 3">申请售后</div>
-        <div class="btn emphasize" v-if="type===1 && state === 1">提醒接单</div>
-        <div class="btn emphasize" v-if="type===2 && state === 1">接受订单</div>
-        <div class="btn" @click="$router.push('/orderdetail/'+item.orderId)">查看订单详情</div>
+      <div class="btn-group">
+        <div class="btn emphasize" v-if="item.customerUserId!==$store.state.userInfo.userid && item.status === 2" @click="updateOrderStatus(item.orderId,3)">确认交易完成</div>
+        <div class="btn emphasize" v-if="item.customerUserId!==$store.state.userInfo.userid && item.status === 3">申请售后</div>
+        <div class="btn emphasize" v-if="item.customerUserId!==$store.state.userInfo.userid && item.status === 1">提醒接单</div>
+        <div class="btn emphasize" v-if="item.customerUserId===$store.state.userInfo.userid && item.status === 1" @click="updateOrderStatus(item.orderId,2)">接受订单</div>
+        <div class="btn emphasize" v-if="item.customerUserId===$store.state.userInfo.userid && item.status === 1" @click="updateOrderStatus(item.orderId,4)">拒接此单</div>
+        <div class="btn" @click="$router.push('/orderdetail/'+item.orderId)" v-if="type">订单详情</div>
       </div>
 
       <van-cell-group class="cell-group" v-if="!type">
@@ -94,7 +95,7 @@
         >
           <div slot="title" class="label">过期时间</div>
           <div slot="default" class="content">
-            {{$METHOD.format(item.expireTime,'MM月dd日 hh:mm')}}
+            {{$METHOD.format(item.publishDate,'MM月dd日 hh:mm')}}
             <span>过期即订单自动取消</span>
           </div>
         </van-cell>
@@ -141,10 +142,15 @@ export default {
       required: false
     }
   },
-  data() {
-    return {
-      stateList: [""]
-    };
+  methods:{
+  updateOrderStatus(id,status){
+    this.$SERVER.updateOrderStatus({
+      orderId:id,
+      status: status
+    }).then(res=>{
+      this.$toast.success(res.data)
+    })
+  }
   }
 };
 </script>
@@ -222,6 +228,7 @@ export default {
       text-align: center;
       border: 1px solid rgba(255, 217, 72, 1);
       color: rgba(153, 153, 153, 1);
+      margin: 0 10px;
       &.emphasize {
         background: rgba(255, 217, 72, 1);
         color: rgba(51, 51, 51, 1);

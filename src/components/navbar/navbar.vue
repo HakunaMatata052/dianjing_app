@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="position: relative">
     <div class="navbar" id="navbar" :class=" stl ? stl : ''">
       <div class="top" :style="'padding-top:'+ top +'px'"></div>
       <van-nav-bar
@@ -109,7 +109,7 @@ export default {
 
 <style lang="less" scoped>
 .navbar {
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
   z-index: 999;

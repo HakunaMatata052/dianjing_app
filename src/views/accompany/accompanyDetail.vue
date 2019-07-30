@@ -1,6 +1,6 @@
 <template>
-  <div id="accompanyDetail">
-    <navBar :stl="'nobg'">
+  <div class="container" id="accompanyDetail">
+    <navBar stl="nobg">
       <van-icon
         class-prefix="icon"
         name="camera"
@@ -12,9 +12,10 @@
       />
     </navBar>
     <div class="main">
-      <div class="userbg">
-        <img :src="backimage || 'https://picsum.photos/500/500'" />
-      </div>
+      <div
+        class="userbg"
+        :style="'background: url('+ (userInfo.backimage || 'https://picsum.photos/500/500') + ') no-repeat center center'"
+      ></div>
       <van-pull-refresh
         v-model="isLoading"
         @refresh="isLoading = false"
@@ -38,20 +39,26 @@
           </div>
           <div class="sign">{{userInfo.signname}}</div>
           <div class="btn-group">
-            <div class="btn nofollow">关注</div>
-            <div class="btn">私聊</div>
+            <follow
+              :toUserid="$route.params.userid"
+              class="btn nofollow"
+              v-if="$route.params.userid!=$store.state.userInfo.userid"
+            ></follow>
+            <div class="btn" v-if="$route.params.userid!=$store.state.userInfo.userid">私聊</div>
             <div class="voice" v-if="!userInfo.voice &&  userInfo.voice != ''">
               <van-icon class-prefix="icon" name="play" />
             </div>
           </div>
           <div class="receiptinfo">
             <dl>
-              <dt>{{myInfo.fansCount}}</dt>
-              <dd>粉丝数</dd>
+              <dt
+                @click="$router.push('/fansList/1/'+$route.params.userid)"
+              >{{myInfo.attentionCount}}</dt>
+              <dd>关注数</dd>
             </dl>
             <dl>
-              <dt>{{myInfo.attentionCount}}</dt>
-              <dd>关注数</dd>
+              <dt @click="$router.push('/fansList/2/'+$route.params.userid)">{{myInfo.fansCount}}</dt>
+              <dd>粉丝数</dd>
             </dl>
             <dl>
               <dt>{{myInfo.orderCount}}</dt>
@@ -69,38 +76,39 @@
           <van-tab title="服务" name="0">
             <div class="tabs-con">
               <div class="game-list">
-                <van-skeleton
-                  title
-                  avatar
-                  :row="1"
-                  :loading="loading"
-                  avatar-size="50"
-                  avatar-shape="square"
+                <van-list
+                  v-model="abilityListLoading"
+                  :finished="abilityFinished"
+                  finished-text="没有更多了"
+                  loading-text=" "
+                  @load="getUserAbilityList"
                 >
-                  <div class="game-item">
-                    <img src="https://picsum.photos/50/50" />
-                    <div class="game-info">
-                      <h3>绝地求生</h3>
-                      <p>技术水平 2100分 | Steam服 | 手Q区 | 包上分段位</p>
+                  <van-skeleton
+                    title
+                    avatar
+                    :row="1"
+                    :loading="abilitySkeletonLoading"
+                    avatar-size="50"
+                    avatar-shape="square"
+                  >
+                    <div
+                      class="game-item"
+                      v-for="(item,index) in abilityList"
+                      :key="index"
+                      @click="downOrder(item.abilityId)"
+                    >
+                      <img :src="item.icon" />
+                      <div class="game-info">
+                        <h3>{{item.name}}</h3>
+                        <p>技术水平 2100分 | Steam服 | 手Q区 | 包上分段位</p>
+                      </div>
+                      <div class="price">
+                        游戏陪练
+                        <span>¥{{item.price}}元起</span>
+                      </div>
                     </div>
-                    <div class="price">
-                      游戏陪练
-                      <span>¥30元起</span>
-                    </div>
-                  </div>
-
-                  <div class="game-item">
-                    <img src="https://picsum.photos/50/50" />
-                    <div class="game-info">
-                      <h3>绝地求生</h3>
-                      <p>技术水平 2100分 | Steam服 | 手Q区 | 包上分段位</p>
-                    </div>
-                    <div class="price">
-                      游戏陪练
-                      <span>¥30元起</span>
-                    </div>
-                  </div>
-                </van-skeleton>
+                  </van-skeleton>
+                </van-list>
               </div>
             </div>
           </van-tab>
@@ -259,14 +267,14 @@
           </van-tab>
         </van-tabs>
       </van-pull-refresh>
-      <div
-        class="order-btn"
-        v-if="activeTabs==0"
-        @click="$router.push(`/downorder/${this.$route.params.id}`)"
-        :style="'padding-bottom:'+ bottom +'px'"
-      >立即下单</div>
     </div>
-    <uploadImage ref="upload" @uploadSuccess="uploadSuccess" mode="all" height="300" />
+    <div
+      class="order-btn"
+      v-if="activeTabs==0 && $route.params.userid!=$store.state.userInfo.userid && abilityList.length != 0"
+      @click="downOrder"
+      :style="'padding-bottom:'+ bottom +'px'"
+    >立即下单</div>
+    <uploadImage ref="upload" @uploadSuccess="uploadSuccess" mode="all" height="300" top="150" />
   </div>
 </template>
 <script>
@@ -276,6 +284,7 @@ Vue.use(ImagePreview);
 import navBar from "@/components/navbar/navbar.vue";
 import gander from "@/components/user/gander.vue";
 import operation from "@/components/operation/operation.vue";
+import follow from "@/components/operation/follow.vue";
 import uploadImage from "@/components/upload/uploadImage.vue";
 export default {
   name: "accompanyDetail",
@@ -283,12 +292,12 @@ export default {
     navBar,
     gander,
     operation,
+    follow,
     uploadImage
   },
   data() {
     return {
       isLoading: false,
-      loading: true,
       activeTabs: "0",
       score: 2,
       bottom: 0,
@@ -297,7 +306,14 @@ export default {
         fansCount: 0,
         attentionCount: 0,
         orderCount: 0
-      }
+      },
+      abilityPageNum: 1,
+      abilityPageSize: 10,
+      abilityLHasNextPage: true,
+      abilityListLoading: false,
+      abilityFinished: false,
+      abilitySkeletonLoading: true,
+      abilityList: []
     };
   },
   created() {
@@ -305,11 +321,6 @@ export default {
       this.bottom = api.safeArea.bottom;
     }
     this.getUserInfo();
-  },
-  mounted() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 3000);
   },
   methods: {
     imagePreview(index) {
@@ -327,13 +338,15 @@ export default {
     // 组件上传成功的回调函数
     uploadSuccess(val) {
       var that = this;
-      that.$SERVER.updateUseInfo({
-        userid: that.$store.state.userInfo.userid,
-        backimage: val
-      }).then(res => {
-        that.$toast.success(res.data);
-        that.userInfo.backimage = val;
-      });
+      that.$SERVER
+        .updateUseInfo({
+          userid: that.$store.state.userInfo.userid,
+          backimage: val
+        })
+        .then(res => {
+          that.$toast.success(res.data);
+          that.userInfo.backimage = val;
+        });
     },
     getUserInfo() {
       var that = this;
@@ -351,6 +364,48 @@ export default {
         .then(res => {
           that.myInfo = res.data;
         });
+    },
+    getUserAbilityList(isClear) {
+      var that = this;
+      if (isClear) {
+        that.abilityPageNum = 1;
+        that.abilityLHasNextPage = true;
+      }
+      if (!that.abilityLHasNextPage) {
+        that.abilityListLoading = false;
+        that.abilityFinished = true;
+        that.abilitySkeletonLoading = false;
+        return;
+      }
+      that.$SERVER
+        .userAbilityList({
+          userid: that.$route.params.userid,
+          pageNum: that.abilityPageNum,
+          pageSize: that.abilityPageSize
+        })
+        .then(res => {
+          that.abilityPageNum = res.data.nextPage;
+          that.abilityLHasNextPage = res.data.hasNextPage;
+          that.abilityFinished = !res.data.hasNextPage;
+          if (isClear) {
+            that.abilityList = res.data.list;
+          } else {
+            that.abilityList = [...that.abilityList, ...res.data.list];
+            that.abilityListLoading = false;
+            that.abilitySkeletonLoading = false;
+          }
+        });
+    },
+    downOrder(id) {
+      if (this.$route.params.userid == this.$store.state.userInfo.userid) {
+        this.$toast.fail("自己不能向自己下单！");
+        return;
+      }
+      if (id) {
+        this.$router.push(`/downorder/${this.$route.params.userid}/${id}`);
+      } else {
+        this.$router.push(`/downorder/${this.$route.params.userid}`);
+      }
     }
   }
 };
@@ -364,8 +419,7 @@ export default {
 </style>
 <style lang="less" scoped>
 .userbg {
-  position: relative;
-  z-index: -1;
+  position: absolute;
   width: 100%;
   height: 300px;
   background-size: cover;
@@ -381,6 +435,7 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 0 15px;
+  margin-top: 200px;
   .avatar {
     position: relative;
     z-index: 99;
@@ -479,7 +534,6 @@ export default {
     background: #fff;
     padding: 15px;
     .game-list {
-      padding-bottom: 55px;
       .game-item {
         border: 1px solid rgba(243, 243, 243, 1);
         border-radius: 5px;
@@ -659,8 +713,5 @@ export default {
   font-weight: bold;
   color: rgba(51, 51, 51, 1);
   text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
 }
 </style>

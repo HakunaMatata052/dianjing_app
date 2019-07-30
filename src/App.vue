@@ -54,7 +54,7 @@ export default {
           }
         }
       );
-      that.$store.state.systemType = api.systemType
+      that.$store.state.systemType = api.systemType;
     }
     this.getBanners();
     this.getGames();
@@ -169,9 +169,10 @@ export default {
         );
       }
     },
+    // 更新用户定位/在线状态
     openUpdate(lng, lat, position) {
       var that = this;
-      if (window.localStorage.getItem("token")) {
+      if (that.$METHOD.getStore("token")) {
         that.$SERVER.openUpdate({
           userId: that.$store.state.userInfo.userid,
           lng: lng,
@@ -183,9 +184,11 @@ export default {
     },
     setVux() {
       this.$store.state.token = this.$METHOD.getStore("token");
-      this.$store.state.userInfo = JSON.parse(
-        this.$METHOD.getStore("userInfo")
-      );
+      if (this.$METHOD.getStore("userInfo")) {
+        this.$store.state.userInfo = JSON.parse(
+          this.$METHOD.getStore("userInfo")
+        );
+      }
     }
   }
 };

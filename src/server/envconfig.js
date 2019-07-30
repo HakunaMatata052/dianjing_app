@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === "production") {
 }
 if (process.env.NODE_ENV === "development") {
   // 干一些测试时不可告人的事情
-  baseURL = "http://192.168.0.102:9000/game/";
+  baseURL = "http://192.168.0.110:11000/game/";
+  // baseURL = "http://192.168.0.119:9000/game/";
 }
 export default { baseURL };

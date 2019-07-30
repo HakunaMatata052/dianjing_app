@@ -20,7 +20,7 @@
       <van-dialog v-model="show" :show-confirm-button="false" get-container="body">
         <div class="release-dialog">
           <div class="release-group">
-            <div class="release-item">
+            <div class="release-item" @click="releaseFn('video')">
               <svg-icon icon-class="release-video"></svg-icon>
               <span>视频</span>
             </div>
@@ -87,7 +87,8 @@ export default {
     switchTab(item, idx) {
       if (idx == 2) {
         this.show = true;
-        document.getElementById("app").style.filter = "blur(5px)";
+        
+      document.querySelector('.view-container').style.filter = "blur(5px)";
         return false;
       } else {
         if (this.$store.state.tabActiveIndex > idx) {
@@ -102,8 +103,11 @@ export default {
       }
     },
     closeReleaseDialog() {
-      document.getElementById("app").style.filter = "blur(0px)";
+      document.querySelector('.view-container').style.filter = "blur(0px)";
       this.show = false;
+    },
+    releaseFn(val){
+      this.$router.push('/release/'+val)      
     }
   }
 };
@@ -111,13 +115,13 @@ export default {
 
 <style lang="less" scoped>
 .footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
   background-color: #ffffff;
 }
-.footer-empty {
-  height: 65px;
+.footer-empty {  
+  height: 60px;
 }
 .iphonX-box {
   height: 0;
@@ -163,6 +167,7 @@ export default {
     &:nth-child(3) {
       position: relative;
       top: -20px;
+      z-index: 9;
     }
     &:nth-child(3):before {
       display: block;

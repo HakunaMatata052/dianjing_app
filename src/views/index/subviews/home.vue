@@ -1,71 +1,72 @@
 <template>
-  <div id="home">
+  <div class="container" id="home">
     <navBar :goback="false" :search="true" />
-    <van-pull-refresh v-model="isLoading" @refresh="onrefresh">
-      <van-swipe :autoplay="3000" class="banner">
-        <van-swipe-item v-for="(image, index) in bannerList" :key="index">
-          <img :src="image.url" />
-        </van-swipe-item>
-      </van-swipe>
-      <div class="box" style="padding:0;">
-        <van-row class="notice" type="flex" justify="center" style="align-items:center">
-          <van-col span="5" style="border-right:1px dashed #ebedf0">
-            <img class="notice-img" src="../../../assets/images/notice.png" />
-          </van-col>
-          <van-col span="19" @click="goExpress(expressList.id)">
-            <h3 class="notice-title">{{expressList.title}}</h3>
-            <p class="notice-des">{{expressList.content}}</p>
-          </van-col>
-          <!-- <van-col span="6">
+    <div class="main">
+      <van-pull-refresh v-model="isLoading" @refresh="onrefresh">
+        <van-swipe :autoplay="3000" class="banner">
+          <van-swipe-item v-for="(image, index) in bannerList" :key="index">
+            <img :src="image.url" />
+          </van-swipe-item>
+        </van-swipe>
+        <div class="box" style="padding:0;">
+          <van-row class="notice" type="flex" justify="center" style="align-items:center">
+            <van-col span="5" style="border-right:1px dashed #ebedf0">
+              <img class="notice-img" src="../../../assets/images/notice.png" />
+            </van-col>
+            <van-col span="19" @click="goExpress(expressList.id)">
+              <h3 class="notice-title">{{expressList.title}}</h3>
+              <p class="notice-des">{{expressList.content}}</p>
+            </van-col>
+            <!-- <van-col span="6">
             <van-button
               size="large"
               round
               :hairline="false"
               :style="'background: '+$store.state.color +';height:40px;line-height:40px;'"
             >预定</van-button>
-          </van-col>-->
-        </van-row>
+            </van-col>-->
+          </van-row>
 
-        <van-grid :border="true" :column-num="3" :square="true" class="grid">
-          <van-grid-item>
-            <img src="../../../assets/images/img1.png" />
-          </van-grid-item>
-          <van-grid-item>
-            <img src="../../../assets/images/img2.png" />
-          </van-grid-item>
-          <van-grid-item>
-            <img src="../../../assets/images/img3.png" />
-          </van-grid-item>
-        </van-grid>
-      </div>
+          <van-grid :border="true" :column-num="3" :square="true" class="grid">
+            <van-grid-item>
+              <img src="../../../assets/images/img1.png" />
+            </van-grid-item>
+            <van-grid-item>
+              <img src="../../../assets/images/img2.png" />
+            </van-grid-item>
+            <van-grid-item>
+              <img src="../../../assets/images/img3.png" />
+            </van-grid-item>
+          </van-grid>
+        </div>
 
-      <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
+        <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
 
-      <div class="box accompany">
-        <div class="accompany-title">
-          <h2 v-if="activeTabs==0">美女陪练</h2>
-          <h2 v-if="activeTabs==1">大神陪练</h2>
-          <div class="more" @click="goAccompany">
-            查看更多
-            <van-icon class-prefix="icon" name="more" />
+        <div class="box accompany">
+          <div class="accompany-title">
+            <h2 v-if="activeTabs==0">美女陪练</h2>
+            <h2 v-if="activeTabs==1">大神陪练</h2>
+            <div class="more" @click="goAccompany">
+              查看更多
+              <van-icon class-prefix="icon" name="more" />
+            </div>
+          </div>
+          <div class="wrapper" ref="wrapper1">
+            <accompany-list :accompanyList="AccompanyList1" :scrollX="true" />
+          </div>
+
+          <div class="wrapper" ref="wrapper2">
+            <accompany-list :accompanyList="AccompanyList2" :scrollX="true" />
+          </div>
+
+          <div class="wrapper" ref="wrapper3">
+            <accompany-list :accompanyList="AccompanyList3" :scrollX="true" />
           </div>
         </div>
-        <div class="wrapper" ref="wrapper1">
-          <accompany-list :accompanyList="AccompanyList1" :scrollX="true" />
+        <div class="ad">
+          <van-image fit="cover" src="http://lorempixel.com/300/300/" class="ad-img"></van-image>
         </div>
-
-        <div class="wrapper" ref="wrapper2">
-          <accompany-list :accompanyList="AccompanyList2" :scrollX="true" />
-        </div>
-
-        <div class="wrapper" ref="wrapper3">
-          <accompany-list :accompanyList="AccompanyList3" :scrollX="true" />
-        </div>
-      </div>
-      <div class="ad">
-        <van-image fit="cover" src="http://lorempixel.com/100/30/" class="ad-img"></van-image>
-      </div>
-      <!-- <div class="video">
+        <!-- <div class="video">
         <van-swipe
           :loop="false"
           :width="300"
@@ -76,41 +77,42 @@
             <van-image fit="cover" width="300" src="https://picsum.photos/300/300" />
           </van-swipe-item>
         </van-swipe>
-      </div>-->
-      <div class="box match">
-        <div class="match-title">
-          <h2>
-            赛事
-            <span>结果竞猜</span>
-          </h2>
+        </div>-->
+        <div class="box match">
+          <div class="match-title">
+            <h2>
+              赛事
+              <span>结果竞猜</span>
+            </h2>
 
-          <div class="more">
-            查看更多
-            <van-icon class-prefix="icon" name="more" />
+            <div class="more">
+              查看更多
+              <van-icon class-prefix="icon" name="more" class="more-ico" />
+            </div>
+          </div>
+          <div class="match-list">
+            <div class="match-item" v-for="item in AccompanyList1" :key="item.id">
+              <div class="match-img">
+                <van-image fit="cover" :src="item.download_url" />
+              </div>
+              <div class="tag-list">
+                <div class="match-tag">
+                  <img src="../../../assets/images/hj_icon_live_hot_1.png" />
+                </div>
+                <div class="match-tag">
+                  <img src="../../../assets/images/hj_icon_live_hot_1.png" />
+                </div>
+              </div>
+              <div class="watch">
+                <van-icon name="eye" color="#fff" />51.3w
+              </div>
+              <div class="title">一直玩一直爽</div>
+              <div class="see">立即观看</div>
+            </div>
           </div>
         </div>
-        <div class="match-list">
-          <div class="match-item" v-for="item in AccompanyList1" :key="item.id">
-            <div class="match-img">
-              <van-image fit="cover" :src="item.download_url" />
-            </div>
-            <div class="tag-list">
-              <div class="match-tag">
-                <img src="../../../assets/images/hj_icon_live_hot_1.png" />
-              </div>
-              <div class="match-tag">
-                <img src="../../../assets/images/hj_icon_live_hot_1.png" />
-              </div>
-            </div>
-            <div class="watch">
-              <van-icon name="eye" color="#fff" />51.3w
-            </div>
-            <div class="title">一直玩一直爽</div>
-            <div class="see">立即观看</div>
-          </div>
-        </div>
-      </div>
-    </van-pull-refresh>
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 <script>
@@ -145,7 +147,7 @@ export default {
         this.refreshNum = 0;
       }
     },
-    activeTabs(){
+    activeTabs() {
       this.getAccompanyList();
     }
   },
@@ -154,7 +156,9 @@ export default {
     this.getExpress();
     this.getBanners();
   },
-  mounted() {},
+  deactivated() {    
+      document.querySelector('.view-container').style.filter = "blur(0px)";
+  },
   methods: {
     onrefresh() {
       this.getAccompanyList(() => {
@@ -166,39 +170,42 @@ export default {
       this.getBanners();
     },
     getAccompanyList(fn) {
-      this.$SERVER.getUserList({
-        pageNum: 1,
-        pageSize: 15,
-        ...this.$store.state.position
-      }).then(res => {
-        this.isLoading = false;
-        this.AccompanyList1 = res.data.list.slice(0, 5);
-        this.AccompanyList2 = res.data.list.slice(5, 10);
-        this.AccompanyList3 = res.data.list.slice(10, 15);
-        this.$nextTick(() => {
-          this.scroll = new BScroll(this.$refs.wrapper1, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
+      this.$SERVER
+        .getUserList({
+          pageNum: 1,
+          pageSize: 15,
+          userType: this.activeTabs,
+          ...this.$store.state.position
+        })
+        .then(res => {
+          this.isLoading = false;
+          this.AccompanyList1 = res.data.list.slice(0, 5);
+          this.AccompanyList2 = res.data.list.slice(5, 10);
+          this.AccompanyList3 = res.data.list.slice(10, 15);
+          this.$nextTick(() => {
+            this.scroll = new BScroll(this.$refs.wrapper1, {
+              scrollX: true,
+              scrollY: false,
+              eventPassthrough: "vertical",
+              freeScroll: true
+            });
+            this.scroll = new BScroll(this.$refs.wrapper2, {
+              scrollX: true,
+              scrollY: false,
+              eventPassthrough: "vertical",
+              freeScroll: true
+            });
+            this.scroll = new BScroll(this.$refs.wrapper3, {
+              scrollX: true,
+              scrollY: false,
+              eventPassthrough: "vertical",
+              freeScroll: true
+            });
           });
-          this.scroll = new BScroll(this.$refs.wrapper2, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
-          this.scroll = new BScroll(this.$refs.wrapper3, {
-            scrollX: true,
-            scrollY: false,
-            eventPassthrough: "vertical",
-            freeScroll: true
-          });
+          if (fn) {
+            fn();
+          }
         });
-        if (fn) {
-          fn();
-        }
-      });
     },
     getExpress(fn) {
       this.$SERVER
@@ -232,8 +239,8 @@ export default {
       this.$router.push("/accompany");
     },
     // 监听 速配/大神 切换
-    tabsFn(val){
-      this.activeTabs = val
+    tabsFn(val) {
+      this.activeTabs = val;
     }
   }
 };
@@ -255,8 +262,14 @@ export default {
 }
 
 .more {
-  color: #999;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(153, 153, 153, 1);
+  .more-ico {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+  }
 }
 .notice {
   padding: 10px 15px;
@@ -270,7 +283,7 @@ export default {
     padding: 0 10px;
   }
   .notice-des {
-    padding: 10px;
+    padding: 5px 10px;
     font-size: 10px;
     color: #999;
   }
@@ -285,6 +298,10 @@ export default {
     padding: 0 0 10px 10px;
     display: flex;
     justify-content: space-between;
+    font-size: 14px;
+
+    font-weight: bold;
+    color: rgba(51, 51, 51, 1);
     h2 {
       font-size: 18px;
       font-weight: bold;
@@ -305,6 +322,7 @@ export default {
 }
 .match {
   padding: 15px;
+  margin-bottom: 30px;
   background-image: url(../../../assets/images/pk.png);
   background-repeat: no-repeat;
   background-position: 10px 15px;
@@ -313,6 +331,7 @@ export default {
     padding: 0 0 10px 40px;
     display: flex;
     justify-content: space-between;
+    font-size: 14px;
     h2 {
       font-size: 18px;
       font-weight: bold;
@@ -342,7 +361,7 @@ export default {
         display: flex;
         .match-tag {
           margin-right: 10px;
-          height: 30px;
+          height: 20px;
           img {
             height: 100%;
           }
@@ -358,6 +377,7 @@ export default {
         border-radius: 50px;
         display: flex;
         align-items: center;
+        font-size: 11px;
         i {
           margin-right: 5px;
         }
@@ -369,6 +389,7 @@ export default {
         width: 50%;
         color: #fff;
         padding: 5px 10px;
+        font-size: 13px;
         background: linear-gradient(
           to right,
           rgba(0, 0, 0, 0.6),
@@ -383,12 +404,13 @@ export default {
         padding: 5px 20px;
         border-radius: 50px;
         background: linear-gradient(to right, #ff376d, #ff8c5a);
+        font-size: 13px;
       }
     }
   }
 }
-.grid{
-  img{
+.grid {
+  img {
     width: auto;
     height: 80px;
   }
