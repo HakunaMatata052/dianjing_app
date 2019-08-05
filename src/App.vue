@@ -59,6 +59,7 @@ export default {
     this.getBanners();
     this.getGames();
     this.getLocation();
+	this.openUpdate();
     this.setVux();
   },
   mounted() {

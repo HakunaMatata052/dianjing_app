@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     getList(isClear) {
-       if (isClear) {        
+       if (isClear) {
         this.pageNum = 1;
         this.hasNextPage = true
       }
