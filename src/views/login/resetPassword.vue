@@ -9,7 +9,8 @@
             clearable
             placeholder="请输入手机号"
             class="field"
-            type="tel"
+            type="number"
+            pattern="[0-9]*"
             :border="false"
             :readonly="readonly"
           ></van-field>

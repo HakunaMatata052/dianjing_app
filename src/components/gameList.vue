@@ -35,7 +35,8 @@ export default {
   components: {},
   data() {
     return {
-      list: []
+      list: [],
+      activeTab: this.activeTabs
     };
   },
   created() {
@@ -55,7 +56,7 @@ export default {
       });
     },
     tabs() {
-      this.$emit("tabs", this.activeTabs);
+      this.$emit("tabs", this.activeTab);
     }
   }
 };
@@ -70,7 +71,7 @@ export default {
   display: flex;
   padding: 10px 0;
   .gamelist-item {
-    margin-right: 15px;
+    margin-right: 10px;
     img {
       border-radius: 5px;
       width: 80px;

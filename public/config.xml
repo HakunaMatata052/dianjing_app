@@ -73,4 +73,26 @@
         <param name="SecretKey" value="7Ju0_gQU367l4dp3gAplN7inx0ZUbMNnL382YweN"/>
         <param name="AccessKey" value="vuI56gU3VrjxUhGEVOx9lrW3dqhR9crTt-ZQTVLJ"/>
     </feature>
+	
+	<!-- 融云 -->
+	<intent-filter>
+        <action name="android.intent.action.VIEW"/>
+        <category name="android.intent.category.DEFAULT"/>
+        <data scheme="rong" host="io.rong.fast" pathPrefix="/conversation/"/>
+    </intent-filter>
+
+    <intent-filter>
+        <action name="android.intent.action.VIEW"/>
+        <category name="android.intent.category.DEFAULT"/>
+        <data host="com.y1941175861.bsw" path="/conversationlist" scheme="rong"/>
+    </intent-filter>
+    <intent-filter>
+        <action name="android.intent.action.VIEW"/>
+        <category name="android.intent.category.DEFAULT"/>
+        <data host="com.y1941175861.bsw" pathPrefix="/push_message" scheme="rong"/>
+    </intent-filter>
+    <feature name="rongCloud2">
+        <param name="appKey" value="e5t4ouvpe6tba"/>
+    </feature>
+
 </widget>

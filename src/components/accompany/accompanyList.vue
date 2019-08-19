@@ -82,10 +82,10 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   .accompany-item {
-    width: 150px;
+    width: 170px;
     .accompany-img {
       width: 100%;
-      height: 120px;
+      height: 130px;
       border-radius: 5px;
       overflow: hidden;
       position: relative;

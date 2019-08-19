@@ -39,12 +39,12 @@
           </div>
           <div class="sign">{{userInfo.signname}}</div>
           <div class="btn-group">
-            <follow
-              :toUserid="$route.params.userid"
-              class="btn nofollow"
+            <follow :toUserid="$route.params.userid" />
+            <div
+              class="btn"
               v-if="$route.params.userid!=$store.state.userInfo.userid"
-            ></follow>
-            <div class="btn" v-if="$route.params.userid!=$store.state.userInfo.userid">私聊</div>
+              @click="$router.push('/chat/'+$route.params.userid)"
+            >私聊</div>
             <div class="voice" v-if="!userInfo.voice &&  userInfo.voice != ''">
               <van-icon class-prefix="icon" name="play" />
             </div>
@@ -241,7 +241,7 @@
                   <div class="impression-text">BitX是一个跨国比特币平台,总部位于新加坡,主要为东南亚和非洲等新兴...</div>
                   <div class="impression-bottom">
                     <span>2018-11-27</span>
-                    <operation class="operation" :id="10" :comment="20" :zan="20" :iszan="true" />
+                    <operation class="operation" :id="10" :comment="20" :zan="20" :iszan="1" />
                   </div>
                 </div>
                 <div class="impression-item">
@@ -259,7 +259,7 @@
                   <div class="impression-text">BitX是一个跨国比特币平台,总部位于新加坡,主要为东南亚和非洲等新兴...</div>
                   <div class="impression-bottom">
                     <span>2018-11-27</span>
-                    <operation class="operation" :id="10" :comment="20" :zan="20" :iszan="false" />
+                    <operation class="operation" :id="10" :comment="20" :zan="20" :iszan="0" />
                   </div>
                 </div>
               </div>
@@ -274,7 +274,7 @@
       @click="downOrder"
       :style="'padding-bottom:'+ bottom +'px'"
     >立即下单</div>
-    <uploadImage ref="upload" @uploadSuccess="uploadSuccess" mode="all" height="300" top="150" />
+    <uploadAvatar ref="upload" @uploadSuccess="uploadSuccess" mode="all" height="300" top="150" />
   </div>
 </template>
 <script>
@@ -285,7 +285,7 @@ import navBar from "@/components/navbar/navbar.vue";
 import gander from "@/components/user/gander.vue";
 import operation from "@/components/operation/operation.vue";
 import follow from "@/components/operation/follow.vue";
-import uploadImage from "@/components/upload/uploadImage.vue";
+import uploadAvatar from "@/components/upload/uploadAvatar.vue";
 export default {
   name: "accompanyDetail",
   components: {
@@ -293,7 +293,7 @@ export default {
     gander,
     operation,
     follow,
-    uploadImage
+    uploadAvatar
   },
   data() {
     return {

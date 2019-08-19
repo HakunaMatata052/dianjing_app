@@ -15,8 +15,8 @@ export default new Vuex.Store({
     },
     isMember: false,   //是否是会员
     position: {      //默认定位
-      lng:34.222,
-      lat:108.222
+      lng:39.910286,
+      lat:116.386446
     },  //用户定位
     qiniuaddr: "http://95youhe.com/"  //七牛地址
   },

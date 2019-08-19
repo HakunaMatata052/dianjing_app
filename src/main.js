@@ -16,7 +16,7 @@ import Navigation from "vue-navigation"
 // import vueg from 'vueg'    
 import touch from 'vue-directive-touch'
 import Vant from 'vant';
-import 'vant/lib/index.css';
+import 'vant/lib/index.less';
 import 'vant/lib/icon/local.css';  // vant图标库
 Vue.use(Vant);
 Vue.use(touch);
@@ -39,7 +39,7 @@ Vue.use(Navigation, {
 // 标识可以在config.xml文件userAgent字段设置
 if (window.navigator.userAgent.match(/APICloud/i)) {
 // if (true) {
-  window.apiready = function() {
+  window.apiready = function() {    
     process.env.NODE_ENV === "development" && new VConsole()
     // 将API链接Vue原型，后续通过this.api代替window.api
     Vue.prototype.api = window.api;

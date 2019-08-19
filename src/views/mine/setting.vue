@@ -115,17 +115,17 @@
       />
     </van-popup>
     <!-- 上传头像层 -->
-    <uploadImage ref="upload" @uploadSuccess="uploadSuccess" appearance="circular" mode="image"/>
+    <uploadAvatar ref="upload" @uploadSuccess="uploadSuccess" appearance="circular" mode="image"/>
   </div>
 </template>
 <script>
 import navBar from "@/components/navbar/navbar.vue";
-import uploadImage from "@/components/upload/uploadImage.vue";
+import uploadAvatar from "@/components/upload/uploadAvatar.vue";
 export default {
   name: "setting",
   components: {
     navBar,
-    uploadImage
+    uploadAvatar
   },
   computed: {
     dateTime: {
@@ -271,6 +271,7 @@ export default {
     logout(){
       this.$METHOD.removeStore('token')
       this.$METHOD.removeStore('userInfo')
+      this.$METHOD.removeStore('rongyunToken')
       this.$store.state.userInfo = {userid:''}
       this.$toast.success('退出成功！')
       this.$router.push('/login')

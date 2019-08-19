@@ -6,12 +6,18 @@
         <router-view></router-view>
       </keep-alive>
     </transition>
+    <rongyun ref="rongyun" />
   </div>
 </template>
 <script>
 import router from "./router/router.js";
+import messageUtil from "@/common/js/messageUtil.js";
+import rongyun from "@/components/rongyun.vue";
 export default {
   name: "App",
+  components: {
+    rongyun
+  },
   data() {
     return {
       transitionName: "",
@@ -38,6 +44,27 @@ export default {
         style: "dark",
         color: "rgba(255,255,255,0)"
       });
+      that.$store.state.systemType = api.systemType;
+      
+    this.allEvent();
+    }
+    this.setVux();
+    this.getBanners();
+    this.getGames();
+    this.getLocation();
+    this.openUpdate();
+    this.db();
+  },
+  mounted() {
+    // console.log(this.keepAlive); // 设置缓存匹配
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      this.$refs.rongyun.initRongyun(); //初始化融云
+    }
+  },
+  methods: {
+    allEvent() {
+      var that = this;
+      // 点击消息状态栏跳转
       api.addEventListener(
         {
           name: "swiperight"
@@ -54,18 +81,24 @@ export default {
           }
         }
       );
-      that.$store.state.systemType = api.systemType;
-    }
-    this.getBanners();
-    this.getGames();
-    this.getLocation();
-	this.openUpdate();
-    this.setVux();
-  },
-  mounted() {
-    // console.log(this.keepAlive); // 设置缓存匹配
-  },
-  methods: {
+      //点击消息状态栏跳转
+      api.addEventListener(
+        {
+          name: "noticeclicked"
+        },
+        function(ret, err) {
+          if (ret.value.type) {
+            that.$router.push("/" + ret.value.type + "/" + ret.value.value);
+          }
+        }
+      );
+    },
+    db() {
+      if (window.navigator.userAgent.match(/APICloud/i)) {
+        messageUtil.openDb();
+        messageUtil.createTable();
+      }
+    },
     setRouteKeepAlive(routes) {
       routes.map(item => {
         if (item.children && Array.isArray(item.children)) {
@@ -131,15 +164,14 @@ export default {
                 api.ajax(
                   {
                     url: "http://api.map.baidu.com/reverse_geocoding/v3/",
-                    method: "post",
+                    method: "get",
                     data: {
                       values: {
                         ak: "r0GPTlafEf4gbOZAENRPNTb0b8OfzXGK",
                         output: "json",
                         coordtype: "wgs84ll",
                         extensions_poi: "1",
-                        location:
-                          ret.location.latitude + "," + ret.location.longitude
+                        location: ret.location.latitude + "," + ret.location.longitude
                       }
                     }
                   },
@@ -198,26 +230,6 @@ export default {
 .color {
   color: #ffd948;
 }
-@color: #ffd948;
-@black: #000;
-@white: #fff;
-@red: #000 !important;
-@blue: #999;
-@orange: #ff976a;
-@orange-dark: #ed6a0c;
-@orange-light: #fffbe8;
-@green: #07c160;
-@gray: #c9c9c9;
-@gray-light: #e5e5e5;
-@gray-darker: #7d7e80;
-@gray-dark: #969799;
-
-// default colors
-@text-color: #323233;
-@border-color: #ebedf0;
-@active-color: #f2f3f5;
-@background-color: #f8f8f8;
-@background-color-light: #fafafa;
 </style>
 
 <style lang="less" scope>

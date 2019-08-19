@@ -24,9 +24,9 @@
               <svg-icon icon-class="release-video"></svg-icon>
               <span>视频</span>
             </div>
-            <div class="release-item">
-              <svg-icon icon-class="release-skill"></svg-icon>
-              <span>比赛</span>
+            <div class="release-item" @click="releaseFn('dynamic')">
+              <svg-icon icon-class="release-dynamic"></svg-icon>
+              <span>动态</span>
             </div>
             <div class="release-item">
               <svg-icon icon-class="release-match"></svg-icon>
@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="release-close" @click="closeReleaseDialog">
-            <van-icon class-prefix="icon" name="close" />
+            <van-icon class-prefix="icon" name="bigclose" />
           </div>
         </div>
       </van-dialog>

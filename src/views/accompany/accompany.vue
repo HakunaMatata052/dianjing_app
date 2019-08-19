@@ -1,6 +1,6 @@
 <template>
   <div class="container" id="accompany">
-    <navBar :search="true" />
+    <navBar :goback="false" :search="true" />
     <div class="main">
       <van-pull-refresh
         v-model="refreshLoading"
@@ -9,7 +9,7 @@
       >
         <gameList @tabs="tabsFn" :activeTabs="activeTabs" />
         <div class="box accompany">
-          <van-dropdown-menu>
+          <van-dropdown-menu class="filter">
             <van-dropdown-item
               v-model="filterActive"
               :options="sortOption"
@@ -77,6 +77,11 @@ export default {
   watch: {
     activeTabs() {
       this.getList(true);
+    },
+    $route() {
+      if (this.$route.name == "accompany") {
+        this.getList(true);
+      }
     }
   },
   created() {
@@ -84,9 +89,9 @@ export default {
   },
   methods: {
     getList(isClear) {
-       if (isClear) {
+      if (isClear) {
         this.pageNum = 1;
-        this.hasNextPage = true
+        this.hasNextPage = true;
       }
       if (!this.hasNextPage) {
         this.refreshLoading = false;
@@ -99,12 +104,12 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           userType: this.activeTabs,
-        ...this.$store.state.position
+          ...this.$store.state.position
         })
         .then(res => {
-            this.pageNum = res.data.nextPage
-            this.hasNextPage = res.data.hasNextPage
-            this.finished = !res.data.hasNextPage
+          this.pageNum = res.data.nextPage;
+          this.hasNextPage = res.data.hasNextPage;
+          this.finished = !res.data.hasNextPage;
           if (isClear) {
             this.AccompanyList = res.data.list;
             this.refreshLoading = false;
@@ -126,10 +131,11 @@ export default {
       this.activeTabs = val;
     }
   }
+  // activated(){
+  //   this.getList(true)
+  // }
 };
 </script>
-<style lang="less">
-</style>
 
 <style lang="less" scoped>
 .accompany {
@@ -137,6 +143,9 @@ export default {
   background-repeat: no-repeat;
   background-position: left 10px;
   background-size: 20px;
+}
+.filter {
+  margin-bottom: 5px;
 }
 </style>
 

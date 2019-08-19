@@ -48,8 +48,8 @@ export default {
           index: 2
         },
         {
-          title: "游戏",
-          path: "/game",
+          title: "陪玩",
+          path: "/accompany",
           icon: "game",
           icon_press: "game-active",
           index: 3

@@ -28,7 +28,7 @@
           </van-row>
 
           <van-grid :border="true" :column-num="3" :square="true" class="grid">
-            <van-grid-item>
+            <van-grid-item @click="$router.push('/square')">
               <img src="../../../assets/images/img1.png" />
             </van-grid-item>
             <van-grid-item>
@@ -46,10 +46,10 @@
           <div class="accompany-title">
             <h2 v-if="activeTabs==0">美女陪练</h2>
             <h2 v-if="activeTabs==1">大神陪练</h2>
-            <div class="more" @click="goAccompany">
+            <!-- <div class="more" @click="goAccompany">
               查看更多
               <van-icon class-prefix="icon" name="more" />
-            </div>
+            </div> -->
           </div>
           <div class="wrapper" ref="wrapper1">
             <accompany-list :accompanyList="AccompanyList1" :scrollX="true" />
@@ -78,7 +78,7 @@
           </van-swipe-item>
         </van-swipe>
         </div>-->
-        <div class="box match">
+        <!-- <div class="box match">
           <div class="match-title">
             <h2>
               赛事
@@ -110,7 +110,7 @@
               <div class="see">立即观看</div>
             </div>
           </div>
-        </div>
+        </div> -->
       </van-pull-refresh>
     </div>
   </div>
@@ -272,7 +272,7 @@ export default {
   }
 }
 .notice {
-  padding: 10px 15px;
+  padding: 10px 10px;
   .notice-img {
     padding: 0 5px;
     width: 60px;
@@ -289,7 +289,7 @@ export default {
   }
 }
 .accompany {
-  padding: 15px;
+  padding: 10px;
   background-image: url(../../../assets/images/mzdj_room_user_ds.png);
   background-repeat: no-repeat;
   background-position: left 10px;
@@ -313,7 +313,7 @@ export default {
   }
 }
 .ad {
-  padding: 15px;
+  padding: 10px;
   .ad-img {
     width: 100%;
     border-radius: 20px;
@@ -321,11 +321,11 @@ export default {
   }
 }
 .match {
-  padding: 15px;
+  padding: 10px;
   margin-bottom: 30px;
   background-image: url(../../../assets/images/pk.png);
   background-repeat: no-repeat;
-  background-position: 10px 15px;
+  background-position: 10px;
   background-size: 40px;
   .match-title {
     padding: 0 0 10px 40px;

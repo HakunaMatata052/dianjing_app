@@ -1,5 +1,9 @@
 <template>
-  <div @click="follow">
+  <div
+    :class="fanStatueId==0 ? 'btn follow' : 'btn'"
+    @click="follow"
+    v-if="toUserid!=$store.state.userInfo.userid"
+  >
     <slot></slot>
     {{fanStatue}}
   </div>
@@ -61,4 +65,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.btn {
+  width: 55px;
+  height: 25px;
+  line-height: 25px;
+  background: rgba(191, 191, 191, 1);
+  border-radius: 13px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  margin-right: 12px;
+  &.follow {
+    background: #ffd948!important;
+  }
+}
 </style>

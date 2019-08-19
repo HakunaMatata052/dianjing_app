@@ -98,41 +98,20 @@ class Api extends Axios {
    * @param {Object} params {pageNum ,pageSize}
    */
   async getExpress(params = {}) {
-    try {
-      let result = await this.axios("post", "express/getExpress", params);
-      if (result) {
-        return result;
-      }
-    } catch (err) {
-      throw err;
-    }
+    return this.axios("post", "express/getExpress", params);
   }
   /**
    * 轮播图banner
    */
   async getBanners(params = {}) {
-    try {
-      let result = await this.axios("post", "banner/getBanners", params);
-      if (result) {
-        return result;
-      }
-    } catch (err) {
-      throw err;
-    }
+    return await this.axios("post", "banner/getBanners", params);
   }
   /**
    * 速配列表
    * @param {Object} params {pageNum ,pageSize,type}
    */
   async getUserList(params = {}) {
-    try {
-      let result = await this.axios("post", "user/getUserList", params);
-      if (result) {
-        return result;
-      }
-    } catch (err) {
-      throw err;
-    }
+    return await this.axios("post", "user/getUserList", params);
   }
   /**
    * 查询用户信息（粉丝数，关注数，接单数）
@@ -349,7 +328,7 @@ class Api extends Axios {
     }
   }
 
-    /**
+  /**
    * 更新订单状态
    * @param {Object} params {orderId,status}
    */
@@ -364,8 +343,8 @@ class Api extends Axios {
     }
   }
 
-  
-    /**
+
+  /**
    * 发布视频
    * @param {Object} params {orderId,status}
    */
@@ -379,10 +358,137 @@ class Api extends Axios {
       throw err;
     }
   }
+  /**
+   * 银行卡列表
+   * @param {Object} params {userid}
+   */
+  async getBankCardList(params = {}) {
+    return await this.axios("post", "bankCard/getBankCardList", params);
+  }
+  /**
+   * 设置默认银行卡
+   * @param {Object} params {bankCardId}
+   */
+  async updateCardBank(params = {}) {
+    return await this.axios("post", "bankCard/updateCardBank", params);
+  }
+  /**
+   * 删除银行卡
+   * @param {Object} params {bankCardId}
+   */
+  async delCardBank(params = {}) {
+    return await this.axios("post", "bankCard/delCardBank", params);
+  }
+  /**
+   * 银行列表
+   */
+  async getBankList(params = {}) {
+    return await this.axios("post", "bankCard/getBankList", params);
+  }
+
+  /**
+   * 添加银行卡
+   * @param {Object} params {accountname,cardaddress,cardno,bankId,userId}
+   */
+  async addCardBank(params = {}) {
+    return await this.axios("post", "bankCard/addCardBank", params);
+  }
 
 
+  /**
+   * 提现
+   * @param {Object} params {exchangeCardEnd,amount,bankCardId,channel,userId}
+   */
+  async withdraw(params = {}) {
+    return await this.axios("post", "exchange/withdraw", params);
+  }
+  /**
+   * 提现信息
+   * @param {Object} params {userId}
+   */
+  async withdrawInfo(params = {}) {
+    return await this.axios("post", "exchange/withdrawInfo", params);
+  }
+  /**
+   * 提现列表
+   * @param {Object} params {userId，pageNum，pageSize}
+   */
+  async withdrawList(params = {}) {
+    return await this.axios("post", "exchange/withdrawList", params);
+  }
+  /**
+   * 收到礼物列表
+   * @param {Object} params {userId，pageNum，pageSize}
+   */
+  async getUserGiftList(params = {}) {
+    return await this.axios("post", "gift/getUserGiftList", params);
+  }
+  /**
+   * 视频详情
+   * @param {Object} params {videoid}
+   */
+  async getVideoInfo(params = {}) {
+    return await this.axios("post", "video/getVideoInfo", params);
+  }
+
+  /**
+   * 发布评论
+   * @param {Object} params {pid,type:1 视频，2动态 ,fromUserId}
+   */
+  async addEvaluate(params = {}) {
+    return await this.axios("post", "evaluate/addEvaluate", params);
+  }
+
+  /**
+   * 评论列表
+   * @param {Object} params {pid,type:1 视频，2动态 ,pageNum,pageSize}
+   */
+  async getEvaluates(params = {}) {
+    return await this.axios("post", "evaluate/getEvaluates", params);
+  }
   
+  /**
+   * 子评论列表
+   * @param {Object} params {msgId,type:1 视频，2动态 ,pageNum,pageSize}
+   */
+  async getEvaluateDetail(params = {}) {
+    return await this.axios("post", "evaluate/getEvaluateDetail", params);
+  }
+  
+  /**
+   * 点赞
+   * @param {Object} params {sourceId,userId}
+   */
+  async agree(params = {}) {
+    return await this.axios("post", "dotAgree/agree", params);
+  }
 
+    
+  /**
+   * 获取融云token
+   * @param {Object} params {sourceId,userId}
+   */
+  async getRongyunToken(params = {}) {
+    return await this.axios("post", "user/rongyun", params);
+  }
+    
+  /**
+   * 发布动态
+   * @param {Object} params {sourceId,userId}
+   */
+  async addDynamicInformation(params = {}) {
+    return await this.axios("post", "dynaInformation/addDynamicInformation", params);
+  }
+
+  /**
+   * 动态列表
+   * @param {Object} params {sourceId,userId}
+   */
+  async getDynamicInformation(params = {}) {
+    return await this.axios("post", "dynaInformation/getDynamicInformation", params);
+  }
+  
+   
 }
 
 export default new Api();

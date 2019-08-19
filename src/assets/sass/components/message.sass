@@ -1,0 +1,300 @@
+@charset "UTF-8";
+.th-message {
+  position: relative;
+}
+.th-message .messagebox {
+  width: 100%;
+  background: #f6f8fc;
+  padding: 20px;
+}
+.th-message .messagebox .th-pulldown {
+  text-align: center;
+  width: 100%;
+  line-height: 60px;
+  height: 60px;
+  color: #888;
+}
+.th-message .messagebox .pbtn {
+  margin-top: 50px;
+  height: 50px;
+}
+.th-message .messagebox .message-item {
+  width: 100%;
+  position: relative;
+  padding: 0px 50px;
+  margin-bottom: 20px;
+}
+.th-message .messagebox .message-item .headimg {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  border-radius: 50%;
+  display: block;
+}
+.th-message .messagebox .message-item.isimg .mtext {
+  background: none !important;
+  padding: 0px;
+}
+.th-message .messagebox .message-item.isimg .mtext:before {
+  display: none;
+}
+.th-message .messagebox .message-item.isimg .mtext img {
+  margin: 0px;
+  display: block;
+  max-width: 150px;
+  max-height: 150px;
+}
+.th-message .messagebox .message-item .mtext {
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  word-break: break-all;
+  line-height: 30px;
+}
+.th-message .messagebox .message-item .mtext img {
+  margin-top: -12px;
+}
+.th-message .messagebox .message-item.default-item .headimg {
+  display: none;
+}
+.th-message .messagebox .message-item.default-item .mtext {
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+  color: #888;
+  line-height: 25px;
+}
+.th-message .messagebox .message-item.msg-item .headimg {
+  display: none;
+}
+.th-message .messagebox .message-item.msg-item .mtext {
+  padding: 10px 15px;
+  background: #fff;
+  font-size: 14px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+  color: #888;
+  line-height: 25px;
+}
+.th-message .messagebox .message-item.people-item {
+  text-align: right;
+  padding-right: 60px;
+  padding-top: 5px;
+}
+.th-message .messagebox .message-item.people-item .headimg {
+  right: 0px;
+  left: auto;
+}
+.th-message .messagebox .message-item.people-item .mtext {
+  color: #fff;
+  background: #4a93ec;
+}
+.th-message .messagebox .message-item.people-item .mtext:before {
+  content: "";
+  background: url("../../images/peopleBubble.png") top right no-repeat;
+  position: absolute;
+  width: 10px;
+  right: -10px;
+  height: 50px;
+  top: 0px;
+}
+.th-message .messagebox .message-item.doc-item {
+  padding-left: 60px;
+  padding-top: 5px;
+}
+.th-message .messagebox .message-item.doc-item .mtext {
+  background: #fff;
+  color: #666;
+}
+.th-message .messagebox .message-item.doc-item .mtext:before {
+  content: "";
+  background: url("../../images/docBubble.png") 0px -15px no-repeat;
+  position: absolute;
+  width: 10px;
+  left: -10px;
+  height: 50px;
+  top: 0px;
+}
+.th-message .inputbox {
+  height: 60px;
+  width: 100%;
+  padding: 10px 80px 10px 45px;
+  border: #dfdfdf solid 1px;
+  position: relative;
+}
+.th-message .inputbox.textShow {
+  padding: 3px 80px 3px 45px;
+  height: 46px;
+}
+.th-message .inputbox .usetexttitle {
+  font-size: 16px;
+  height: 38px;
+  line-height: 38px;
+  text-align: center;
+  margin-right: -35px;
+}
+.th-message .inputbox .usetexthidebox {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  font-size: 14px;
+  color: #666666;
+  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+.th-message .inputbox .usetexthidebox:active {
+  color: #4a93ec;
+}
+.th-message .inputbox .usetext {
+  margin-left: -35px;
+  height: 38px;
+}
+.th-message .inputbox .usetext.hide-emoticon {
+  margin-right: -35px;
+}
+.th-message .inputbox .usetext.hide-emoticon .icon-add {
+  right: 10px;
+}
+.th-message .inputbox .usetext .textbtn {
+  height: 38px;
+  line-height: 38px;
+  color: #888;
+  font-size: 16px;
+}
+.th-message .inputbox .usetext .icon-add {
+  left: auto;
+  right: 42px;
+}
+.th-message .inputbox .usetext .icon-face {
+  right: 10px;
+  font-size: 27px;
+}
+.th-message .inputbox .icon-add {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  font-size: 25px;
+  color: #666666;
+}
+.th-message .inputbox .icon-face {
+  position: absolute;
+  right: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  font-size: 25px;
+  color: #666666;
+  z-index: 1;
+}
+.th-message .inputbox [class^=icon-].isopen:before {
+  color: #4a93ec;
+  content: "";
+  display: inline-block;
+  transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+}
+.th-message .inputbox .messageinput {
+  height: 40px;
+  width: 100%;
+  background: #efefef;
+  box-shadow: none;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  line-height: 20px;
+  outline: none;
+  font-size: 14px;
+  padding-right: 40px;
+}
+.th-message .inputbox .sendbtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 60px;
+  height: 40px;
+  font-size: 14px;
+}
+.th-message .textbox {
+  padding: 0px;
+  height: 175px;
+}
+.th-message .textbox .btnbox {
+  padding: 10px;
+}
+.th-message .textbox .btnbox .textbtn {
+  height: 40px;
+  line-height: 40px;
+}
+.th-message .textbox textarea {
+  box-sizing: border-box;
+  resize: none;
+  box-shadow: none;
+  border: none;
+  width: 100%;
+  height: 122px;
+  border-radius: 5px;
+  outline: none;
+  padding: 12px 15px;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0px;
+}
+.th-message .facebox {
+  display: flex;
+  padding: 10px;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+.th-message .facebox .faceitem {
+  display: block;
+  margin: 5px;
+}
+.th-message .facebox .vux-emotion {
+  width: 24px;
+  height: 24px;
+}
+.th-message .funcbox {
+  height: 175px;
+  background: #FAFAFA;
+  padding: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+.th-message .funcbox .funcimg {
+  display: block;
+  margin: 0px auto;
+  width: 42px;
+  margin-bottom: 5px;
+}
+.th-message .funcbox .funclist {
+  width: 25%;
+  text-align: center;
+  float: left;
+  height: 70px;
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 10px;
+}

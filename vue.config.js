@@ -10,6 +10,8 @@ const appname = "apiCloud"; // 项目文件名
 const appPort = 1111; // 真机同步端口,浏览器打开端口。(请与)
 const scriptActive = process.env.npm_lifecycle_event;
 
+const customTheme = require("./van-custom-theme")
+
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
@@ -50,7 +52,11 @@ module.exports = {
   css: {
     extract: true, // 是否使用css分离插件 ExtractTextPlugin
     sourceMap: false, // 开启 CSS source maps
-    loaderOptions: {}, // css预设器配置项
+    loaderOptions: {
+      less: {
+        modifyVars: customTheme.theme
+      }
+    }, // css预设器配置项
     modules: false // 启用 CSS modules for all css / pre-processor files.
   },
   // webpack配置

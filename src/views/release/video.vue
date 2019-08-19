@@ -65,7 +65,9 @@
           type="input"
           placeholder="添加位置"
           left-icon="location-o"
-          class="cell"
+          class="cell"          
+          readonly
+          @click="positionListPopupShow = true"
         />
         <van-switch-cell v-model="form.isfree" title="是否收费" class="cell" />
         <transition name="fade">
@@ -89,8 +91,11 @@
     <van-popup v-model="userListPopupShow" style="height:100%;" position="bottom">
       <userList @selectUser="selectUser" />
     </van-popup>
+    <van-popup v-model="positionListPopupShow" style="height:100%;" position="bottom">
+      <positionStr @selectPosition="selectPosition" />
+    </van-popup>
     <!-- 上传视频层 -->
-    <uploadVideo ref="upload" @selectVideo="selectVideo" appearance="circular" mode="image" />
+    <uploadVideo ref="upload" @selectVideo="selectVideo"/>
   </div>
 </template>
 <script>
@@ -98,18 +103,21 @@ import md5 from "js-md5";
 import navBar from "@/components/navbar/navbar.vue";
 import uploadVideo from "@/components/upload/uploadVideo.vue";
 import userList from "@/components/operation/userList.vue";
+import positionStr from "@/components/operation/positionStr.vue";
 export default {
   name: "release-video",
   components: {
     navBar,
     uploadVideo,
-    userList
+    userList,
+    positionStr
   },
   data() {
     return {
       imageShow: false,
       pickerPopupShow: false,
       userListPopupShow: false,
+      positionListPopupShow: false,
       columns: [
         { id: 0, text: "公开" },
         { id: 1, text: "好友可见" },
@@ -161,7 +169,13 @@ export default {
       if (JSON.stringify(val) != "{}") {
         this.form.friendsList.push({userId:val.userId,nickName:val.nickName});
       }
-    },    
+    },        
+    selectPosition(val) {
+      this.positionListPopupShow = false;
+      if (JSON.stringify(val) != "") {
+        this.form.position = val;
+      }
+    },
     delFriends(index) {
       if (index == 0) {
         this.form.friendsList = [];

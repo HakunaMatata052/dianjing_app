@@ -8,8 +8,9 @@
             v-model="form.telephone"
             clearable
             placeholder="请输入手机号"
-            class="field"            
-            type="tel"
+            class="field"   
+            type="number"
+            pattern="[0-9]*"
             :border="false"
           ></van-field>
           <van-cell-group>

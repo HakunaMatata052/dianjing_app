@@ -1,63 +1,83 @@
 <template>
   <div class="operation">
-    <div class="operation-item" v-if="forward">
+    <div class="operation-item" v-if="forward != -1">
       <van-icon class-prefix="icon" name="zhuanfa" color="rgba(153,153,153,1)" class="icon" />
       <span>{{forward}}</span>
     </div>
-    <div class="operation-item" v-if="comment">
-      <van-icon class-prefix="icon" name="pinglun" color="rgba(153,153,153,1)"  class="icon"/>
+    <div class="operation-item" v-if="comment != -1" @click.stop="commentFn">
+      <van-icon class-prefix="icon" name="pinglun" color="rgba(153,153,153,1)" class="icon" />
       <span>{{comment}}</span>
     </div>
-    <div class="operation-item" v-if="zan" @click="zanFn">
-      <van-icon name="like" :color="$store.state.color" size="16px" v-if="iszan"/>
-      <van-icon name="like-o" color="rgba(153,153,153,1)" size="16px" v-else/>
-      <span>{{zan}}</span>
+    <div class="operation-item" v-if="zan != -1" @click.stop="zanFn">
+      <van-icon name="like" :color="$store.state.color" size="16px" v-if="activeZan" />
+      <van-icon name="like-o" color="rgba(153,153,153,1)" size="16px" v-else />
+      <span>{{zanNum}}</span>
     </div>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      activeZan: this.iszan,
+      overlayShow: false,
+      UIChatBox: null,
+      popupShow: false,
+      zanNum : this.zan
+    };
+  },
   props: {
     id: {
-      type: Number,
       default() {
-        return 0;
+        return "";
       },
-      required: false
+      required: true
     },
     forward: {
       type: Number,
       default() {
-        return 0;
+        return -1;
       },
       required: false
     },
     comment: {
       type: Number,
       default() {
-        return 0;
+        return -1;
       },
       required: false
     },
     zan: {
       type: Number,
       default() {
-        return 0;
+        return -1;
       },
       required: false
     },
     iszan: {
-      type: Boolean,
+      type: Number,
       default() {
         return false;
       },
       required: false
     }
-  },methods:{
-      zanFn(){
-          console.log(this.id)
-          this.iszan = !this.iszan
-      }
+  },
+  methods: {
+    zanFn() {
+      this.activeZan = !this.activeZan;
+      this.$SERVER.agree({
+        sourceId: this.id,
+        userId: this.$store.state.userInfo.userid
+      }).then(res=>{
+        this.zanNum = res.count
+      }).catch(err=>{
+        this.activeZan = !this.activeZan;
+      })
+    },
+    commentFn() {
+      var that = this;
+      that.$emit('commentFn')
+    },
   }
 };
 </script>

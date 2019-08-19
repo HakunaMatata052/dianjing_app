@@ -131,11 +131,6 @@ export default {
         .then(res => {
           that.list[index].fanStatue = res.data;
         });
-    },
-    goAccompany(id, e) {
-      if (e) e.preventDefault();
-      this.$router.push(`/accompanyDetail/${id}`);
-      return;
     }
   }
 };

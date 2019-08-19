@@ -1,6 +1,6 @@
 <template>
   <div id="mine">
-    <navBar :stl="'nobg'" />
+    <navBar stl="nobg" />
     <div class="main">
       <div class="userinfo" :style="'margin-top:'+top+'px'">
         <div class="userinfo-top">
@@ -87,7 +87,7 @@ export default {
         },
         {
           text: "我的钱包",
-          path: "/",
+          path: "/wallet",
           ico: "wallet"
         },
         {
@@ -97,7 +97,7 @@ export default {
         },
         {
           text: "我的礼物",
-          path: "/",
+          path: "/mygift",
           ico: "gift"
         }
       ],
@@ -109,7 +109,7 @@ export default {
         },
         {
           text: "我的视频",
-          path: "/",
+          path: "/video/4",
           ico: "mine02"
         },
         {
@@ -119,7 +119,7 @@ export default {
         },
         {
           text: "我的消息",
-          path: "/",
+          path: "/messageList",
           ico: "mine04"
         },
         {
@@ -144,7 +144,7 @@ export default {
         },
         {
           text: "在线客服",
-          path: "/",
+          path: "/chat/10000",
           ico: "mine09"
         },
         {
@@ -166,13 +166,7 @@ export default {
     };
   },
   created() {
-    this.$SERVER
-      .getMyInfo({
-        userId: this.$store.state.userInfo.userid
-      })
-      .then(res => {
-        this.myInfo = res.data;
-      });
+    this.getMyInfo()
   },
   mounted() {
     var systemType = this.$store.state.systemType;
@@ -183,7 +177,20 @@ export default {
       this.top = 40;
     }
   },
-  activated() {}
+  methods:{
+    getMyInfo(){
+    this.$SERVER
+      .getMyInfo({
+        userId: this.$store.state.userInfo.userid
+      })
+      .then(res => {
+        this.myInfo = res.data;
+      });
+    }
+  },
+  activated() {
+    this.getMyInfo()
+  }
 };
 </script>
 
