@@ -12,7 +12,7 @@
   <meta name="apple-touch-fullscreen" content="yes">
   <meta name="format-detection" content="telephone=no">
   <meta name="Author" content="Anles">
-  <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+  <!-- <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script> -->
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <link rel="stylesheet" href="font/iconfont.css">
   <title>vue-apiCloud-model-mobile</title>
@@ -28,17 +28,17 @@
   <!-- built files will be auto injected -->
   <script>
     // fastClick 解决移动端300ms问题
-    if ('addEventListener' in document) {
-      document.addEventListener('DOMContentLoaded', function () {
-        FastClick.attach(document.body);
-      }, false);
-      // 解决fastclick  input获取焦点Bug
-      FastClick.prototype.onTouchEnd = function (event) {
-        if (event.target.hasAttribute("type") && event.target.getAttribute("type") == "date") {
-          return false;
-        }
-      }
-    }
+    // if ('addEventListener' in document) {
+    //   document.addEventListener('DOMContentLoaded', function () {
+    //     FastClick.attach(document.body);
+    //   }, false);
+    //   // 解决fastclick  input获取焦点Bug
+    //   FastClick.prototype.onTouchEnd = function (event) {
+    //     if (event.target.hasAttribute("type") && event.target.getAttribute("type") == "date") {
+    //       return false;
+    //     }
+    //   }
+    // }
 
     window.onload = function () {
       // safari阻止双击放大

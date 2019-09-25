@@ -17,9 +17,10 @@
         <div class="con">
           <h4>提现金币数量</h4>
           <div class="field">
-            <input type="text" v-model.number="form.amount" placeholder="请输入要提现的金币数量" />
+            <input v-model.number="form.amount" placeholder="请输入要提现的金币数量" type="number" 
+            pattern="[0-9]*"/>
             <span>=</span>
-            <input type="text" :value="amount" class="amount" />元
+            <input type="text" :value="amount" class="amount" disabled/>元
           </div>
           <div class="tips">
             1金币={{withdrawInfo.rate}}元

@@ -1,214 +1,162 @@
 <template>
-  <div id="register">
-    <navBar />
+  <div id="register" :style="'padding-top:'+ top +'px'">
+    <van-nav-bar :border="false" @click-left="$router.push('/')">
+      <template slot="left">
+        <van-icon class-prefix="icon" name="bigclose" color="#333" />
+      </template>
+    </van-nav-bar>
     <div class="register">
       <div class="main">
+        <h1>手机号注册</h1>
+        <p>
+          已有账号，
+          <span @click="$router.push('/login/home')">立即登录</span>
+        </p>
         <van-cell-group class="cell-group" :border="false">
           <van-field
-            v-model="form.telephone"
+            v-model="$store.state.register.telephone"
             clearable
             placeholder="请输入手机号"
-            class="field"   
+            class="field"
             type="number"
             pattern="[0-9]*"
             :border="false"
-          ></van-field>
-          <van-cell-group>
-            <van-field
-              v-model="form.checknum"
-              center
-              clearable
-              class="field"
-              placeholder="请输入短信验证码"
-            >
-              <van-button
-                slot="button"
-                size="small"
-                type="primary"
-                class="checknumbtn"
-                @click="sendchecknum"
-                :disabled="checkNumDisabled"
-                :hairline="false"
-              >
-                <span v-if="checkNumDisabled">{{countDown}}秒后重试</span>
-                <span v-else>发送验证码</span>
-              </van-button>
-            </van-field>
-          </van-cell-group>
-          <van-field
-            v-model="form.password"
-            type="password"
-            placeholder="请输入密码"
-            class="field"
-            :border="false"
-          ></van-field>
+          >
+            <template slot="left-icon">
+              <van-icon name="phone" color="#333" />
+            </template>
+          </van-field>
         </van-cell-group>
         <van-button
           type="primary"
           size="large"
-          :loading="regLoading"
+          :loading="loading"
           loading-type="spinner"
-          @click="regFn"
-          class="regbtn"
+          @click="sendchecknum"
+          class="btn"
           :hairline="false"
-        >立即注册</van-button>
-        <p>
-          <van-checkbox
-            v-model="checked"
-            shape="square"
-            :checked-color="$store.state.color"
-            class="agreement"
-          >
-            我同意
-            <span>《用户注册协议》</span>
-          </van-checkbox>
-        </p>
-        <div class="gologin">
-          已有账号？
-          <span @click="$router.push('/login')">立即登录</span>
-        </div>
+        >获取验证码</van-button>
+        <p>注册即同意《XXX用户协议》</p>
       </div>
     </div>
   </div>
 </template>
 <script>
-import regexUtil from "regex-util";
-import navBar from "@/components/navbar/navbar.vue";
 export default {
   name: "register",
-  components: {
-    navBar
-  },
   data() {
     return {
-      regLoading: false,
-      checkNumDisabled: false,
-      form: {
-        telephone: "",
-        password: "",
-        checknum: ""
-      },
-      countDown: 60,
-      checked: true,
-      timer: null
+      top: 0,
+      loading: false
     };
   },
-  created(){
-    if(this.$METHOD.getStore('token')){
-      this.$router.push('/')
+  created() {
+    // if (this.$METHOD.getStore("token")) {
+    //   this.$router.push("/");
+    // }
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      api.setStatusBarStyle({
+        style: "light",
+        color: "rgba(255,255,255,0)"
+      });
+      var systemType = this.$store.state.systemType;
+      if (systemType == "android") {
+        this.top = 25;
+      }
+      if (systemType == "ios") {
+        this.top = 40;
+      }
+    }
+  },
+  beforeDestroy() {
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      api.setStatusBarStyle({
+        style: "dark",
+        color: "rgba(255,255,255,0)"
+      });
     }
   },
   methods: {
     sendchecknum() {
-      if (this.form.telephone.length > 0) {
-        const timer_COUNT = 60;
-        if (!this.timer) {
-          this.countDown = timer_COUNT;
-          this.checkNumDisabled = true;
-          this.timer = setInterval(() => {
-            if (this.countDown > 0 && this.countDown <= timer_COUNT) {
-              this.countDown--;
-            } else {
-              this.checkNumDisabled = false;
-              clearInterval(this.timer);
-              this.timer = null;
-            }
-          }, 1000);
-        }
-        this.$SERVER
+      var that = this;
+      that.loading = true;
+      if (that.$store.state.register.telephone.length > 0) {
+        that.$SERVER
           .sendchecknum({
-            telephone: this.form.telephone
+            telephone: that.$store.state.register.telephone
           })
           .then(res => {
-            this.$toast.success("验证码发送成功！");
+            that.$toast.success("验证码发送成功！");
+            that.$router.push("/register/2");
           })
           .catch(res => {
-            this.checkNumDisabled = false;
-            clearInterval(this.timer);
-            this.timer = null;
+            that.loading = false;
           });
       } else {
-        this.$toast.fail("请输入手机号码");
+        that.$toast.fail("请输入手机号码");
       }
-    },
-    regFn() {
-      if (!regexUtil.isPhone(this.form.telephone)) {
-        this.$toast.fail("请输入正确的手机号码");
-        return;
-      }
-      if (this.form.checknum == "") {
-        this.$toast.fail("请输入验证码");
-        return;
-      }
-
-      if (!regexUtil.isPassword(this.form.password)) {
-        this.$toast.fail("请输入6-11位字母数字组合密码");
-        return;
-      }
-      if (!this.checked) {
-        this.$toast.fail("请阅读并同意《用户注册协议》");
-        return;
-      }
-      this.regLoading = true;
-      this.$SERVER.register(this.form).then(res => {
-        this.$toast.success("注册成功");
-        this.regLoading = false;
-        this.$router.push("/login");
-      }).catch(res=>{
-        this.regLoading = false;
-      });
     }
-  },
-  destroyed() {
-    clearInterval(this.timer);
   }
 };
 </script>
+<style lang="less">
+#login .van-field__control {
+  color: #fff;
+}
+</style>
+
 <style lang="less" scoped>
 #register {
   width: 100%;
-    height: 100%;
-  background-color: #fff;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
   .register {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 30px;
   }
   .main {
     width: 90%;
   }
-  .field {
+  h1 {
+    font-size: 30px;
+    font-weight: 800;
+    color: rgba(51, 51, 51, 1);
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 55px;
   }
-  .checknumbtn {
-    background: rgba(254, 196, 58, 1);
+  p {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(179, 179, 179, 1);
+    line-height: 20px;
+    text-align: center;
+    margin-bottom: 60px;
+    span {
+      color: #333;
+    }
+  }
+  .cell-group,
+  .field {
+    background: none;
     border: 0;
   }
-  .regbtn {
+  .field {
+    margin-bottom: 14px;
+    border: 1px solid #333;
+    border-radius: 50px;
+  }
+  .btn {
     background: rgba(254, 196, 58, 1);
     border-radius: 100px;
-    margin-top: 30px;
+    margin-top: 40px;
+    margin-bottom: 26px;
     font-size: 17px;
     font-weight: bold;
     color: rgba(51, 51, 51, 1);
     border: 0;
-  }
-  p {
-    margin-top: 30px;
-    color: #fff;
-    font-size: 14px;
-    span {
-      color: rgba(254, 196, 58, 1);
-      margin-left: 5px;
-    }
-  }
-  .gologin {
-    text-align: center;
-    margin-top: 50px;
-    color: #999;
-    span {
-      text-decoration: underline;
-    }
   }
 }
 </style>

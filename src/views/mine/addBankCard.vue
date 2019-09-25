@@ -28,7 +28,8 @@
           clearable
           label="银行卡号"
           placeholder="请输入银行卡号"
-          type="number"
+          type="number"          
+            pattern="[0-9]*"
         />
       </van-cell-group>
     </div>
@@ -42,7 +43,7 @@
         @confirm="OnConfirm"
       />
     </van-popup>
-    <div class="bottom-btn" @click="submit">添加银行卡</div>
+    <div class="bottom-btn" @click="submit" :style="'padding-bottom:'+ bottom +'px'">添加银行卡</div>
   </div>
 </template>
 
@@ -64,8 +65,14 @@ export default {
         bankname: "",
         cardaddress: "",
         cardno: null
-      }
+      },
+      bottom: 0,
     };
+  },
+  created(){
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      this.bottom = api.safeArea.bottom;
+    }
   },
   methods: {
     getBankList() {

@@ -52,7 +52,8 @@ import quick from "@/assets/images/quick.png";
 import camera from "@/assets/images/camera.png";
 import gallery from "@/assets/images/gallery.png";
 
-import { Scroller, XButton } from "vux";
+import Scroller from 'vux/src/components/scroller'
+import XButton from 'vux/src/components/x-button'
 import { facelist } from "@/assets/testdata.js";
 
 import facebox from "./facebox.vue";
@@ -376,6 +377,74 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+
+@font-face {
+  font-family: 'thoricon';
+  src: url('../../assets/fonts/icomoon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'thoricon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-close:before {
+  content: "\e900";
+}
+
+.icon-top:before {
+  content: "\e901";
+  color: #515151;
+}
+
+.icon-add:before {
+  content: "\e94b";
+  color: #666;
+}
+
+.icon-down:before {
+  content: "\e94c";
+  color: #6e6e6e;
+}
+
+.icon-face:before {
+  content: "\e94d";
+}
+
+.icon-star:before {
+  content: "\e94e";
+  color: #ffc471;
+}
+
+.icon-clock:before {
+  content: "\e94f";
+}
+
+div,
+input,
+button {
+  box-sizing: border-box;
+}
+.weui-btn_primary{
+  background: #4a93ec!important;
+}
+.weui-btn_primary:not(.weui-btn_disabled):active{
+  background: #2f73c5!important;
+}
+
+
 .th-message {
   position: relative;
 }
@@ -383,6 +452,7 @@ export default {
   width: 100%;
   background: #f6f8fc;
   padding: 20px;
+  box-sizing: border-box;
 }
 .th-message .messagebox .th-pulldown {
   text-align: center;
@@ -475,7 +545,7 @@ export default {
 }
 .th-message .messagebox .message-item.people-item .mtext:before {
   content: "";
-  // background: url("../../images/peopleBubble.png") top right no-repeat;
+  background: url("../../assets/images/peopleBubble.png") top right no-repeat;
   position: absolute;
   width: 10px;
   right: -10px;
@@ -492,7 +562,7 @@ export default {
 }
 .th-message .messagebox .message-item.doc-item .mtext:before {
   content: "";
-  // background: url("../../images/docBubble.png") 0px -15px no-repeat;
+  background: url("../../assets/images/docBubble.png") 0px -15px no-repeat;
   position: absolute;
   width: 10px;
   left: -10px;
@@ -503,7 +573,8 @@ export default {
   height: 60px;
   width: 100%;
   padding: 10px 80px 10px 45px;
-  border: #dfdfdf solid 1px;
+  box-sizing: border-box;
+  border-top: #dfdfdf solid 1px;
   position: relative;
 }
 .th-message .inputbox.textShow {
@@ -592,6 +663,7 @@ export default {
   -o-transform: rotate(45deg);
 }
 .th-message .inputbox .messageinput {
+  box-sizing: border-box;
   height: 40px;
   width: 100%;
   background: #efefef;
@@ -636,43 +708,5 @@ export default {
   font-size: 16px;
   line-height: 20px;
   margin: 0px;
-}
-.th-message .facebox {
-  display: flex;
-  padding: 10px;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-}
-.th-message .facebox .faceitem {
-  display: block;
-  margin: 5px;
-}
-.th-message .facebox .vux-emotion {
-  width: 24px;
-  height: 24px;
-}
-.th-message .funcbox {
-  height: 175px;
-  background: #FAFAFA;
-  padding: 15px;
-  width: 100%;
-  overflow: hidden;
-}
-.th-message .funcbox .funcimg {
-  display: block;
-  margin: 0px auto;
-  width: 42px;
-  margin-bottom: 5px;
-}
-.th-message .funcbox .funclist {
-  width: 25%;
-  text-align: center;
-  float: left;
-  height: 70px;
-  font-size: 10px;
-  color: #666;
-  margin-bottom: 10px;
 }
 </style>

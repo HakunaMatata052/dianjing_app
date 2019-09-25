@@ -18,7 +18,11 @@
         </div>
       </div>
     </div>
-    <div class="bottom-btn" @click="$router.push('/addBankCard')">添加银行卡</div>
+    <div
+      class="bottom-btn"
+      @click="$router.push('/addBankCard')"
+      :style="'padding-bottom:'+ bottom +'px'"
+    >添加银行卡</div>
   </div>
 </template>
 <script>
@@ -32,11 +36,15 @@ export default {
   },
   data() {
     return {
-      list: []
+      list: [],
+      bottom: 0
     };
   },
   created() {
     this.getBankCardList();
+    if (window.navigator.userAgent.match(/APICloud/i)) {
+      this.bottom = api.safeArea.bottom;
+    }
   },
   methods: {
     getBankCardList() {

@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { XButton } from "vux";
+import XButton from 'vux/src/components/x-button'
 export default {
   components: {
     XButton

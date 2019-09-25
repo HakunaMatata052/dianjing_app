@@ -1,6 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 import store from "../store/store";
+import {
+  Toast
+} from "vant";
+Vue.use(Toast);
 
 // tarBar ----- 子页面
 import Index from "@/views/index/index.vue";
@@ -74,7 +78,7 @@ const router = new Router({
           name: "mine",
           component: () => import("@/views/index/subviews/mine.vue"),
           meta: {
-            keepAlive: false,
+            keepAlive: true,
             isTransition: true,
             title: "我的",
             isMember: false,
@@ -107,6 +111,18 @@ const router = new Router({
         isLogin: true
       }
     },
+    {
+      path: "/release/ability",
+      name: "release-ability",
+      component: () => import("@/views/release/ability.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "发布技能",
+        isMember: false,
+        isLogin: true
+      }
+    },
     // 陪玩
     // {
     //   path: "/accompany",
@@ -121,7 +137,7 @@ const router = new Router({
     //   }
     // },
     {
-      path: "/accompanyDetail/:userid",
+      path: "/accompanyDetail/:userid/:type?",
       name: "accompanyDetail",
       component: () => import("@/views/accompany/accompanyDetail.vue"),
       meta: {
@@ -199,6 +215,54 @@ const router = new Router({
       path: "/register",
       name: "register",
       component: () => import("@/views/login/register.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "注册",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/register/2",
+      name: "register2",
+      component: () => import("@/views/login/register2.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "注册",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/register/3",
+      name: "register3",
+      component: () => import("@/views/login/register3.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "注册",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/register/4",
+      name: "register4",
+      component: () => import("@/views/login/register4.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "注册",
+        isMember: false,
+        isLogin: false
+      }
+    },
+    {
+      path: "/register/5",
+      name: "register5",
+      component: () => import("@/views/login/register5.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
@@ -329,27 +393,15 @@ const router = new Router({
       }
     },
     {
-      path: "/dynamicDetail/:id?",
+      path: "/dynamicDetail/:id",
       name: "dynamicDetail",
       component: () => import("@/views/community/dynamicDetail.vue"),
       meta: {
         keepAlive: false,
         isTransition: true,
-        title: "广场",
+        title: "动态详情",
         isMember: false,
         isLogin: false
-      }
-    },
-    {
-      path: "/messageList",
-      name: "messageList",
-      component: () => import("@/views/message/messageList.vue"),
-      meta: {
-        keepAlive: false,
-        isTransition: true,
-        title: "我的消息",
-        isMember: false,
-        isLogin: true
       }
     },
     {
@@ -364,17 +416,32 @@ const router = new Router({
         isLogin: true
       }
     },
+    {
+      path: "/messageList",
+      name: "messageList",
+      component: () => import("@/views/message/messageList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "我的消息",
+        isMember: false,
+        isLogin: true
+      }
+    },
   ]
 
 });
 router.beforeEach((to, from, next) => {
   if (to.meta.isLogin) {
-
     if (!window.localStorage.getItem('token')) {
       if (from.name == "login") {
         router.push('/')
       } else {
-        router.push('/login/' + from.name)
+        Toast.fail('你还没有登录，请登录后再操作！')
+        setTimeout(() => {
+          router.push('/login/' + from.name)
+        }, 1000);
+
       }
     } else {
       next()
@@ -386,7 +453,10 @@ router.beforeEach((to, from, next) => {
         if (store.state.isMember) {
           next()
         } else {
-          router.push('/buymember')
+          Toast.fail('你还不是会员，请购买会员后再操作！')
+          setTimeout(() => {
+            router.push('/buymember')
+          }, 1000);
         }
       }
     }

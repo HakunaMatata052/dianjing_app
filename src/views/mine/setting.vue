@@ -196,8 +196,8 @@ export default {
     confirmEdit() {
       var that = this;
       if (this.activePopup.field == "nickname") {
-        if (this.activePopup.value.length >= 6) {
-          this.$toast.fail("个性签名不能超过6字");
+        if (this.activePopup.value.length > 6) {
+          this.$toast.fail("昵称不能超过6字");
           return;
         }
       }

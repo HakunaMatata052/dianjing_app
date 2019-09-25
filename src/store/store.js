@@ -15,10 +15,21 @@ export default new Vuex.Store({
     },
     isMember: false,   //是否是会员
     position: {      //默认定位
-      lng:39.910286,
-      lat:116.386446
+      lng:116.386446,
+      lat:39.910286
     },  //用户定位
-    qiniuaddr: "http://95youhe.com/"  //七牛地址
+    newMessage: 0,
+    register: {
+      telephone: "",
+      checknum: "",
+      password: "",
+      nickname: "",
+      birthday: null,
+      sex:null,
+      image: null
+    },
+    qiniuaddr: "http://95youhe.com/",  //七牛地址
+    wxcallback: "http://95youhe.com/gamePay/wxPayCallback"
   },
   mutations: {},
   actions: {}

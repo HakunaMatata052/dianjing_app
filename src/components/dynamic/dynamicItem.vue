@@ -10,12 +10,16 @@
     </div>
     <p>
       {{info.message}}...
-      <span>@123</span>
+      <span
+        v-if="info.friendsList"
+        v-for="friends,index in info.friendsList"
+        @click.stop="$router.push(`/accompanyDetail/${friends.userid}`)"
+      >  @{{friends.nickname}}</span>
     </p>
     <div class="image-list">
       <van-grid :border="false" :gutter="5" square :column-num="3">
         <van-grid-item class="image-item" v-for="item,index in info.mediaList" :key="index">
-          <van-image fit="cover" class="image" :src="item.url" />
+          <van-image fit="cover" class="image" :src="item.url" @click.stop="imagePreview(index)" />
         </van-grid-item>
       </van-grid>
     </div>
@@ -24,6 +28,9 @@
 </template>
 
 <script>
+import Vue from "vue";
+import { ImagePreview } from "vant";
+Vue.use(ImagePreview);
 export default {
   props: {
     info: {
@@ -32,6 +39,30 @@ export default {
         return {};
       },
       required: true
+    }
+  },
+  computed: {
+    images() {
+      var that = this;
+      var images = []
+      if (that.info.mediaList) {
+        that.info.mediaList.forEach(e => {
+          images.push(e.url);
+        });
+      }
+      return images
+    }
+  },
+  methods: {
+    imagePreview(index) {
+      var that = this;
+      ImagePreview({
+        images: that.images,
+        startPosition: index,
+        onClose() {
+          // do something
+        }
+      });
     }
   }
 };

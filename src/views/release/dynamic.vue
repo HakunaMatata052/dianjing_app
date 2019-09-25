@@ -3,7 +3,7 @@
     <navBar />
     <div class="main">
       <van-cell-group class="cell-group">
-        <van-cell value-class="duan-cell" class="cell">
+        <van-cell value-class="duan-cell" class="cell" size="large">
           <template slot="title">
             <van-field
               v-model="form.message"
@@ -42,9 +42,10 @@
           autosize
           class="cell"
           @input="tagsInput"
+          size="large"
         />
 
-        <van-cell title-class="duan-cell" v-if="form.tagsList.length!=0">
+        <van-cell title-class="duan-cell" v-if="form.tagsList.length!=0" size="large">
           <template slot="title">
             <van-tag
               type="primary"
@@ -55,15 +56,15 @@
             >{{item}}</van-tag>
           </template>
         </van-cell>
-        <van-cell title="@好友" class="cell" @click="userListPopupShow = true" />
-        <van-cell title-class="duan-cell" v-if="form.friends.length!=0">
+        <van-cell title="@好友" class="cell" @click="userListPopupShow = true" size="large" />
+        <van-cell title-class="duan-cell" v-if="form.friendsList.length!=0" size="large">
           <template slot="title">
             <span
               class="friends-list"
-              v-for="(item,index) in form.friends"
+              v-for="(item,index) in form.friendsList"
               :key="index"
               @click="delFriends(index)"
-            >@{{item.nickName}}</span>
+            >@{{item.nickname}}</span>
           </template>
         </van-cell>
         <van-field
@@ -74,14 +75,28 @@
           class="cell"
           readonly
           @click="positionListPopupShow = true"
+          size="large"
         />
-        <van-switch-cell v-model="form.isfree" title="是否收费" class="cell" />
+        <van-switch-cell v-model="form.isfree" title="是否收费" class="cell" size="large" />
         <transition name="fade">
-          <van-field v-model="form.price" title="价格" placeholder="金币" v-if="form.isfree" />
+          <van-field
+            v-model="form.price"
+            title="价格"
+            placeholder="金币"
+            v-if="form.isfree"
+            size="large"
+          />
         </transition>
-        <van-switch-cell v-model="form.onceonly" title="是否阅后即焚" class="cell" />
-        <van-cell title="分享范围" :value="owner" is-link @click="pickerPopupShow = true" class="cell" />
-        <van-cell class="submit-cell">
+        <van-switch-cell v-model="form.onceonly" title="是否阅后即焚" class="cell" size="large" />
+        <van-cell
+          title="分享范围"
+          :value="owner"
+          is-link
+          @click="pickerPopupShow = true"
+          class="cell"
+          size="large"
+        />
+        <van-cell class="submit-cell" size="large">
           <van-button class="submit" size="large" :hairline="false" @click="releaseFn">发布</van-button>
         </van-cell>
       </van-cell-group>
@@ -133,10 +148,10 @@ export default {
       tagsList: "",
       pic: [],
       form: {
-        list: [],
+        mediaList: [],
         message: "",
         tagsList: [],
-        friends: [],
+        friendsList: [],
         isfree: 0,
         price: "",
         position: "",
@@ -187,9 +202,9 @@ export default {
     selectUser(val) {
       this.userListPopupShow = false;
       if (JSON.stringify(val) != "{}") {
-        this.form.friends.push({
-          userId: val.userId,
-          nickName: val.nickName
+        this.form.friendsList.push({
+          userid: val.userId,
+          nickname: val.nickName
         });
       }
     },
@@ -201,9 +216,9 @@ export default {
     },
     delFriends(index) {
       if (index == 0) {
-        this.form.friends = [];
+        this.form.friendsList = [];
       } else {
-        this.form.friends.splice(index, index);
+        this.form.friendsList.splice(index, index);
       }
     },
     releaseFn() {
@@ -227,8 +242,8 @@ export default {
           function(upret2, uperr2) {
             if (upret2.status) {
               if (upret2.oper == "complete") {
-                that.form.list.push({
-                  url:that.$store.state.qiniuaddr + upret2.info.key
+                that.form.mediaList.push({
+                  url: that.$store.state.qiniuaddr + upret2.info.key
                 });
                 if (i == that.pic.length - 1) {
                   that.addDynamicInformation();
@@ -249,7 +264,7 @@ export default {
         .then(res => {
           that.$toast.clear();
           that.$toast.success("发布成功！");
-          // that.$router.push('/')
+          that.$router.push("/dynamicDetail/" + res.data.inforid);
         });
     }
   }

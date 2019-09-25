@@ -35,31 +35,15 @@ export default {
   methods: {
     onLoad() {
       var that = this;
-      if (window.navigator.userAgent.match(/APICloud/i)) {
-        api.ajax(
-          {
-            url: "http://api.map.baidu.com/reverse_geocoding/v3/",
-            method: "get",
-            data: {
-              values: {
-                ak: "r0GPTlafEf4gbOZAENRPNTb0b8OfzXGK",
-                output: "json",
-                coordtype: "bd09ll",
-                extensions_poi: "1",
-                location: that.$store.state.position.lat + "," + that.$store.state.position.lng
-              }
-            }
-          },
-          function(data) {
-            if (data) {
-              if (data.status == 0) {
-                console.log(data);
-                that.list = data.result.pois
-              }
-            }
-          }
-        );
-      }
+      that.$SERVER.positionStr({
+        ak: "r0GPTlafEf4gbOZAENRPNTb0b8OfzXGK",
+        output: "json",
+        coordtype: "bd09ll",
+        extensions_poi: "1",
+        location: that.$store.state.position.lat +"," +that.$store.state.position.lng
+      }).catch(res=>{
+        that.list = res.result.pois;
+      });
     },
     selectPosition(item) {
       this.$emit("selectPosition", item);

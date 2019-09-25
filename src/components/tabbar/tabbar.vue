@@ -28,7 +28,7 @@
               <svg-icon icon-class="release-dynamic"></svg-icon>
               <span>动态</span>
             </div>
-            <div class="release-item">
+            <div class="release-item" @click="releaseFn('ability')">
               <svg-icon icon-class="release-match"></svg-icon>
               <span>技能</span>
             </div>
@@ -86,8 +86,7 @@ export default {
   methods: {
     switchTab(item, idx) {
       if (idx == 2) {
-        this.show = true;
-        
+        this.show = true;        
       document.querySelector('.view-container').style.filter = "blur(5px)";
         return false;
       } else {
@@ -107,7 +106,8 @@ export default {
       this.show = false;
     },
     releaseFn(val){
-      this.$router.push('/release/'+val)      
+      this.$router.push('/release/'+val)
+      this.closeReleaseDialog()  
     }
   }
 };

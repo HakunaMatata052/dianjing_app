@@ -3,7 +3,7 @@
     <navBar />
     <div class="main">
       <van-cell-group class="cell-group">
-        <van-cell value-class="duan-cell" class="cell">
+        <van-cell value-class="duan-cell" class="cell" size="large">
           <template slot="title">
             <van-field
               v-model="form.comment"
@@ -36,9 +36,10 @@
           autosize
           class="cell"
           @input="tagsInput"
+           size="large"
         />
 
-        <van-cell title-class="duan-cell" v-if="form.tagsList.length!=0">
+        <van-cell title-class="duan-cell" v-if="form.tagsList.length!=0" size="large">
           <template slot="title">
             <van-tag
               type="primary"
@@ -49,15 +50,15 @@
             >{{item}}</van-tag>
           </template>
         </van-cell>
-        <van-cell title="@好友" class="cell" @click="userListPopupShow = true" />
-        <van-cell title-class="duan-cell" v-if="form.friendsList.length!=0">
+        <van-cell title="@好友" class="cell" @click="userListPopupShow = true"  size="large"/>
+        <van-cell title-class="duan-cell" v-if="form.friendsList.length!=0" size="large">
           <template slot="title">
             <span
               class="friends-list"
               v-for="(item,index) in form.friendsList"
               :key="index"
               @click="delFriends(index)"
-            >@{{item.nickName}}</span>
+            >@{{item.nickname}}</span>
           </template>
         </van-cell>
         <van-field
@@ -68,14 +69,15 @@
           class="cell"          
           readonly
           @click="positionListPopupShow = true"
+           size="large"
         />
         <van-switch-cell v-model="form.isfree" title="是否收费" class="cell" />
         <transition name="fade">
-          <van-field v-model="form.price" title="价格" placeholder="金币" v-if="form.isfree" />
+          <van-field v-model="form.price" title="价格" placeholder="金币" v-if="form.isfree"  size="large"/>
         </transition>
-        <van-switch-cell v-model="form.onceonly" title="是否阅后即焚" class="cell" />
-        <van-cell title="分享范围" :value="owner" is-link @click="pickerPopupShow = true" class="cell" />
-        <van-cell class="submit-cell">
+        <van-switch-cell v-model="form.onceonly" title="是否阅后即焚" class="cell"  size="large" />
+        <van-cell title="分享范围" :value="owner" is-link @click="pickerPopupShow = true" class="cell"  size="large"/>
+        <van-cell class="submit-cell" size="large">
           <van-button class="submit" size="large" :hairline="false" @click="releaseFn">发布</van-button>
         </van-cell>
       </van-cell-group>
@@ -167,13 +169,13 @@ export default {
     selectUser(val) {
       this.userListPopupShow = false;
       if (JSON.stringify(val) != "{}") {
-        this.form.friendsList.push({userId:val.userId,nickName:val.nickName});
+        this.form.friendsList.push({userid:val.userId,nickname:val.nickName});
       }
     },        
     selectPosition(val) {
       this.positionListPopupShow = false;
-      if (JSON.stringify(val) != "") {
-        this.form.position = val;
+      if (JSON.stringify(val) != "{}") {
+        this.form.position = val.name;
       }
     },
     delFriends(index) {
@@ -225,7 +227,7 @@ export default {
                       }).then(res=>{
                         that.$toast.clear();
                         that.$toast.success("上传成功！");
-                        // that.$router.push('/')
+                        that.$router.push('/video/'+res.data.videoid)
                       })
                     }
                   }

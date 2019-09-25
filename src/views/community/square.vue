@@ -36,7 +36,6 @@
               </template>
               <template slot="operation">
                 <operation
-                  class="operation"
                   :id="item.inforid"
                   :forward="item.shardeCount"
                   :comment="item.replyCount"
@@ -75,13 +74,18 @@ export default {
       hasNextPage: true
     };
   },
-  created(){
-    if(this.$route.params.type){
-      this.activeType = Number(this.$route.params.type)
+  created() {
+    if (this.$route.params.type) {
+      this.activeType = Number(this.$route.params.type);
     }
   },
   methods: {
     onLoad(isClear) {
+      var that = this
+      if (isClear) {
+        that.pageNum = 1;
+        that.hasNextPage = true;
+      }
       this.$SERVER
         .getDynamicInformation({
           userid: this.$store.state.userInfo.userid,
@@ -99,7 +103,7 @@ export default {
             this.refreshLoading = false;
           } else {
             this.list = [...this.list, ...res.data.list];
-            this.listLoading = false;
+            this.loading = false;
           }
         });
     }
@@ -117,5 +121,8 @@ export default {
 }
 .title-tabs {
   margin-bottom: 15px;
+}
+.operation {
+  border-top: 1px solid rgba(245,245,245,1);
 }
 </style>

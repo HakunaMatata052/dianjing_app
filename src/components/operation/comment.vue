@@ -38,7 +38,7 @@
               :id="item.id"
               :comment="item.replyCount"
               :zan="item.likecount"
-              :iszan="0"
+              :iszan="item.likestatue"
               @commentFn="commentFn(index,item.fromUser)"
             />
           </div>
@@ -109,7 +109,7 @@ export default {
       that.$SERVER
         .getEvaluateDetail({
           msgId: that.list[index].id,
-          type: 1,
+          type: that.type,
           pageNum: that.list[index].pageNum || 1,
           pageSize: 2
         })
@@ -175,7 +175,7 @@ export default {
                 that.$SERVER
                   .addEvaluate({
                     msgId: that.list[index].id,
-                    type: 1,
+                    type: that.type,
                     message: msg,
                     fromUserId: that.$store.state.userInfo.userid
                   })

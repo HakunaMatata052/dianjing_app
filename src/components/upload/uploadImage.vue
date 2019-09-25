@@ -66,27 +66,29 @@ export default {
           function(ret) {
             if (ret) {
               if (ret.eventType == "confirm") {
-                if (systemType == "ios") {
-                  var list = [];
-                  ret.list.forEach((e,i) => {
+                var list = [];
+                ret.list.forEach((e, i) => {
+                  if (systemType == "ios") {
                     UIMediaScanner.transPath(
                       {
                         path: e.path
                       },
                       function(pic) {
                         if (pic) {
-                          list.push(pic.path)
-                          if(i==ret.list.length-1){
+                          list.push(pic.path);
+                          if (i == ret.list.length - 1) {
                             that.$emit("selectImage", list);
                           }
                         }
                       }
                     );
-                  });
-                  
-                } else {
-                  that.$emit("selectImage", ret.list);
-                }
+                  } else {
+                    list.push(e.path);
+                    if (i == ret.list.length - 1) {
+                      that.$emit("selectImage", list);
+                    }
+                  }
+                });
               }
             }
           }

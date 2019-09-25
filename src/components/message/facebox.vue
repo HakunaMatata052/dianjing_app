@@ -12,7 +12,10 @@
 </template>
 
 <script>
-import { Scroller, WechatEmotion as Emotion } from "vux";
+// import { Scroller, WechatEmotion as Emotion } from "vux";
+
+import Scroller from 'vux/src/components/scroller'
+import Emotion from 'vux/src/components/wechat-emotion'
 
 export default {
   components: {
@@ -47,3 +50,55 @@ export default {
   props: ["facelist"]
 };
 </script>
+<style lang="less" scoped>
+div,
+input,
+button {
+  box-sizing: border-box;
+}
+.weui-btn_primary{
+  background: #4a93ec!important;
+}
+.weui-btn_primary:not(.weui-btn_disabled):active{
+  background: #2f73c5!important;
+}
+
+.facebox {
+  display: flex;
+  padding: 10px;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+.facebox .faceitem {
+  display: block;
+  margin: 5px;
+}
+.facebox .vux-emotion {
+  width: 24px;
+  height: 24px;
+}
+.funcbox {
+  height: 175px;
+  background: #FAFAFA;
+  padding: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+.funcbox .funcimg {
+  display: block;
+  margin: 0px auto;
+  width: 42px;
+  margin-bottom: 5px;
+}
+.funcbox .funclist {
+  width: 25%;
+  text-align: center;
+  float: left;
+  height: 70px;
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 10px;
+}
+</style>

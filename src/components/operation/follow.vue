@@ -2,7 +2,7 @@
   <div
     :class="fanStatueId==0 ? 'btn follow' : 'btn'"
     @click="follow"
-    v-if="toUserid!=$store.state.userInfo.userid"
+    v-if="toUserid!=$store.state.userInfo.userid && $METHOD.getStore('token')"
   >
     <slot></slot>
     {{fanStatue}}
@@ -48,12 +48,10 @@ export default {
             this.fanStatueId = res.data;
             this.fanStatue = "关注";
           }
-
           if (res.data == 1) {
             this.fanStatueId = res.data;
             this.fanStatue = "已关注";
           }
-
           if (res.data == 2) {
             this.fanStatue = "互相关注";
             this.fanStatueId = res.data;

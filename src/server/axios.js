@@ -4,7 +4,9 @@ import axios from "axios";
 import envconfig from "./envconfig.js";
 import router from "@/router/router.js";
 import store from "../store/store";
-import { Toast } from "vant";
+import {
+  Toast
+} from "vant";
 Vue.use(Toast);
 
 // 状态码错误信息
@@ -29,6 +31,15 @@ const codeMessage = {
 // 发起请求前
 axios.interceptors.request.use(
   config => {
+    if (config.isLogin) {
+      if (!window.localStorage.getItem('token')) {
+        Toast.fail('你还没有登录，请登录后再操作!')
+        setTimeout(() => {
+          router.push('/login')
+        }, 1000);
+        return
+      }
+    }
     if (config.LOADINGHIDE) {
       Toast.loading({
         duration: 0, // 持续展示 toast
@@ -88,8 +99,7 @@ export default class Axios {
   axios(method, url, params, config) {
     return new Promise((resolve, reject) => {
       if (typeof params !== "object") params = {};
-      let _option = Object.assign(
-        {
+      let _option = Object.assign({
           method,
           url,
           baseURL: envconfig.baseURL,
@@ -109,24 +119,27 @@ export default class Axios {
         // Cookie: "JSESSIONID=" + window.localStorage.getItem('Cookie')
       };
       // 处理get、post传参问题
-      method.toUpperCase() !== "GET"
-        ? (_option.data = params)
-        : (_option.params = params);
+      method.toUpperCase() !== "GET" ?
+        (_option.data = params) :
+        (_option.params = params);
 
       // 请求成功后服务器返回二次处理
       axios.request(_option).then(
         res => {
-          if(res.data.code==200){
+          if (res.data.code == 200) {
             resolve(res.data);
-          }else{
-            Toast.fail(res.data.msg);
+          } else {
+            // Toast.fail(res.data.msg);
+            console.log(1)
             reject(res.data)
           }
         },
         error => {
           if (error.response) {
+            console.log(2)
             reject(error.response.data);
           } else {
+            console.log(3)
             reject(error);
           }
         }

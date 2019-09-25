@@ -208,6 +208,7 @@ export default {
     }
     .cell-right {
       text-align: left;
+      display: flex;
       padding: 0 15px;
     }
   }

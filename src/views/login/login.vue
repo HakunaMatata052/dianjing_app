@@ -45,18 +45,14 @@
         </p>
       </div>
     </div>
-
-    <rongyun ref="rongyun" />
   </div>
 </template>
 <script>
 import navBar from "@/components/navbar/navbar.vue";
-import rongyun from "@/components/rongyun.vue";
 export default {
   name: "login",
   components: {
-    navBar,
-    rongyun
+    navBar
   },
   data() {
     return {
@@ -100,9 +96,14 @@ export default {
           that.$store.state.userInfo = res.data;
           that.loginLoading = false;
           if (window.navigator.userAgent.match(/APICloud/i)) {
-            this.$refs.rongyun.initRongyun(); //初始化融云
+            this.$RONGYUN.initRongyun(); //初始化融云
           }
-          that.$router.go(-1);
+          console.log(that.$route.params.name)
+          if (that.$route.params.name) {
+            that.$router.push({name:that.$route.params.name});
+          } else {
+            that.$router.go(-1);
+          }
         })
         .catch(res => {
           that.loginLoading = false;

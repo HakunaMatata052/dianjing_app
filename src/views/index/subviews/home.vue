@@ -63,9 +63,9 @@
             <accompany-list :accompanyList="AccompanyList3" :scrollX="true" />
           </div>
         </div>
-        <div class="ad">
+        <!-- <div class="ad">
           <van-image fit="cover" src="http://lorempixel.com/300/300/" class="ad-img"></van-image>
-        </div>
+        </div> -->
         <!-- <div class="video">
         <van-swipe
           :loop="false"

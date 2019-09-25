@@ -6,7 +6,7 @@ const {
   spawn
 } = require("child_process");
 
-const appname = "apiCloud"; // 项目文件名
+const appname = "apicloud"; // 项目文件名
 const appPort = 1111; // 真机同步端口,浏览器打开端口。(请与)
 const scriptActive = process.env.npm_lifecycle_event;
 
@@ -47,7 +47,7 @@ module.exports = {
     }
   },
   lintOnSave: true, // 是否在保存的时候检查
-  productionSourceMap: true, // 生产环境是否生成 sourceMap 文件
+  productionSourceMap: false, // 生产环境是否生成 sourceMap 文件
   // css配置
   css: {
     extract: true, // 是否使用css分离插件 ExtractTextPlugin
@@ -84,6 +84,11 @@ module.exports = {
 
   },
   configureWebpack: config => {
+    require('vux-loader').merge(config, {
+      options: {},
+      plugins: ['vux-ui']
+    })
+
     config.plugins = config.plugins.concat([
       // 删除build时旧的文件
       new WebpackOnBuildPlugin(function (stats) {
@@ -137,15 +142,15 @@ module.exports = {
     https: false,
     hotOnly: false,
     open: false, //配置自动启动浏览器
-    disableHostCheck: true ,//外网映射
+    disableHostCheck: true, //外网映射
     proxy: {
       // 配置多个代理(配置一个 proxy: "http://localhost:4000" )
-      "/api": {
-        target: "http://192.168.0.105:9000",
-        changeOrigin: true, 
+      "/game": {
+        target: "http://api.map.baidu.com/reverse_geocoding",
+        changeOrigin: true,
         // target: "http://192.168.1.4:8999",
         pathRewrite: {
-          "^/api": "/game"
+          "^/v3": "/v3"
         }
       }
     }

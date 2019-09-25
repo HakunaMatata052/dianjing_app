@@ -3,23 +3,12 @@
     <navBar />
     <div class="main">
       <div class="box2">
-        <div class="box2-top" @click="showPopup = true">
-          <h3>储蓄卡</h3>
-          <div class="bank-info">
-            <img :src="form.bgimg" />
-            <div class="bankname">
-              {{form.bankName}}
-              <span>（尾号{{form.bankCardEnd}}）</span>
-              <p>24小时内到账</p>
-            </div>
-          </div>
-        </div>
         <div class="con">
           <h4>充值金额</h4>
           <div class="field">
-            <input type="text" v-model.number="form.amount" placeholder="请输入要提现的金币数量" />
-            <span>=</span>
-            <input type="text" :value="amount" class="amount" />元
+            <span>￥</span>
+            <input v-model.number="form.amount" placeholder="请输入要提现的金币数量" type="number" 
+            pattern="[0-9]*"/>
           </div>
           <div class="tips">
             1金币={{withdrawInfo.rate}}元
@@ -30,21 +19,11 @@
             size="large"
             :loading="loading"
             @click="submit"
-            v-if="withdrawInfo.statue == 0 "
             class="submit"
           >确认提现</van-button>
-          <van-button type="info" size="large" :loading="loading" class="nosubmit" v-else-if="withdrawInfo.statue == 1">您有一笔款正在提现</van-button>
         </div>
       </div>
     </div>
-    <van-popup v-model="showPopup" class="popup">
-      <bankCard
-        :item="item"
-        v-for="(item,index) in bankList"
-        :key="index"
-        @click.native="selectBankCard(index)"
-      />
-    </van-popup>
   </div>
 </template>
 
@@ -56,11 +35,6 @@ export default {
   components: {
     navBar,
     bankCard
-  },
-  computed: {
-    amount() {
-      return this.form.amount * Number(this.withdrawInfo.rate);
-    }
   },
   data() {
     return {
@@ -86,54 +60,66 @@ export default {
       .then(res => {
         this.withdrawInfo = { ...this.withdrawInfo, ...res.data };
       });
-    this.getBankCardList();
   },
   methods: {
-    getBankCardList() {
-      this.$SERVER
-        .getBankCardList({
-          userId: this.$store.state.userInfo.userid
-        })
-        .then(res => {
-          this.bankList = res.data;
-          this.form.bankName = res.data[0].bankName;
-          this.form.bankCardEnd = res.data[0].bankCardEnd;
-          this.form.bankCardId = res.data[0].bankCardId;
-          this.form.bgimg = res.data[0].bgimg;
-        });
-    },
     submit() {
       if (this.form.amount <= 0) {
         this.$toast.fail("请填写正确的提现金额！");
         return;
       }
-      if (this.form.amount > this.withdrawInfo.balance) {
-        this.$toast.fail("没有足够的余额！");
-        return;
-      }
       this.loading = true;
       this.$SERVER
-        .withdraw({
-          ...this.form,
-          ...{
-            userId: this.$store.state.userInfo.userid
-          }
+        .wxprepayment({
+          amount: this.form.amount,
+          channel: 2,
+          userId: this.$store.state.userInfo.userid
         })
         .then(res => {
-          this.$toast.success(res.data);
-          this.$router.go(-1)
-          this.loading = false;
+          var that = this;
+          if (window.navigator.userAgent.match(/APICloud/i)) {
+            var wxPay = api.require("wxPay");
+            wxPay.config(
+              {
+                apiKey: "wxc7c08b65a6d1df06",
+                mchId: "1508221791",
+                partnerKey: "TkVOr4zdDowHxqHPV2MPm0arHfQetRyT",
+                notifyUrl: that.$store.state.wxcallback
+              },
+              function(ret, err) {
+                if (ret.status) {
+                  wxPay.pay(
+                    {
+                      description: "充值",
+                      totalFee: that.form.amount * 100,
+                      tradeNo: res.data,
+                      deviceInfo: api.deviceId,
+                      feeType: "CNY",
+                      attach: "WXPREPAYMENT" + res.data
+                    },
+                    function(payret, payerr) {
+                      if (payret.status) {
+                        that.$toast.success("支付成功！");
+                        that.$router.go(-1);
+                        that.loading = false;
+                      } else {
+                        that.$toast.fail(
+                          "支付失败!！" + payerr.code + payerr.msg
+                        );
+                        that.loading = false;
+                      }
+                    }
+                  );
+                } else {
+                  this.$toast.fail("支付失败！" + err.code);
+                  this.loading = false;
+                }
+              }
+            );
+          }
         })
         .catch(err => {
           this.loading = false;
         });
-    },
-    selectBankCard(index) {
-      this.form.bankName = this.bankList[index].bankName;
-      this.form.bankCardEnd = this.bankList[index].bankCardEnd;
-      this.form.bankCardId = this.bankList[index].bankCardId;
-      this.form.bgimg = this.bankList[index].bgimg;
-      this.showPopup = false
     }
   }
 };
@@ -156,28 +142,6 @@ export default {
       color: rgba(51, 51, 51, 1);
       margin-right: 30px;
     }
-    .bank-info {
-      flex-grow: 1;
-      display: flex;
-      img {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        margin-right: 10px;
-        line-height: 25px;
-      }
-      .bankname {
-        font-size: 15px;
-        font-weight: 500;
-        color: rgba(51, 51, 51, 1);
-        span,
-        p {
-          font-size: 13px;
-          font-weight: 500;
-          color: rgba(255, 255, 255, 1);
-        }
-      }
-    }
   }
   .con {
     padding: 30px;
@@ -197,9 +161,12 @@ export default {
       align-items: center;
       span {
         color: rgba(51, 51, 51, 1);
+        font-size: 45px;
+        font-weight: 500;
+        color: rgba(51, 51, 51, 1);
       }
       input {
-        width: 130px;
+        flex-grow: 1;
         height: 30px;
         line-height: 30px;
         border-bottom: 1px solid rgba(230, 230, 230, 1);

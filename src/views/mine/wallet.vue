@@ -48,7 +48,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .top {
-  padding: 60px 0 15px;
+  padding: 100px 0 15px;
   background: linear-gradient(
     -35deg,
     rgba(253, 191, 37, 1),

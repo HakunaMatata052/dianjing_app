@@ -6,18 +6,13 @@
         <router-view></router-view>
       </keep-alive>
     </transition>
-    <rongyun ref="rongyun" />
   </div>
 </template>
 <script>
 import router from "./router/router.js";
 import messageUtil from "@/common/js/messageUtil.js";
-import rongyun from "@/components/rongyun.vue";
 export default {
   name: "App",
-  components: {
-    rongyun
-  },
   data() {
     return {
       transitionName: "",
@@ -45,8 +40,9 @@ export default {
         color: "rgba(255,255,255,0)"
       });
       that.$store.state.systemType = api.systemType;
-      
-    this.allEvent();
+
+      this.allEvent();
+      this.$RONGYUN.initRongyun(); //初始化融云
     }
     this.setVux();
     this.getBanners();
@@ -54,12 +50,6 @@ export default {
     this.getLocation();
     this.openUpdate();
     this.db();
-  },
-  mounted() {
-    // console.log(this.keepAlive); // 设置缓存匹配
-    if (window.navigator.userAgent.match(/APICloud/i)) {
-      this.$refs.rongyun.initRongyun(); //初始化融云
-    }
   },
   methods: {
     allEvent() {
@@ -171,7 +161,8 @@ export default {
                         output: "json",
                         coordtype: "wgs84ll",
                         extensions_poi: "1",
-                        location: ret.location.latitude + "," + ret.location.longitude
+                        location:
+                          ret.location.latitude + "," + ret.location.longitude
                       }
                     }
                   },

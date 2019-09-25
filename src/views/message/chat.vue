@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <navBar :title="title" />
-    <div class="main" :style="'padding-top:'+top+'px'">
+    <div class="main">
       <th-message
         ref="messgebox"
         :useText="useText"
         :usePulldown="usePulldown"
         :pulldownConfig="pulldownConfig"
-        :topPadding="topPadding"
+        :topPadding="bottom"
         :messageData="messageData"
         :funcList="funcList"
         :showInput="showInput"
@@ -26,8 +26,6 @@
 
       ></th-message>
     </div>
-    <div class="footer-empty" :style="'padding-top:'+bottom+'px'"></div>
-    <rongyun ref="rongyun" />
   </div>
 </template>
 <script>
@@ -36,15 +34,13 @@
 // import "thor-x/dist/index.css";
 // Vue.use(thor);
 import navBar from "@/components/navbar/navbar.vue";
-import rongyun from "@/components/rongyun.vue";
 import ThMessage from "@/components/message";
 import messageUtil from "@/common/js/messageUtil.js";
 export default {
   name: "chat",
   components: {
     navBar,
-    ThMessage ,
-    rongyun
+    ThMessage 
   },
   data() {
     return {
@@ -124,10 +120,7 @@ export default {
         text: val
       };
       that.messageData.push(content);
-      that.$refs.rongyun.sendTextMessageListener(that.frienduserid,val,that.$route.params.userid,that.otherFace)
-    },
-    receive(){
-      console.log(123)
+      this.$RONGYUN.sendTextMessageListener(that.frienduserid,val,that.title,that.otherFace)
     },
     // 刷新未读消息
     updateRead(){

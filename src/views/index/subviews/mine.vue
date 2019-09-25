@@ -4,8 +4,7 @@
     <div class="main">
       <div class="userinfo" :style="'margin-top:'+top+'px'">
         <div class="userinfo-top">
-          <van-image
-            fit="cover"
+          <img
             :src="$store.state.userInfo.image || ($store.state.userInfo.sex == 0 ? 'img/avatar-w.png' :'img/avatar-m.png')"
             class="avatar"
           />
@@ -92,7 +91,7 @@ export default {
         },
         {
           text: "我的技能",
-          path: "/",
+          path: `/accompanyDetail/${this.$store.state.userInfo.userid}/2`,
           ico: "skill"
         },
         {
@@ -166,7 +165,7 @@ export default {
     };
   },
   created() {
-    this.getMyInfo()
+    this.getMyInfo();
   },
   mounted() {
     var systemType = this.$store.state.systemType;
@@ -177,19 +176,19 @@ export default {
       this.top = 40;
     }
   },
-  methods:{
-    getMyInfo(){
-    this.$SERVER
-      .getMyInfo({
-        userId: this.$store.state.userInfo.userid
-      })
-      .then(res => {
-        this.myInfo = res.data;
-      });
+  methods: {
+    getMyInfo() {
+      this.$SERVER
+        .getMyInfo({
+          userId: this.$store.state.userInfo.userid
+        })
+        .then(res => {
+          this.myInfo = res.data;
+        });
     }
   },
   activated() {
-    this.getMyInfo()
+    this.getMyInfo();
   }
 };
 </script>

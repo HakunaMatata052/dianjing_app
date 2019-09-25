@@ -30,7 +30,7 @@
                 <div class="user">
                   <van-image
                     fit="cover"
-                    :src="item.frontcover"
+                    :src="item.image"
                     class="avatar"
                     @click.stop="$router.push(`/accompanyDetail/${item.userid}`)"
                   />

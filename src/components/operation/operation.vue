@@ -1,17 +1,17 @@
 <template>
   <div class="operation">
     <div class="operation-item" v-if="forward != -1">
-      <van-icon class-prefix="icon" name="zhuanfa" color="rgba(153,153,153,1)" class="icon" />
-      <span>{{forward}}</span>
+      <van-icon class-prefix="icon" name="zhuanfa" :size="size" color="rgba(153,153,153,1)" class="icon" />
+      <span :style="'font-size:'+(size-4)+'px'">{{forwardC}}</span>
     </div>
     <div class="operation-item" v-if="comment != -1" @click.stop="commentFn">
-      <van-icon class-prefix="icon" name="pinglun" color="rgba(153,153,153,1)" class="icon" />
-      <span>{{comment}}</span>
+      <van-icon class-prefix="icon" name="pinglun" :size="size" color="rgba(153,153,153,1)" class="icon" />
+      <span :style="'font-size:'+(size-4)+'px'">{{commentC}}</span>
     </div>
     <div class="operation-item" v-if="zan != -1" @click.stop="zanFn">
-      <van-icon name="like" :color="$store.state.color" size="16px" v-if="activeZan" />
-      <van-icon name="like-o" color="rgba(153,153,153,1)" size="16px" v-else />
-      <span>{{zanNum}}</span>
+      <van-icon name="like" :color="$store.state.color" :size="size" v-if="activeZan" />
+      <van-icon name="like-o" color="rgba(153,153,153,1)" :size="size" v-else />
+      <span :style="'font-size:'+(size-4)+'px'">{{zanNumC}}</span>
     </div>
   </div>
 </template>
@@ -25,6 +25,31 @@ export default {
       popupShow: false,
       zanNum : this.zan
     };
+  },
+  computed:{
+    forwardC(){
+      if(this.forward===0) {
+        return ''
+      }else{
+        return this.forward
+      }
+    },
+    
+    commentC(){
+      if(this.comment===0) {
+        return ''
+      }else{
+        return this.comment
+      }
+    },
+    
+    zanNumC(){
+      if(this.zanNum===0) {
+        return ''
+      }else{
+        return this.zanNum
+      }
+    }
   },
   props: {
     id: {
@@ -55,9 +80,15 @@ export default {
       required: false
     },
     iszan: {
+      default() {
+        return 0;
+      },
+      required: false
+    },
+    size: {
       type: Number,
       default() {
-        return false;
+        return 16;
       },
       required: false
     }
@@ -70,6 +101,7 @@ export default {
         userId: this.$store.state.userInfo.userid
       }).then(res=>{
         this.zanNum = res.count
+        this.$emit('zanFn',res.count)
       }).catch(err=>{
         this.activeZan = !this.activeZan;
       })
@@ -92,9 +124,6 @@ export default {
     color: rgba(153, 153, 153, 1);
     display: flex;
     align-content: center;
-    .icon {
-      font-size: 16px;
-    }
     span {
       margin-left: 5px;
     }

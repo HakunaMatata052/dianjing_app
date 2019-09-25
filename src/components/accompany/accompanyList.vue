@@ -114,6 +114,7 @@ export default {
         i {
           width: 10px;
           height: 10px;
+          line-height: 10px;
           position: absolute;
           left: -5px;
           top: 5px;

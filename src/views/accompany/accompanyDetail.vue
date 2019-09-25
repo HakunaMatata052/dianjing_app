@@ -1,6 +1,6 @@
 <template>
   <div class="container" id="accompanyDetail">
-    <navBar stl="nobg">
+    <navBar :stl="nobg">
       <van-icon
         class-prefix="icon"
         name="camera"
@@ -13,6 +13,7 @@
     </navBar>
     <div class="main">
       <div
+        ref="userbg"
         class="userbg"
         :style="'background: url('+ (userInfo.backimage || 'https://picsum.photos/500/500') + ') no-repeat center center'"
       ></div>
@@ -71,7 +72,10 @@
           class="tabs"
           :color="$store.state.color"
           :title-active-color="$store.state.color"
+          sticky
           animated
+          swipeable
+          :offset-top="46+top"
         >
           <van-tab title="服务" name="0">
             <div class="tabs-con">
@@ -100,7 +104,7 @@
                       <img :src="item.icon" />
                       <div class="game-info">
                         <h3>{{item.name}}</h3>
-                        <p>技术水平 2100分 | Steam服 | 手Q区 | 包上分段位</p>
+                        <p>技术水平 {{item.grade}} | {{item.server}} | {{item.area}} | {{item.remark}}</p>
                       </div>
                       <div class="price">
                         游戏陪练
@@ -115,92 +119,37 @@
           <van-tab title="动态" name="1">
             <div class="tabs-con">
               <div class="dynamic-list">
-                <div class="dynamic-item">
-                  <div class="dynamic-time">
-                    <span>2018/08/20 13:12</span>
-                    <van-icon class-prefix="icon" name="more2" color="rgba(204,204,204,1)" />
-                  </div>
-                  <div class="dynamic-text">总部位于新加坡,主要为东南亚和非洲等新兴...</div>
-                  <div class="dynamic-media">
-                    <van-row gutter="10">
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://img.yzcdn.cn/1.jpg"
-                          @click="imagePreview(1)"
-                        />
-                      </van-col>
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://img.yzcdn.cn/2.jpg"
-                          @click="imagePreview(2)"
-                        />
-                      </van-col>
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://picsum.photos/50/50"
-                          @click="imagePreview(3)"
-                        />
-                      </van-col>
-                    </van-row>
-                  </div>
-                  <operation
-                    class="operation"
-                    :id="10"
-                    :forward="120"
-                    :comment="20"
-                    :zan="112"
-                    :iszan="true"
-                  />
-                </div>
-                <div class="dynamic-item">
-                  <div class="dynamic-time">
-                    <span>2018/08/20 13:12</span>
-                    <van-icon class-prefix="icon" name="more2" color="rgba(204,204,204,1)" />
-                  </div>
-                  <div class="dynamic-text">总部位于新加坡,主要为东南亚和非洲等新兴...</div>
-                  <div class="dynamic-media">
-                    <van-row gutter="10">
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://picsum.photos/50/50"
-                          @click="imagePreview(0)"
-                        />
-                      </van-col>
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://picsum.photos/50/50"
-                          @click="imagePreview(1)"
-                        />
-                      </van-col>
-                      <van-col span="8">
-                        <van-image
-                          fit="cover"
-                          width="100%"
-                          src="https://picsum.photos/50/50"
-                          @click="imagePreview(2)"
-                        />
-                      </van-col>
-                    </van-row>
-                  </div>
-                  <operation
-                    class="operation"
-                    :id="12"
-                    :forward="10"
-                    :comment="210"
-                    :zan="1"
-                    :iszan="false"
-                  />
-                </div>
+                <van-list
+                  v-model="dynamicListLoading"
+                  :finished="dynamicFinished"
+                  finished-text="没有更多了"
+                  loading-text=" "
+                  @load="getUserDynamic"
+                >
+                  <dynamicItem
+                    @click.native="$router.push('/dynamicDetail/'+item.inforid)"
+                    :info="item"
+                    v-for="item,index in dynamicList"
+                    :key="index"
+                  >
+                    <template slot="title-right">
+                      <div class="tags">
+                        <van-icon class-prefix="icon" name="jing" color="#FFD948" />
+                        <van-icon class-prefix="icon" name="hot" color="#FFD948" />
+                      </div>
+                    </template>
+                    <template slot="operation">
+                      <operation
+                        class="operation"
+                        :id="item.inforid"
+                        :forward="item.shardeCount"
+                        :comment="item.replyCount"
+                        :zan="item.likeCount"
+                        :iszan="item.likeStatue"
+                      />
+                    </template>
+                  </dynamicItem>
+                </van-list>
               </div>
             </div>
           </van-tab>
@@ -278,14 +227,12 @@
   </div>
 </template>
 <script>
-import Vue from "vue";
-import { ImagePreview } from "vant";
-Vue.use(ImagePreview);
 import navBar from "@/components/navbar/navbar.vue";
 import gander from "@/components/user/gander.vue";
 import operation from "@/components/operation/operation.vue";
 import follow from "@/components/operation/follow.vue";
 import uploadAvatar from "@/components/upload/uploadAvatar.vue";
+import dynamicItem from "@/components/dynamic/dynamicItem.vue";
 export default {
   name: "accompanyDetail",
   components: {
@@ -293,10 +240,12 @@ export default {
     gander,
     operation,
     follow,
-    uploadAvatar
+    uploadAvatar,
+    dynamicItem
   },
   data() {
     return {
+      top: 0,
       isLoading: false,
       activeTabs: "0",
       score: 2,
@@ -307,30 +256,59 @@ export default {
         attentionCount: 0,
         orderCount: 0
       },
+      nobg: "nobg",
+      // 服务列表
       abilityPageNum: 1,
       abilityPageSize: 10,
       abilityLHasNextPage: true,
       abilityListLoading: false,
       abilityFinished: false,
       abilitySkeletonLoading: true,
-      abilityList: []
+      abilityList: [],
+      // 动态列表
+      dynamicPageNum: 1,
+      dynamicPageSize: 10,
+      dynamicLHasNextPage: true,
+      dynamicListLoading: false,
+      dynamicFinished: false,
+      dynamicSkeletonLoading: true,
+      dynamicList: []
     };
   },
+  // watch: {
+  //   $route(){
+  //     if(this.$route.params.type){
+  //       this.activeTabs = this.$route.params.type
+  //     }
+  //   }
+  // },
   created() {
     if (window.navigator.userAgent.match(/APICloud/i)) {
       this.bottom = api.safeArea.bottom;
     }
     this.getUserInfo();
+    var systemType = this.$store.state.systemType;
+    if (systemType == "android") {
+      this.top = 25;
+    }
+    if (systemType == "ios") {
+      this.top = 40;
+    }
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll, true);
+  },
+  beforeDestroy: function() {
+    window.removeEventListener("scroll", this.handleScroll, true);
   },
   methods: {
-    imagePreview(index) {
-      ImagePreview({
-        images: ["https://img.yzcdn.cn/1.jpg", "https://img.yzcdn.cn/2.jpg"],
-        startPosition: index,
-        onClose() {
-          // do something
-        }
-      });
+    handleScroll(e) {
+      var that = this
+      if (e.target.scrollTop >= (200-46-this.top)) {
+        that.nobg = "";
+      } else {
+        that.nobg = "nobg";
+      }
     },
     uploadBackimage() {
       this.$refs.upload.openLoadPopup();
@@ -393,6 +371,38 @@ export default {
             that.abilityList = [...that.abilityList, ...res.data.list];
             that.abilityListLoading = false;
             that.abilitySkeletonLoading = false;
+          }
+        });
+    },
+    getUserDynamic(isClear) {
+      var that = this;
+      if (isClear) {
+        that.dynamicPageNum = 1;
+        that.dynamicLHasNextPage = true;
+      }
+      if (!that.dynamicLHasNextPage) {
+        that.dynamicListLoading = false;
+        that.dynamicFinished = true;
+        that.dynamicSkeletonLoading = false;
+        return;
+      }
+      that.$SERVER
+        .getDynamicInformation({
+          userid: that.$route.params.userid,
+          range: 1,
+          pageNum: that.dynamicPageNum,
+          pageSize: that.dynamicPageSize
+        })
+        .then(res => {
+          that.dynamicPageNum = res.data.nextPage;
+          that.dynamicLHasNextPage = res.data.hasNextPage;
+          that.dynamicFinished = !res.data.hasNextPage;
+          if (isClear) {
+            that.dynamicList = res.data.list;
+          } else {
+            that.dynamicList = [...that.dynamicList, ...res.data.list];
+            that.dynamicListLoading = false;
+            that.dynamicSkeletonLoading = false;
           }
         });
     },
@@ -532,8 +542,8 @@ export default {
   margin-top: 15px;
   .tabs-con {
     background: #fff;
-    padding: 15px;
     .game-list {
+      padding: 10px;
       .game-item {
         border: 1px solid rgba(243, 243, 243, 1);
         border-radius: 5px;
@@ -589,34 +599,10 @@ export default {
         }
       }
     }
-    .dynamic-list {
-      .dynamic-item {
-        border-bottom: 1px solid rgba(153, 153, 153, 0.5);
-        margin-bottom: 20px;
-        .dynamic-time {
-          font-size: 10px;
-          font-weight: 400;
-          color: rgba(153, 153, 153, 1);
-          display: flex;
-          justify-content: space-between;
-        }
-        .dynamic-text {
-          font-size: 12px;
-          font-weight: 400;
-          color: rgba(51, 51, 51, 1);
-          line-height: 17px;
-          padding: 15px 0;
-        }
-        .dynamic-media {
-        }
-        .operation {
-          padding: 10px 0;
-        }
-      }
-    }
   }
 }
 .impression {
+  padding: 10px;
   .rate {
     display: flex;
     justify-content: center;

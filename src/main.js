@@ -11,6 +11,7 @@ import "../public/js/api.js"; // 引入apiCloud-api
 import "@/icons/index.js"; // 引入svg图标
 import * as method from "@/common/js/mixin.js"; // 引入全局方法
 import API from "@/server/apis.js"; // 引入api接口
+import rongyun from "@/common/js/rongyun.js"; // 引入融云
 import VConsole from "vconsole";
 import Navigation from "vue-navigation"
 // import vueg from 'vueg'    
@@ -26,6 +27,8 @@ Vue.config.productionTip = false;
 Vue.prototype.$METHOD = method;
 // 全局引入API
 Vue.prototype.$SERVER = API;
+// 全局引入融云
+Vue.prototype.$RONGYUN = rongyun;
 // 引入路由记录插件
 Vue.use(Navigation, {
   router,
@@ -43,7 +46,7 @@ if (window.navigator.userAgent.match(/APICloud/i)) {
     process.env.NODE_ENV === "development" && new VConsole()
     // 将API链接Vue原型，后续通过this.api代替window.api
     Vue.prototype.api = window.api;
-    new Vue({
+    let vm = new Vue({
       router,
       store,
       render: h => h(App)
@@ -51,7 +54,7 @@ if (window.navigator.userAgent.match(/APICloud/i)) {
   };
 } else {
   process.env.NODE_ENV === "development" // && new VConsole();
-  new Vue({
+  let vm = new Vue({
     router,
     store,
     render: h => h(App)

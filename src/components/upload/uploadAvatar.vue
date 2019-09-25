@@ -128,15 +128,15 @@ export default {
                   },
                   srcPath: ret.data,
                   style: {
-                    mask: "rgba(0,0,0,0.75)",
+                    mask: "rgba(255,255,255,.8)",
                     clip: that.clip
                   },
-                  mode: "image"
+                  mode: that.mode
                 },
                 function(ret, err) {}
               );
             } else {
-              that.$toast.fail("获取相册失败！");
+              // that.$toast.fail("获取相册失败！");
               that.uploadShow = false;
             }
           }

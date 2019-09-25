@@ -47,7 +47,7 @@
       <van-cell-group>
         <van-cell size="large" :value="form.type" to="/" class="balance" value-class="duan-cell">
           <template slot="default">
-            <div class="btn">立即充值</div>
+            <div class="btn" @click="$router.push('/recharge')">立即充值</div>
           </template>
           <template slot="title">
             <span>

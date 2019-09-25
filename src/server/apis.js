@@ -79,6 +79,14 @@ class Api extends Axios {
       throw err;
     }
   }
+
+  /**
+   * 验证验证码
+   * @param {Object} params {telephone,password,checknum}
+   */
+  async checknum(params = {}) {
+    return await this.axios("post", "user/checknum", params);
+  }
   /**
    * 修改密码
    * @param {Object} params {userid,password,newpassword}
@@ -286,14 +294,7 @@ class Api extends Axios {
    * @param {Object} params {queryType,userid,pageNum,pageSize}
    */
   async fans(params = {}) {
-    try {
-      let result = await this.axios("post", "user/fans", params);
-      if (result) {
-        return result;
-      }
-    } catch (err) {
-      throw err;
-    }
+    return await this.axios("post", "user/fans", params);
   }
 
 
@@ -446,7 +447,7 @@ class Api extends Axios {
   async getEvaluates(params = {}) {
     return await this.axios("post", "evaluate/getEvaluates", params);
   }
-  
+
   /**
    * 子评论列表
    * @param {Object} params {msgId,type:1 视频，2动态 ,pageNum,pageSize}
@@ -454,7 +455,7 @@ class Api extends Axios {
   async getEvaluateDetail(params = {}) {
     return await this.axios("post", "evaluate/getEvaluateDetail", params);
   }
-  
+
   /**
    * 点赞
    * @param {Object} params {sourceId,userId}
@@ -463,7 +464,7 @@ class Api extends Axios {
     return await this.axios("post", "dotAgree/agree", params);
   }
 
-    
+
   /**
    * 获取融云token
    * @param {Object} params {sourceId,userId}
@@ -471,7 +472,7 @@ class Api extends Axios {
   async getRongyunToken(params = {}) {
     return await this.axios("post", "user/rongyun", params);
   }
-    
+
   /**
    * 发布动态
    * @param {Object} params {sourceId,userId}
@@ -487,8 +488,51 @@ class Api extends Axios {
   async getDynamicInformation(params = {}) {
     return await this.axios("post", "dynaInformation/getDynamicInformation", params);
   }
-  
-   
+
+  /**
+   * 充值
+   * @param {Object} params {sourceId,userId}
+   */
+  async wxprepayment(params = {}) {
+    return await this.axios("post", "gamePay/wxprepayment", params);
+  }
+
+  /**
+   * 发布技能
+   * @param {Object} params {userId}
+   */
+  async addUserAbility(params = {}) {
+    return await this.axios("post", "ability/addUserAbility", params);
+  }
+
+  /**
+   * 获取第三方定位文字信息
+   * @param {Object} params {userId}
+   */
+  async positionStr(params = {}) {
+    return await this.axios("get", "http://api.map.baidu.com/reverse_geocoding/v3/", params);
+  }
+
+
+  /**
+   * 获取动态详情
+   * @param {Object} params {userId}
+   */
+  async getDynamicDetail(params = {}) {
+    return await this.axios("post", "dynaInformation/getDynamicInformationDetail", params);
+  }
+
+  /**
+   * 点赞列表
+   * @param {Object} params {userId}
+   */
+  async getAgreeUserList(params = {}) {
+    return await this.axios("post", "dotAgree/getAgreeUserList", params);
+  }
+
+
+
+
 }
 
 export default new Api();

@@ -7,7 +7,13 @@
           <van-icon name="arrow-left" :color="color" size="25" @click="$router.go(-1)" />
           <van-icon name="like" color="#ffd948" size="25" v-if="info.likeStatue" @click="zanFn" />
           <van-icon name="like" :color="color" size="25" v-else @click="zanFn" />
-          <van-icon class-prefix="icon" name="zhuanfa-o" :color="color" size="25" />
+          <van-icon
+            class-prefix="icon"
+            name="zhuanfa-o"
+            :color="color"
+            size="25"
+            @click="$refs.share.open()"
+          />
           <van-icon name="warning" :color="color" size="25" />
         </div>
         <div class="head-right">
@@ -17,14 +23,11 @@
             @click="$router.push(`/accompanyDetail/${info.userid}`)"
           />
           <follow :toUserid="info.userid" />
-          <!-- <div class="btn" v-if="info.fansStatue == 1 && info.userid != $store.state.userInfo.userid" @click="fansFn(2)">已关注</div>
-          <div class="btn" v-else-if="info.fansStatue == 2 && info.userid != $store.state.userInfo.userid" @click="fansFn(2)">互相关注</div>
-          <div class="btn follow" v-else-if="info.fansStatue == 0 && info.userid != $store.state.userInfo.userid" @click="fansFn(1)">+关注</div>-->
         </div>
       </div>
     </div>
     <div class="main">
-      <div class="video" ref="video_box">
+      <div class="video" ref="video_box" @click="pauseVideo">
         <video
           ref="video"
           class="video_box"
@@ -61,6 +64,11 @@
         <div class="userinfo">
           <span @click="$router.push(`/accompanyDetail/${info.userid}`)">{{info.nickname}}：</span>
           {{info.comment}}
+          <span
+            v-if="info.friendsList"
+            v-for="item,index in info.friendsList"
+            @click="$router.push(`/accompanyDetail/${item.userId}`)"
+          >@{{item.nickName}}</span>
         </div>
         <div class="data">
           <div class="item">
@@ -77,6 +85,7 @@
 
       <div class="bottom" :style="'padding-top:'+top+'px'"></div>
     </div>
+    <share ref="share" />
   </div>
 </template>
 <script>
@@ -84,13 +93,15 @@ import navBar from "@/components/navbar/navbar.vue";
 import operation from "@/components/operation/operation.vue";
 import comment from "@/components/operation/comment.vue";
 import follow from "@/components/operation/follow.vue";
+import share from "@/components/operation/share.vue";
 export default {
-  name: "videoList",
+  name: "videoDetail",
   components: {
     navBar,
     operation,
     comment,
-    follow
+    follow,
+    share
   },
   data() {
     return {
@@ -146,6 +157,9 @@ export default {
           sourceId: this.info.videoid,
           userId: this.$store.state.userInfo.userid
         })
+        .then(res => {
+          this.info.likeCount = res.count;
+        })
         .catch(err => {
           this.info.likeStatue = !this.info.likeStatue;
         });
@@ -178,72 +192,68 @@ export default {
         this.color = "#fff";
       }
       if (window.navigator.userAgent.match(/APICloud/i)) {
-        if (e.target.scrollTop >= 100) {
-          that.UIChatBox.open(
-            {
-              placeholder: "说点什么",
-              autoFocus: false,
-              emotionPath: "widget://res/image/emotion",
-              texts: {
-                sendBtn: {
-                  title: "发送"
-                }
-              },
-              styles: {
-                inputBar: {
-                  borderColor: "rgba(255,255,255,1)",
-                  bgColor: "rgba(255,255,255,1)"
-                },
-                inputBox: {
-                  borderColor: "rgba(245,245,245,1)",
-                  bgColor: "rgba(245,245,245,1)",
-                  textColor: "rgba(153,153,153,1)",
-                  borderCorner: 15
-                },
-                indicator: {
-                  target: "both",
-                  color: "#c4c4c4",
-                  activeColor: "#9e9e9e"
-                },
-                emotionBtn: {
-                  //（可选项）JSON对象；表情按钮样式；不传则不显示表情按钮
-                  normalImg: "widget://res/image/face1.png" //（可选项）字符串类型；表情按钮常态的背景图片（本地路径，fs://、widget://）；默认：笑脸小图标,
-                },
-                sendBtn: {
-                  bg: "#4cc518",
-                  titleColor: "#ffffff",
-                  activeBg: "#46a91e",
-                  titleSize: 13
-                }
+        that.UIChatBox.open(
+          {
+            placeholder: "说点什么",
+            autoFocus: false,
+            emotionPath: "widget://res/image/emotion",
+            texts: {
+              sendBtn: {
+                title: "发送"
               }
             },
-            function(ret, err) {
-              if (ret.eventType == "send") {
-                if (ret.msg == null || ret.msg == "") {
-                  that.$toast.fail("评论内容不能为空！");
-                } else {
-                  that.$SERVER
-                    .addEvaluate({
-                      pid: that.$route.params.id,
-                      type: 1,
-                      message: ret.msg,
-                      fromUserId: that.$store.state.userInfo.userid
-                    })
-                    .then(res => {
-                      that.$toast.success("评论成功！");
-                      that.info.replyCount++;
-                      that.$refs.comment.addCommentView(ret.msg);
-                    });
-                  that.UIChatBox.close();
-                }
+            styles: {
+              inputBar: {
+                borderColor: "rgba(255,255,255,1)",
+                bgColor: "rgba(255,255,255,1)"
+              },
+              inputBox: {
+                borderColor: "rgba(245,245,245,1)",
+                bgColor: "rgba(245,245,245,1)",
+                textColor: "rgba(153,153,153,1)",
+                borderCorner: 15
+              },
+              indicator: {
+                target: "both",
+                color: "#c4c4c4",
+                activeColor: "#9e9e9e"
+              },
+              emotionBtn: {
+                //（可选项）JSON对象；表情按钮样式；不传则不显示表情按钮
+                normalImg: "widget://res/image/face1.png" //（可选项）字符串类型；表情按钮常态的背景图片（本地路径，fs://、widget://）；默认：笑脸小图标,
+              },
+              sendBtn: {
+                bg: "#4cc518",
+                titleColor: "#ffffff",
+                activeBg: "#46a91e",
+                titleSize: 13
               }
             }
-          );
-        } else {
-          this.UIChatBox.close();
-        }
+          },
+          function(ret, err) {
+            if (ret.eventType == "send") {
+              if (ret.msg == null || ret.msg == "") {
+                that.$toast.fail("评论内容不能为空！");
+              } else {
+                that.$SERVER
+                  .addEvaluate({
+                    pid: that.$route.params.id,
+                    type: 1,
+                    message: ret.msg,
+                    fromUserId: that.$store.state.userInfo.userid
+                  })
+                  .then(res => {
+                    that.$toast.success("评论成功！");
+                    that.info.replyCount++;
+                    that.$refs.comment.addCommentView(ret.msg);
+                  });
+                that.UIChatBox.close();
+              }
+            }
+          }
+        );
       }
-    },
+    }
   }
 };
 </script>
