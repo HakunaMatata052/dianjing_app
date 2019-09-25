@@ -2,6 +2,7 @@
 node_modules
 /dist
 /apiCloud
+/widget
 
 # local env files
 .env.local
