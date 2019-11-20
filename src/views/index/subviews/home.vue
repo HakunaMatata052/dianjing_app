@@ -49,7 +49,7 @@
             <!-- <div class="more" @click="goAccompany">
               查看更多
               <van-icon class-prefix="icon" name="more" />
-            </div> -->
+            </div>-->
           </div>
           <div class="wrapper" ref="wrapper1">
             <accompany-list :accompanyList="AccompanyList1" :scrollX="true" />
@@ -65,7 +65,7 @@
         </div>
         <!-- <div class="ad">
           <van-image fit="cover" src="http://lorempixel.com/300/300/" class="ad-img"></van-image>
-        </div> -->
+        </div>-->
         <!-- <div class="video">
         <van-swipe
           :loop="false"
@@ -110,7 +110,31 @@
               <div class="see">立即观看</div>
             </div>
           </div>
-        </div> -->
+        </div>-->
+        <div class="pk">
+          <div class="pk-top">
+            <img :src="pkTop" />
+          </div>
+          <div class="pk-list">
+            <pkItem
+              v-for="(item,index) in pkList"
+              :key="index"
+              :id="item.id"
+              :image="item.image"
+              :nickName="item.nickName"
+              :count="item.count"
+              :successCount="item.successCount"
+              :userId="item.userId"
+              :startTime="item.startTime"
+              :endTime="item.endTime"
+              :amount="item.amount"
+              :gameName="item.gameName"
+            />
+          </div>
+          <div class="pk-bottom" @click="$router.push('/pkList')">
+            <img :src="pkBottom" />
+          </div>
+        </div>
       </van-pull-refresh>
     </div>
   </div>
@@ -120,6 +144,9 @@ import BScroll from "better-scroll";
 import navBar from "@/components/navbar/navbar.vue";
 import gameList from "@/components/gameList.vue";
 import accompanyList from "@/components/accompany/accompanyList.vue";
+import pkItem from "@/components/pk/pkItem.vue";
+import pkTop from "@/assets/images/bg1.png";
+import pkBottom from "@/assets/images/bg2.png";
 export default {
   name: "home",
   data() {
@@ -131,13 +158,17 @@ export default {
       AccompanyList2: [],
       AccompanyList3: [],
       isLoading: false,
-      refreshNum: 0
+      refreshNum: 0,
+      pkTop: pkTop,
+      pkBottom: pkBottom,
+      pkList: []
     };
   },
   components: {
     navBar,
     gameList,
-    "accompany-list": accompanyList
+    accompanyList,
+    pkItem
   },
   watch: {
     // 监听所有请求是否都完成
@@ -155,9 +186,11 @@ export default {
     this.getAccompanyList();
     this.getExpress();
     this.getBanners();
+
+    this.getListBattles();
   },
-  deactivated() {    
-      document.querySelector('.view-container').style.filter = "blur(0px)";
+  deactivated() {
+    document.querySelector(".view-container").style.filter = "blur(0px)";
   },
   methods: {
     onrefresh() {
@@ -168,6 +201,7 @@ export default {
         this.refreshNum++;
       });
       this.getBanners();
+      this.getListBattles();
     },
     getAccompanyList(fn) {
       this.$SERVER
@@ -206,6 +240,11 @@ export default {
             fn();
           }
         });
+    },
+    getListBattles() {
+      this.$SERVER.getListBattles().then(res => {
+        this.pkList = res.data.list;
+      });
     },
     getExpress(fn) {
       this.$SERVER
@@ -413,6 +452,24 @@ export default {
   img {
     width: auto;
     height: 80px;
+  }
+}
+.pk {
+  background: url(../../../assets/images/bg3.png);
+  margin-bottom: 30px;
+  .pk-top,
+  .pk-bottom {
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
+  .pk-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
   }
 }
 </style>

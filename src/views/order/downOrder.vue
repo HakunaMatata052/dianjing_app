@@ -80,7 +80,8 @@
       <van-datetime-picker
         v-model="datetime"
         :min-date="new Date()"
-        v-if="activePopupId==1"
+        v-if="activePopupId==1"        
+        @cancel="showPopup = false"
         @confirm="timeOnConfirm"
       />
     </van-popup>

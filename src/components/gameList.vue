@@ -6,6 +6,7 @@
       :title-active-color="$store.state.color"
       animated
       @click="tabs"
+      v-if="tab"
     >
       <van-tab title="速配" :name="0"></van-tab>
       <van-tab title="大神" :name="1"></van-tab>
@@ -30,6 +31,13 @@ export default {
         return 0;
       },
       required: true
+    },
+    tab:{
+      type: Boolean,
+      default() {
+        return true;
+      },
+      required: false
     }
   },
   components: {},

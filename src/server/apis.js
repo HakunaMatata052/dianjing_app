@@ -530,7 +530,20 @@ class Api extends Axios {
     return await this.axios("post", "dotAgree/getAgreeUserList", params);
   }
 
-
+  /**
+   * PK列表
+   * @param {Object} params {userId}
+   */
+  async getListBattles(params = {}) {
+    return await this.axios("post", "battle/getListBattles", params);
+  }
+  /**
+   * 发布挑战
+   * @param {Object} params {userId}
+   */
+  async publishBattle(params = {}) {
+    return await this.axios("post", "battle/publishBattle", params);
+  }
 
 
 }

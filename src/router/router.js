@@ -123,6 +123,18 @@ const router = new Router({
         isLogin: true
       }
     },
+    {
+      path: "/release/pk",
+      name: "release-pk",
+      component: () => import("@/views/release/pk.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "发布挑战",
+        isMember: false,
+        isLogin: true
+      }
+    },
     // 陪玩
     // {
     //   path: "/accompany",
@@ -426,6 +438,18 @@ const router = new Router({
         title: "我的消息",
         isMember: false,
         isLogin: true
+      }
+    },
+    {
+      path: "/pkList",
+      name: "pkList",
+      component: () => import("@/views/pk/pkList.vue"),
+      meta: {
+        keepAlive: false,
+        isTransition: true,
+        title: "挑战列表",
+        isMember: false,
+        isLogin: false
       }
     },
   ]

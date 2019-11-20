@@ -20,17 +20,9 @@
       <van-dialog v-model="show" :show-confirm-button="false" get-container="body">
         <div class="release-dialog">
           <div class="release-group">
-            <div class="release-item" @click="releaseFn('video')">
-              <svg-icon icon-class="release-video"></svg-icon>
-              <span>视频</span>
-            </div>
-            <div class="release-item" @click="releaseFn('dynamic')">
-              <svg-icon icon-class="release-dynamic"></svg-icon>
-              <span>动态</span>
-            </div>
-            <div class="release-item" @click="releaseFn('ability')">
-              <svg-icon icon-class="release-match"></svg-icon>
-              <span>技能</span>
+            <div class="release-item" v-for="(item,index) in item" :key="index" @click="releaseFn(item.path)">
+              <svg-icon :icon-class="item.icon"></svg-icon>
+              <span>{{item.name}}</span>
             </div>
           </div>
           <div class="release-close" @click="closeReleaseDialog">
@@ -67,7 +59,24 @@ export default {
     return {
       // tabActiveIndex: 0,
       bottom: 0,
-      show: false
+      show: false,
+      item:[{
+        name:"视频",
+        path:"video",
+        icon:"release-video",
+      },{
+        name:"动态",
+        path:"dynamic",
+        icon:"release-dynamic",
+      },{
+        name:"技能",
+        path:"ability",
+        icon:"release-match",
+      },{
+        name:"挑战",
+        path:"pk",
+        icon:"release-pk",
+      }]
     };
   },
   created() {
@@ -196,7 +205,12 @@ export default {
   .release-group {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+        flex-wrap: wrap;
     .release-item {
+      width: 50%;
+      text-align: center;
+      margin-top: 30px;
       svg {
         width: 45px;
         height: 45px;
