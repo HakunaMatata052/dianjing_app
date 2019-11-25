@@ -1,17 +1,19 @@
-<template>
+﻿<template>
     <div class="container">
-        <navBar/>
+        <navBar title="" stl="nobg"/>
         <div class="main">
             <div class="pk_chunk">
                 <div>
-                    <img src="https://github.githubassets.com/images/spinners/octocat-spinner-128.gif" alt=""><br>
+                    <img class="user" src="https://github.githubassets.com/images/spinners/octocat-spinner-128.gif"
+                         alt=""><br>
                     <span>周杰伦</span>
                 </div>
                 <div>
                     <img src="../../assets/images/pk_det_img2.png" alt="">
                 </div>
                 <div>
-                    <img src="https://github.githubassets.com/images/spinners/octocat-spinner-128.gif" alt=""><br>
+                    <img class="user" src="https://github.githubassets.com/images/spinners/octocat-spinner-128.gif"
+                         alt=""><br>
                     <span>蔡旭辉</span>
                 </div>
             </div>
@@ -71,13 +73,18 @@
 
     .pk_chunk div {
         display: inline-block;
-        margin-top: 30px;
+        margin-top: 35px;
         text-align: center;
         margin-right: 20px;
     }
 
+    .pk_chunk div .user {
+        border: 5px solid #fff;
+        border-radius: 100px;
+    }
+
     .pk_chunk div:nth-child(1) {
-        margin-left: 70px;
+        margin-left: 65px;
     }
 
     .pk_chunk div span {
@@ -132,6 +139,7 @@
     .pk_chunk_2 div .pk_chunk_2_details {
         display: inline-block;
         vertical-align: top;
+        text-decoration: underline;
         color: #FFD948;
     }
 
@@ -150,7 +158,6 @@
     }
 
     .pk_chunk_3 div:nth-child(1) {
-        height: 19px;
         font-size: 20px;
         font-weight: bold;
         text-align: center;
