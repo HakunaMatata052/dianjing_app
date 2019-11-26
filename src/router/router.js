@@ -464,6 +464,18 @@ const router = new Router({
                 isMember: false,
                 isLogin: false
             }
+        },
+        {
+            path: "/pkResult",
+            name: "pkResult",
+            component: () => import("@/views/pk/pkResult.vue"),
+            meta: {
+                keepAlive: false,
+                isTransition: true,
+                title: "挑战结果",
+                isMember: false,
+                isLogin: false
+            }
         }
     ]
 
