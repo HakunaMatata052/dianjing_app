@@ -476,6 +476,42 @@ const router = new Router({
                 isMember: false,
                 isLogin: false
             }
+        },
+        {
+            path: "/coupons",
+            name: "coupons",
+            component: () => import("@/views/coupons/coupons.vue"),
+            meta: {
+                keepAlive: false,
+                isTransition: true,
+                title: "卡券-积分兑换商城",
+                isMember: false,
+                isLogin: false
+            }
+        },
+        {
+            path: "/pkManito",
+            name: "pkManito",
+            component: () => import("@/views/pk/pkManito.vue"),
+            meta: {
+                keepAlive: false,
+                isTransition: true,
+                title: "我要挑战",
+                isMember: false,
+                isLogin: false
+            }
+        },
+        {
+            path: "/task",
+            name: "task",
+            component: () => import("@/views/task/task.vue"),
+            meta: {
+                keepAlive: false,
+                isTransition: true,
+                title: "任务中心",
+                isMember: false,
+                isLogin: false
+            }
         }
     ]
 
