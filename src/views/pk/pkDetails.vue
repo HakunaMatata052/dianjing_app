@@ -16,7 +16,7 @@
             </div>
 
             <div class="pk_chunk3">
-                <div class="bottom">挑战TA</div>
+                <div class="bottom" @click="$router.push('/pkManito/'+$route.params.id)">挑战TA</div>
             </div>
         </div>
     </div>
@@ -33,7 +33,16 @@
         data() {
             return {};
         },
-        methods: {}
+        created(){
+            this.$SERVER.getBattleReceiveDetails({
+                battleId:this.$route.params.id,
+                status:1
+            }).then(res=>{
+                
+            })
+        },
+        methods: {
+        }
     };
 </script>
 

@@ -153,7 +153,10 @@
               </div>
             </div>
           </van-tab>
-          <van-tab title="印象" name="2">
+          <van-tab title="Ta的挑战" name="2">
+
+          </van-tab>
+          <van-tab title="印象" name="3">
             <div class="tabs-con impression">
               <van-rate
                 v-model="score"
