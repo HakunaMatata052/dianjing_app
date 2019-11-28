@@ -10,6 +10,8 @@
         <van-cell size="large" title="挑战金">
           <input type="text" class="input" v-model="form.amount" placeholder="请输入挑战金" />
         </van-cell>
+
+
         <van-cell size="large" title="个人/团队">
           <van-radio-group v-model="form.isGroup" class="radio">
             <van-radio :name="0" :checked-color="$store.state.color">个人</van-radio>
