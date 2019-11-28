@@ -454,7 +454,7 @@ const router = new Router({
             }
         },
         {
-            path: "/pkDetails",
+            path: "/pkDetails/:id",
             name: "pkDetails",
             component: () => import("@/views/pk/pkDetails.vue"),
             meta: {
@@ -490,7 +490,7 @@ const router = new Router({
             }
         },
         {
-            path: "/pkManito",
+            path: "/pkManito/:id",
             name: "pkManito",
             component: () => import("@/views/pk/pkManito.vue"),
             meta: {

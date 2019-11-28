@@ -545,6 +545,21 @@ class Api extends Axios {
     return await this.axios("post", "battle/publishBattle", params);
   }
 
+  /**
+   * 挑战详情
+   * @param {Object} params {userId}
+   */
+  async getBattleReceiveDetails(params = {}) {
+    return await this.axios("post", "battle/getBattleReceiveDetailsByBattleId", params);
+  }
+
+  /**
+   * 接受挑战
+   * @param {Object} params {userId}
+   */
+  async receiveBattle(params = {}) {
+    return await this.axios("post", "battle/receiveBattle", params);
+  }
 
 }
 

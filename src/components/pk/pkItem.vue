@@ -27,7 +27,7 @@
         <dd>{{$METHOD.format(startTime,"hh:mm")}}-{{$METHOD.format(endTime,"hh:mm")}}</dd>
       </dl>
     </div>
-    <div class="btn">挑战TA</div>
+    <div class="btn" @click="$router.push('/pkDetails/'+id)">挑战TA</div>
   </div>
 </template>
 
