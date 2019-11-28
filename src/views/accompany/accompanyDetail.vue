@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </van-tab>
-                    <van-tab title="Ta的挑战" name="2">
+                    <van-tab title="Ta的挑战" name="2" class="userChallengeDetailedWrapper">
 
                         <div class="userChallengeDetailed">
                             <div class="left">
@@ -473,57 +473,63 @@
     }
 </style>
 <style lang="less" scoped>
-    .userChallengeDetailed {
-        height: 65px;
-        line-height: 65px;
-        background: url("./bg.png") no-repeat;
-        background-size: 340px 65px;
-        color: white;
-        font-size: 0;
-        margin-left: 15px;
-        margin-top: 18px;
-
-        > div {
-            display: inline-block;
-            vertical-align: top;
+    .userChallengeDetailedWrapper{
+        background-color: white;
+        .userChallengeDetailed {
             height: 65px;
             line-height: 65px;
-            width: 50%;
+            background: url("./bg.png") no-repeat;
+            background-size: 340px 65px;
+            color: white;
+            font-size: 0;
+            margin-left: 15px;
+            margin-top: 17.5px;
+            margin-bottom: 17.5px;
 
-            span {
-                font-size: 15px;
-                height: 65px;
-                line-height: 65px;
+            > div {
                 display: inline-block;
                 vertical-align: top;
-                font-weight: bold;
+                height: 65px;
+                line-height: 65px;
+                width: 50%;
+
+                span {
+                    font-size: 15px;
+                    height: 65px;
+                    line-height: 65px;
+                    display: inline-block;
+                    vertical-align: top;
+                    font-weight: bold;
+                }
+
+                .number {
+                    font-size: 30px;
+                }
             }
 
-            .number {
-                font-size: 30px;
+            .left {
+                .text {
+                    color: #333;
+                    margin: 0 20px 0 10px;
+                }
+            }
+
+            .right {
+                .number {
+                    margin: 0 20px 0 20px;
+                }
             }
         }
-
-        .left {
-            .text {
-                color: #333;
-                margin: 0 20px 0 10px;
-            }
-        }
-
-        .right {
-            .number {
-                margin: 0 20px 0 20px;
-            }
+        .pk-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffd948;
+            padding: 10px;
         }
     }
-    .pk-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-    }
+
 
     .userbg {
         position: absolute;
