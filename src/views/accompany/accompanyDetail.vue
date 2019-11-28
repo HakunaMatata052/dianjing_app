@@ -481,7 +481,7 @@
             background: url("./bg.png") no-repeat;
             background-size: 340px 65px;
             color: white;
-            font-size: 0;
+            font-size: 0px;
             margin-left: 15px;
             margin-top: 17.5px;
             margin-bottom: 17.5px;
