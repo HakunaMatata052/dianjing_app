@@ -481,7 +481,7 @@
         color: white;
         font-size: 0;
         margin-left: 15px;
-        margin-top: 17.5px;
+        margin-top: 18px;
 
         > div {
             display: inline-block;
