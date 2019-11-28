@@ -481,10 +481,10 @@
             background: url("./bg.png") no-repeat;
             background-size: 340px 65px;
             color: white;
-            font-size: 0px;
+            font-size: 0;
             margin-left: 15px;
-            margin-top: 17.5px;
-            margin-bottom: 17.5px;
+            margin-top: 17px;
+            margin-bottom: 18px;
 
             > div {
                 display: inline-block;
