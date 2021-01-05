@@ -10,7 +10,7 @@
     "apicloud": "vue-cli-service build --watch --mode development --no-clean"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "better-scroll": "^1.15.2",
     "install": "^0.13.0",
     "js-md5": "^0.7.3",
